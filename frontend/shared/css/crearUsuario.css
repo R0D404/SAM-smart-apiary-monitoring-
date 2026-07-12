@@ -1,0 +1,423 @@
+/* =========================================
+   ESTILOS DEL CONTENIDO PRINCIPAL (CREAR APICULTOR)
+   ========================================= */
+.main-content {
+    position: fixed; 
+    top: 0; 
+    left: clamp(240px, 20%, 300px); 
+    height: 100vh; 
+    width: calc(100% - clamp(240px, 20%, 300px)); 
+    background-color: #1A1206; 
+    padding: clamp(30px, 2.5vw, 50px); 
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto; 
+    font-family: 'Inter', sans-serif;
+}
+
+/* =========================================
+   BOTÓN SUPERIOR DERECHO (MI CUENTA)
+========================================= */
+.user-info-btn {
+    position: absolute; 
+    top: clamp(18px, 1.25vw, 30px); 
+    right: clamp(18px, 1.25vw, 30px); 
+    display: flex; 
+    align-items: center; 
+    gap: clamp(10px, 0.62vw, 14px); 
+    padding: clamp(5px, 0.37vw, 10px) clamp(14px, 1.0vw, 24px) clamp(5px, 0.37vw, 10px) clamp(5px, 0.37vw, 10px); 
+    border: clamp(1px, 0.06vw, 1px) solid #3b3222; 
+    border-radius: clamp(46px, 3.12vw, 74px); 
+    background-color: transparent; 
+    cursor: pointer;
+    z-index: 10;
+}
+
+.user-info-btn .circle-avatar {
+    width: clamp(26px, 2.18vw, 36px); 
+    height: clamp(26px, 2.18vw, 36px); 
+    border-radius: 50%; 
+    background-color: #F2A900;
+}
+
+.user-info-btn p {
+    color: #F5F5F5; 
+    font-size: clamp(11px, 0.74vw, 14px); 
+    margin: 0; 
+}
+
+/* =========================================
+   CABECERA Y BREADCRUMB
+========================================= */
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end; 
+    margin-bottom: clamp(24px, 2vw, 40px);
+    margin-top: 10px;
+}
+
+.breadcrumb {
+    color: #8A7A5A;
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+.page-title h2 {
+    color: #F5F5F5;
+    font-size: clamp(22px, 1.8vw, 30px);
+    margin: 0 0 6px 0;
+    font-weight: bold;
+}
+
+.page-title p {
+    color: #8A7A5A;
+    font-size: 14px;
+    margin: 0;
+}
+
+/* =========================================
+   BOTONES
+========================================= */
+.btn-primary {
+    background-color: #F2A900;
+    color: #1e160e;
+    border: none;
+    padding: 14px 24px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    transition: background-color 0.3s;
+    white-space: nowrap;
+}
+
+.btn-primary:hover { background-color: #d49300; }
+.w-100 { width: 100%; }
+.mt-4 { margin-top: 24px; }
+
+.btn-outline-dark {
+    background-color: transparent;
+    color: #F2A900;
+    border: 1px solid #3b3222;
+    padding: 10px 20px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+}
+
+.btn-outline-dark:hover {
+    background-color: #241A0B;
+    border-color: #F2A900;
+}
+
+.btn-outline-yellow {
+    background-color: transparent;
+    color: #F2A900;
+    border: 1px solid #F2A900;
+    padding: 0 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.3s;
+}
+
+.btn-outline-yellow:hover {
+    background-color: rgba(242, 169, 0, 0.1);
+}
+
+/* =========================================
+   GRID PRINCIPAL (2 COLUMNAS)
+========================================= */
+.create-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); 
+    gap: 24px;
+    align-items: flex-start;
+}
+
+/* Tarjetas base */
+.main-card {
+    background-color: #1e160e;
+    border: 1px solid #3b3222;
+    border-radius: 16px;
+    padding: clamp(24px, 2vw, 32px);
+    display: flex;
+    flex-direction: column;
+}
+
+.card-header {
+    margin-bottom: 24px;
+}
+
+.card-header h3 {
+    color: #F5F5F5;
+    font-size: 18px;
+    margin: 0 0 6px 0;
+    font-weight: bold;
+}
+
+.card-header p {
+    color: #8A7A5A;
+    font-size: 13px;
+    margin: 0;
+}
+
+/* =========================================
+   FORMULARIO IZQUIERDO
+========================================= */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    color: #8A7A5A;
+    text-transform: uppercase;
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+}
+
+.input-field {
+    background-color: #1a130c;
+    border: 1px solid #3b3222;
+    color: #F5F5F5;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    border-radius: 8px;
+    padding: 14px 16px;
+    width: 100%;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.input-field:focus {
+    border-color: #F2A900;
+}
+
+.divider {
+    height: 1px;
+    background-color: #3b3222;
+    margin: 30px 0;
+}
+
+.section-subtitle {
+    color: #F2A900;
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0 0 20px 0;
+}
+
+.credentials-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.input-with-button {
+    display: flex;
+    gap: 8px;
+}
+
+/* Custom Checkbox en línea */
+.checkbox-group {
+    margin-top: 10px;
+    margin-bottom: 24px;
+}
+
+.custom-checkbox {
+    display: flex;
+    align-items: center;
+    color: #F5F5F5;
+    font-size: 13px;
+    cursor: pointer;
+    position: relative;
+    user-select: none;
+}
+
+.custom-checkbox input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkmark {
+    height: 18px;
+    width: 18px;
+    background-color: transparent;
+    border: 1px solid #8A7A5A;
+    border-radius: 4px;
+    margin-right: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.custom-checkbox:hover input ~ .checkmark {
+    border-color: #F2A900;
+}
+
+.custom-checkbox input:checked ~ .checkmark {
+    background-color: #F2A900;
+    border-color: #F2A900;
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.custom-checkbox input:checked ~ .checkmark:after {
+    display: block;
+}
+
+.custom-checkbox .checkmark:after {
+    left: 6px;
+    top: 2px;
+    width: 4px;
+    height: 10px;
+    border: solid #1A1206;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+/* Tarjeta Info Rol */
+.info-alert-card {
+    background-color: #1a130c;
+    border: 1px solid #2dd4bf; /* Teal */
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.info-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #2dd4bf;
+    margin-top: 4px; 
+    flex-shrink: 0;
+}
+
+.info-content h4 {
+    color: #2dd4bf; 
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0 0 4px 0;
+}
+
+.info-content p {
+    color: #8A7A5A;
+    font-size: 13px;
+    line-height: 1.4;
+    margin: 0;
+}
+
+/* =========================================
+   ASIGNACIÓN DE APIARIOS (DERECHA)
+========================================= */
+.checkbox-list { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 12px; 
+}
+
+.checkbox-card {
+    display: flex; 
+    align-items: center; 
+    gap: 16px; 
+    padding: 16px; 
+    border: 1px solid #3b3222; 
+    border-radius: 12px; 
+    background-color: transparent; 
+    cursor: pointer; 
+    transition: all 0.2s ease;
+}
+
+.checkbox-card input[type="checkbox"] { display: none; }
+
+.checkbox-box {
+    width: 20px; 
+    height: 20px; 
+    border: 1px solid #8A7A5A; 
+    border-radius: 4px; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.check-icon { display: none; color: #1e160e; }
+
+.checkbox-texts {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.checkbox-title { color: #F5F5F5; font-size: 14px; font-weight: 500; }
+.checkbox-subtitle { color: #8A7A5A; font-size: 12px; }
+
+.checkbox-card.active { border-color: #F2A900; }
+.checkbox-card.active .checkbox-box { background-color: #F2A900; border-color: #F2A900; }
+.checkbox-card.active .check-icon { display: block; }
+
+/* Caja de Recomendación */
+.recommendation-box {
+    border: 1px solid #3b3222;
+    border-radius: 12px;
+    padding: 16px;
+    background-color: #1a130c;
+}
+
+.recommendation-box h5 {
+    color: #F2A900;
+    margin: 0 0 6px 0;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.recommendation-box p {
+    color: #8A7A5A;
+    font-size: 12px;
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* Caja de Resumen */
+.summary-box {
+    padding-top: 16px;
+    border-top: 1px solid #3b3222;
+}
+
+.summary-box p {
+    color: #F5F5F5;
+    font-size: 14px;
+    margin: 8px 0 0 0;
+}
+
+/* Media Query para pantallas más pequeñas */
+@media (max-width: 1100px) {
+    .create-grid {
+        grid-template-columns: 1fr;
+    }
+}
