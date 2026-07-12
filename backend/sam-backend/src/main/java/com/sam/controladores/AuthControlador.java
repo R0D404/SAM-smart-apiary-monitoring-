@@ -46,6 +46,8 @@ public class AuthControlador {
                         
                         // Verificar la contraseña usando BCrypt
                         if (BCrypt.checkpw(inputPassword, hashGuardado)) {
+                            // Crear la sesión del usuario
+                            ctx.sessionAttribute("usuarioLogueado", inputUsername);
                             ctx.status(200).json("{\"mensaje\": \"Login exitoso\"}");
                             return;
                         }

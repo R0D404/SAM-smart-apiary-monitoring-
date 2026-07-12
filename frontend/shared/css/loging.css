@@ -199,3 +199,70 @@
     font-size: 12px;
     margin: 0;
 }
+
+/* =========================================
+   RESPONSIVE - MÓVIL (Android, iPhone, etc.)
+   ========================================= */
+@media screen and (max-width: 768px) {
+    body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        overflow-x: hidden;
+    }
+
+    #present-card, #imput-form {
+        position: relative;
+        width: 100%;
+        height: auto;
+    }
+
+    #present-card {
+        padding-bottom: 30px;
+        min-height: auto;
+    }
+
+    #banner-login {
+        padding-top: 40px;
+        padding-left: 0;
+        justify-content: center;
+    }
+
+    #presentacion {
+        padding-left: 20px;
+        padding-right: 20px;
+        margin-top: 24px;
+        text-align: center;
+        align-items: center;
+    }
+
+    /* Reducir tamaño de textos de presentación */
+    .presntation-info:nth-child(1),
+    .presntation-info:nth-child(2) {
+        font-size: 24px;
+    }
+    .presntation-info:nth-child(3) {
+        font-size: 14px;
+        margin-top: 12px;
+    }
+
+    #imput-form {
+        flex: 1;
+        padding: 30px 20px;
+        align-items: flex-start; /* Para que no se centre verticalmente si hay mucho espacio */
+    }
+
+    #form-login {
+        padding: 30px 20px;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    /* Ajustar la notificación toast en pantallas pequeñas */
+    .toast {
+        width: 90%;
+        right: 5%;
+        top: 20px;
+        padding: 12px 16px;
+    }
+}

@@ -964,3 +964,64 @@ body {
     font-size: 14px;
     margin: 0;
 }
+
+/* =========================================
+   TOAST NOTIFICATION (ÉXITO)
+   ========================================= */
+.toast-success {
+    position: fixed;
+    top: 24px;
+    right: 24px; 
+    width: 380px;
+    background-color: var(--color-bg-sidebar);
+    border: 1px solid var(--color-alert-green);
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    z-index: 9999;
+    transition: all 0.3s ease;
+}
+
+.toast-success.hidden {
+    opacity: 0;
+    transform: translateY(-20px);
+    pointer-events: none;
+}
+
+.toast-success-icon {
+    background-color: rgba(76, 175, 80, 0.15);
+    color: var(--color-alert-green);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.toast-success-icon svg {
+    width: 20px;
+    height: 20px;
+}
+
+.toast-success-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.toast-success-content h4 {
+    color: var(--color-text-white);
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.toast-success-content p {
+    color: var(--color-text-gray);
+    font-size: 14px;
+    margin: 0;
+}

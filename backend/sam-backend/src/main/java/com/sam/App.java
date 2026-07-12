@@ -14,6 +14,16 @@ public class App
             });
         }).start(7070);
 
+        // Filtro de seguridad: Proteger todas las rutas de administrador
+        app.before(ctx -> {
+            String path = ctx.path();
+            if (path.startsWith("/frontend/admin") || path.startsWith("/api/dashboard")) {
+                if (ctx.sessionAttribute("usuarioLogueado") == null) {
+                    ctx.redirect("/index.html");
+                }
+            }
+        });
+
         app.routes(() -> {
             // Todas las rutas que empiecen con /api/auth
             path("/api/auth", () -> {
