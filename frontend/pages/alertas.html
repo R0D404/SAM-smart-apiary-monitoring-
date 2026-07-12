@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAM - Alertas</title>
+    <link rel="stylesheet" href="../shared/css/alertas.css">
+    <link rel="stylesheet" href="../shared/css/plantilla.css">
+</head>
+<body>
+    <section class="sidebar">
+        <div class="logo">
+            <hexagon>
+                <img src="./frontend/assets/img/logo/logoSam.png" alt="">
+            </hexagon>
+            <div class="logo-text">
+                <h1>SAM</h1>
+                <p>Smart Apiary Monitoring</p>
+            </div>
+        </div>
+        <div class="menu">
+            <ul>
+                <li><a href=""><img src="./frontend/assets/icons/dashboard.svg" alt="" class="menu-icon"> Dashboard</a></li>
+                <li><a href=""><img src="./frontend/assets/icons/apiarios.svg" alt="" class="menu-icon"> Apiarios</a></li>
+                <li><a href=""><img src="./frontend/assets/icons/colmenas.svg" alt="" class="menu-icon"> Colmenas</a></li>
+                <!-- Clase active movida a Alertas -->
+                <li><a href="" class="active"><img src="./frontend/assets/icons/alertas.svg" alt="" class="menu-icon"> Alertas</a></li>
+                <li><a href=""><img src="./frontend/assets/icons/visitas.svg" alt="" class="menu-icon"> Visitas / Cosechas</a></li>
+                <li><a href=""><img src="./frontend/assets/icons/historial.svg" alt="" class="menu-icon"> Historial</a></li>
+                <li><a href=""><img src="./frontend/assets/icons/usuarios.svg" alt="" class="menu-icon"> Usuarios</a></li>
+            </ul>
+        </div>
+        <div class="user-profile">
+            <img src="./img/user.png" alt="">
+            <div class="profile-text">
+                <h2>Emmanuel U.</h2>
+                <p>Administrador</p>
+            </div>
+        </div>
+    </section>
+    
+    <section class="main-content">
+        <!-- Botón flotante superior derecho de Mi Cuenta -->
+        <div class="user-info-btn">
+            <div class="circle-avatar"></div>
+            <p>Mi cuenta</p>
+        </div>
+
+        <!-- Cabecera principal -->
+        <header class="header-container">
+            <div class="page-title">
+                <h2>Alertas</h2>
+                <p>Anomalías detectadas por umbrales contextuales y tasa de cambio</p>
+            </div>
+
+            <div class="header-actions">
+                <button class="btn-outline">Config. umbrales</button>
+            </div>
+        </header>
+
+        <!-- Tarjetas de Resumen (Indicadores) -->
+        <div class="summary-cards">
+            <!-- Tarjeta Críticas -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="dot dot-red"></span>
+                    <span>CRÍTICAS</span>
+                </div>
+                <div class="card-value text-red">1</div>
+            </div>
+            <!-- Tarjeta Avisos -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="dot dot-yellow"></span>
+                    <span>AVISOS</span>
+                </div>
+                <div class="card-value text-yellow">2</div>
+            </div>
+            <!-- Tarjeta Normales -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="dot dot-teal"></span>
+                    <span>NORMALES</span>
+                </div>
+                <div class="card-value text-teal">15</div>
+            </div>
+            <!-- Tarjeta Atendidas Hoy -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="dot dot-teal-dark"></span>
+                    <span>ATENDIDAS HOY</span>
+                </div>
+                <div class="card-value text-teal-dark">4</div>
+            </div>
+        </div>
+
+        <!-- Botones de filtros -->
+        <div class="filters-container">
+            <button class="filter-btn active">Todas</button>
+            <button class="filter-btn outline">Críticas</button>
+            <button class="filter-btn outline">Avisos</button>
+            <button class="filter-btn outline">Atendidas</button>
+        </div>
+
+        <!-- Contenedor de la Tabla -->
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>COLMENA</th>
+                        <th>MENSAJE</th>
+                        <th>TIPO</th>
+                        <th>FECHA</th>
+                        <th>ESTADO</th>
+                    </tr>
+                </thead>
+                <!-- El tbody está vacío, esperando los datos del script js -->
+                <tbody id="tabla-alertas-body">
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Script para renderizar la tabla -->
+    <script src="/frontend/shared/js/alertas.js"></script>
+</body>
+</html>
