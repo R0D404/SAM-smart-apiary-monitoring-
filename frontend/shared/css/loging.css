@@ -1,0 +1,142 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+#imput-form {
+    position: fixed;   
+    top: 0;            
+    right: 0;          
+    width: 50vw;       
+    height: 100vh;     
+    background-color: #1A1206; 
+    color: white;
+
+    /* FLEXBOX para centrar */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px; 
+    
+    /* NUEVO: Si la pantalla es muy pequeña a lo alto, permite hacer scroll en lugar de cortar el formulario */
+    overflow-y: auto; 
+}
+
+#form-login {
+    background-color: #1e160e; 
+    width: 100%;               
+    max-width: 420px;          
+    padding: 40px;             
+    border-radius: 25px;       
+    border: 1px solid #4A3A1C;
+    display: flex;
+    flex-direction: column;
+}
+
+#form-login h2 {
+    color: #ffffff;
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+#form-login p {
+    color: #B9A988;            
+    font-size: 14px;
+    margin-bottom: 24px;       
+}
+
+#form-login label {
+    display: block;            
+    color: #8A7A5A;            
+    font-size: 11px;           
+    font-weight: 600;
+    letter-spacing: 0.8px;     
+    margin-bottom: 8px;        
+    margin-top: 16px;          
+}
+
+#form-login input {
+    background-color: #2E2010;
+    font-size: 14px;           
+    color: white;
+    border: 1px solid #4A3A1C;
+    border-radius: 5px;
+    width: 100%;               
+    height: 46px;              
+    padding: 0 12px;
+    outline: none;
+}
+
+#iniciar {
+    display: block;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1A1206;
+    background-color: #F2A900;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;               
+    height: 46px;              
+    margin-top: 32px;          
+    transition: background 0.2s;
+}
+
+#iniciar:hover {
+    background-color: #d49400; 
+}
+
+/*
+    Cambios en las secciones de logo y presentación
+*/
+#banner-login {
+    display: flex;
+    align-items: center;
+    padding-top: 60px;
+    /* CAMBIO: Usar porcentaje en lugar de 60px fijos para que se adapte mejor */
+    padding-left: 10%; 
+}
+
+.banner-Sam {
+    margin-left: 10px;
+    padding: 0;
+}
+
+#present-card {
+    display: flex;
+    flex-direction: column;
+    position: fixed;   
+    top: 0;            
+    left: 0;          
+    width: 50vw;       
+    height: 100vh;     
+    background-color: #F2A900; 
+    color: black;
+    
+    /* NUEVO: Permite scroll si la pantalla es muy bajita */
+    overflow-y: auto; 
+}
+
+#presentacion {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+    
+    /* CAMBIO: Ajustamos los márgenes usando porcentajes para que no rompa la caja de 50vw */
+    padding-left: 10%; 
+    padding-right: 10%;
+    
+    /* CAMBIO CLAVE: En lugar de 650px (que es muy grande para pantallas chicas), le decimos que ocupe máximo el 100% del espacio disponible */
+    max-width: 100%;  
+}
+
+#logo {
+    background-color: #1A1206;
+    border-radius: 20%;
+    padding-right: 5px;
+    padding-left: 5px;
+}

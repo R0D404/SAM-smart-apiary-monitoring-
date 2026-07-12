@@ -1,0 +1,322 @@
+/* =========================================
+   ESTILOS DE LA BARRA LATERAL (TU CSS GLOBAL)
+   ========================================= */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+    background-color: #1A1206; /* Fondo general oscuro */
+}
+
+.sidebar {
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: clamp(240px, 20%, 300px); 
+    height: 100vh; 
+    background-color: #241A0B; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    padding-top: clamp(18px, 1.25vw, 30px); 
+}
+
+.sidebar .logo {
+    display: flex; 
+    flex-direction: row; 
+    align-items: center; 
+    margin-bottom: clamp(18px, 1.25vw, 30px); 
+    gap: clamp(7px, 0.5vw, 12px); 
+}
+
+.sidebar .logo hexagon {
+    width: clamp(58px, 4.0vw, 96px); 
+    min-width: clamp(58px, 4.0vw, 96px); 
+    height: clamp(56px, 3.94vw, 95px); 
+    background-color: #F2A900; 
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    margin-bottom: clamp(10px, 0.62vw, 14px); 
+}
+
+.sidebar .logo img {
+    width: clamp(49px, 3.43vw, 83px); 
+    height: auto;
+    object-fit: contain; 
+}
+
+.sidebar .logo-text h1 {
+    font-family: 'Inter', sans-serif; 
+    color: #F2A900; 
+    font-size: clamp(18px, 1.25vw, 30px); 
+    font-weight: bold; 
+    margin: 0; 
+    line-height: 1; 
+}
+
+.sidebar .logo-text {
+    display: flex; 
+    flex-direction: column; 
+    align-items: flex-start; 
+    transform: translateY(-clamp(4px, 0.25vw, 6px)); 
+}
+
+.sidebar .logo-text p {
+    font-family: 'Inter', sans-serif; 
+    color: #9c9993; 
+    font-size: clamp(12px, 0.88vw, 22px); 
+    margin: 0; 
+    margin-top: clamp(2px, 0.12vw, 2px); 
+    white-space: nowrap; 
+}
+
+.sidebar .menu {
+    width: 100%; 
+}
+
+.sidebar .menu ul {
+    list-style: none; 
+    padding: 0; 
+    margin: 0; 
+}
+
+.sidebar .menu ul li {
+    width: 100%; 
+}
+
+.sidebar .menu ul li a {
+    font-family: 'Inter', sans-serif; 
+    font-size: clamp(12px, 0.88vw, 22px); 
+    display: flex; 
+    align-items: center; 
+    gap: clamp(13px, 0.94vw, 23px); 
+    width: auto; 
+    padding: clamp(10px, 0.62vw, 14px) clamp(18px, 1.25vw, 30px); 
+    color: #F5F5F5; 
+    text-decoration: none; 
+}
+
+.sidebar .menu ul li a .menu-icon {
+    width: clamp(18px, 1.25vw, 30px); 
+    height: clamp(18px, 1.25vw, 30px); 
+    filter: brightness(0) invert(1); 
+}
+
+/* Estado hover y estado ACTIVE fusionados */
+.sidebar .menu ul li a:hover,
+.sidebar .menu ul li a.active {
+    background-color: #F2A900; 
+    color: #1A1206; 
+    border-radius: clamp(10px, 0.62vw, 14px); 
+    font-weight: bold;
+}
+
+.sidebar .menu ul li a:hover .menu-icon,
+.sidebar .menu ul li a.active .menu-icon {
+    filter: brightness(0); 
+}
+
+.sidebar .user-profile {
+    display: flex; 
+    flex-direction: row; 
+    align-items: center; 
+    gap: clamp(13px, 0.94vw, 23px); 
+    padding: clamp(18px, 1.25vw, 30px); 
+    margin-top: auto; 
+    margin-bottom: clamp(18px, 1.25vw, 30px); 
+    width: 100%; 
+    box-sizing: border-box; 
+}
+
+.sidebar .user-profile img {
+    width: clamp(41px, 2.81vw, 67px); 
+    height: clamp(41px, 2.81vw, 67px); 
+    border-radius: 50%; 
+    background-color: #4ade80; /* Color temporal en caso de no cargar img */
+}
+
+.sidebar .user-profile .profile-text {
+    display: flex; 
+    flex-direction: column; 
+}
+
+.sidebar .user-profile h2 {
+    font-family: 'Inter', sans-serif; 
+    color: #F5F5F5; 
+    font-size: clamp(14px, 1.0vw, 24px); 
+    font-weight: bold; 
+    margin: 0; 
+    line-height: 1.2; 
+}
+
+.sidebar .user-profile p {
+    font-family: 'Inter', sans-serif; 
+    color: #9c9993; 
+    font-size: clamp(12px, 0.82vw, 19px); 
+    margin: 0; 
+}
+
+
+/* =========================================
+   ESTILOS DEL CONTENIDO PRINCIPAL (NUEVO)
+   ========================================= */
+.main-content {
+    position: fixed; 
+    top: 0; 
+    left: clamp(240px, 20%, 300px); 
+    height: 100vh; 
+    width: calc(100% - clamp(240px, 20%, 300px)); 
+    background-color: #1A1206; 
+    padding: clamp(30px, 2.5vw, 50px); /* Padding interno para que el contenido no pegue a los bordes */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto; /* Permite hacer scroll si hay muchos datos */
+}
+
+/* Cabecera (Título + Notificación) */
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: clamp(20px, 1.5vw, 30px);
+}
+
+.page-title h2 {
+    color: #F5F5F5;
+    font-size: clamp(24px, 1.8vw, 36px);
+    margin: 0 0 clamp(4px, 0.3vw, 8px) 0;
+    font-weight: bold;
+}
+
+.page-title p {
+    color: #9c9993;
+    margin: 0;
+    font-size: clamp(13px, 0.9vw, 16px);
+}
+
+/* Toast de éxito */
+.toast-success {
+    display: flex;
+    align-items: center;
+    background-color: #201810;
+    border: 1px solid #2e4d36; /* Borde verdoso sutil */
+    padding: clamp(10px, 0.8vw, 16px) clamp(16px, 1.2vw, 24px);
+    border-radius: clamp(8px, 0.6vw, 12px);
+    gap: clamp(12px, 0.9vw, 16px);
+}
+
+.toast-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: clamp(32px, 2.5vw, 40px);
+    height: clamp(32px, 2.5vw, 40px);
+    background-color: rgba(74, 222, 128, 0.1);
+    border-radius: 50%;
+}
+
+.toast-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.toast-content strong {
+    color: #F5F5F5;
+    font-size: clamp(13px, 0.9vw, 16px);
+}
+
+.toast-content span {
+    color: #9c9993;
+    font-size: clamp(11px, 0.8vw, 14px);
+    margin-top: 2px;
+}
+
+/* Filtros */
+.filters-container {
+    display: flex;
+    gap: clamp(10px, 0.8vw, 16px);
+    margin-bottom: clamp(24px, 2vw, 40px);
+}
+
+.filter-btn {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(12px, 0.85vw, 15px);
+    padding: clamp(6px, 0.5vw, 10px) clamp(16px, 1.2vw, 24px);
+    border-radius: 40px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.filter-btn.active {
+    background-color: #F2A900;
+    color: #1A1206;
+    font-weight: bold;
+}
+
+.filter-btn.outline {
+    background-color: transparent;
+    color: #9c9993;
+    border: 1px solid #3b3222;
+}
+
+.filter-btn.outline:hover {
+    background-color: #241A0B;
+    color: #F5F5F5;
+}
+
+/* Contenedor de la Tabla */
+.table-container {
+    background-color: #1f160c; /* Fondo un poco más claro que el main, según el diseño */
+    border: 1px solid #322616;
+    border-radius: clamp(12px, 1vw, 20px);
+    overflow: hidden;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+th, td {
+    padding: clamp(14px, 1.2vw, 20px) clamp(20px, 1.5vw, 30px);
+    font-size: clamp(13px, 0.9vw, 15px);
+}
+
+th {
+    color: #797165; /* Color gris/café atenuado para encabezados */
+    text-transform: uppercase;
+    font-size: clamp(11px, 0.8vw, 13px);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid #322616;
+}
+
+td {
+    color: #d1cdc7;
+    border-bottom: 1px solid #292015; /* Línea separadora sutil */
+}
+
+/* Quitar la línea del último registro para que se vea limpio */
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Efecto hover en las filas */
+tbody tr:hover {
+    background-color: #241A0B;
+}
+
+/* Estilos específicos inyectables vía JS (colores de texto de la tabla) */
+.text-colmena {
+    color: #F2A900;
+    font-weight: bold;
+}
+
+.text-muted {
+    color: #797165;
+}

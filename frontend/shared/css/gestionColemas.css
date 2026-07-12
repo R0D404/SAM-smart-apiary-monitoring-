@@ -1,0 +1,300 @@
+/* =========================================
+   HEADER BLINDADO CONTRA PLANTILLA.CSS
+========================================= */
+
+header {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    padding: 20px 40px 0 40px !important;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+header h1 {
+    color: #F5F5F5;
+    font-family: 'Inter', sans-serif;
+    font-size: 24px;
+    margin: 0;
+    flex-grow: 1; /* El H1 toma todo el espacio sobrante y empuja lo demás a la derecha */
+}
+
+/* Espaciado del botón y blindaje */
+#btn-guardarColemena {
+    margin-right: 30px !important; /* Distancia segura con la foto de perfil */
+    z-index: 10;
+}
+
+.btn-Colmena {
+    background-color: #F2A900;
+    color: #1e160e;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 24px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    white-space: nowrap;
+}
+
+.btn-Colmena:hover {
+    background-color: #d49300;
+}
+
+/* Neutralizamos cualquier posición flotante o absoluta que traiga tu plantilla */
+.user-info {
+    position: relative !important; 
+    right: auto !important;
+    top: auto !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px;
+    color: #F5F5F5;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.user-info img {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* =========================================
+   FORMULARIO PARA NUEVA COLMENA
+========================================= */
+
+.info-form {
+    color: #ffff;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* Contenedor que abarca toda la pantalla para centrar el formulario */
+#input-form {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none; 
+    display: none; 
+    justify-content: center; 
+    align-items: center; 
+    z-index: 1000; 
+}
+
+#input-form.activo {
+    display: flex;
+    pointer-events: auto; 
+}
+
+/* La tarjeta del formulario */
+#form-gestionColmena {
+    background-color: #1e160e;
+    width: 400px; 
+    max-width: 90%;
+    max-height: 90vh; 
+    overflow-y: auto; 
+    padding: 30px;
+    border-radius: 25px;
+    border: 1px solid #4A3A1C;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0px 15px 35px rgba(0,0,0,0.6); 
+    box-sizing: border-box; 
+}
+
+#form-gestionColmena::-webkit-scrollbar {
+    width: 6px;
+}
+#form-gestionColmena::-webkit-scrollbar-thumb {
+    background-color: #F2A900;
+    border-radius: 10px;
+}
+
+#form-gestionColmena input:not([type="checkbox"]), 
+#form-gestionColmena select {
+    color: #ffff;
+    background-color: #1e160e; 
+    border: 1px solid #4A3A1C;
+    border-radius: 12px;
+    padding: 12px 15px; 
+    margin-bottom: 15px;
+    font-family: 'Inter', sans-serif;
+    width: 100%; 
+    box-sizing: border-box; 
+}
+
+label {
+    margin-bottom: 5px;
+    display: block;
+}
+
+/* =========================================
+   BOTONES DEL FORMULARIO
+========================================= */
+
+.form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 15px;
+    justify-content: flex-end;
+}
+
+.btn-form-cancelar {
+    background-color: transparent;
+    color: #ffff;
+    border: 1px solid #4A3A1C;
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-form-cancelar:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.btn-form-guardar {
+    background-color: #F2A900;
+    color: #1e160e;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-form-guardar:hover {
+    background-color: #d49300;
+}
+
+/* =========================================
+   SWITCH / INTERRUPTOR
+========================================= */
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 26px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #3b3222;
+  transition: .4s;
+  border-radius: 34px;
+  border: 1px solid #4A3A1C;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 4px;
+  bottom: 3px;
+  background-color: #8A7A5A;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #F2A900;
+  border-color: #F2A900;
+}
+
+input:checked + .slider:before {
+  background-color: #1e160e;
+  transform: translateX(22px);
+}
+
+/* =========================================
+   TABLA PRINCIPAL
+========================================= */
+
+.table-container {
+    background-color: #1e160e;
+    border: 1px solid #4A3A1C;
+    border-radius: 15px;
+    padding: 20px 30px;
+    width: calc(100% - 80px); 
+    margin: 20px 40px; 
+    height: fit-content;
+    overflow-x: auto; 
+    box-sizing: border-box;
+}
+
+.colmenas-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Inter', sans-serif;
+}
+
+.colmenas-table th {
+    color: #8A7A5A;
+    font-size: 11px;
+    font-weight: 600;
+    text-align: left;
+    padding: 15px 10px;
+    border-bottom: 1px solid #3b3222;
+}
+
+.colmenas-table td {
+    color: #F5F5F5;
+    font-size: 14px;
+    padding: 15px 10px;
+    border-bottom: 1px solid #3b3222;
+}
+
+.colmenas-table tr:last-child td {
+    border-bottom: none;
+}
+
+.colmenas-table tbody tr:hover {
+    background-color: rgba(242, 169, 0, 0.05);
+}
+
+/* =========================================
+   CLASES DINÁMICAS (BASE DE DATOS)
+========================================= */
+
+.col-codigo {
+    color: #F2A900 ;
+    font-weight: 600;
+}
+
+.status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.dot-activa { background-color: #2eb85c; }
+.dot-aviso { background-color: #F2A900; }
+.dot-critica { background-color: #e55353; }
