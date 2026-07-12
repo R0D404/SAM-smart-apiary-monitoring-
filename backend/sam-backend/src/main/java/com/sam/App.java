@@ -9,7 +9,7 @@ public class App
     {
         var app = Javalin.create(config -> {
             config.staticFiles.add(staticFiles -> {
-                staticFiles.directory = "../../";
+                staticFiles.directory = "/home/emma/SAM";
                 staticFiles.location = io.javalin.http.staticfiles.Location.EXTERNAL;
             });
         }).start(7070);
@@ -19,7 +19,8 @@ public class App
             path("/api/auth", () -> {
                 // Delegamos la lógica al AuthControlador
                 post("/login", AuthControlador::manejarLogin); 
-            });            
+            });  
+                      
         });
     }
 }

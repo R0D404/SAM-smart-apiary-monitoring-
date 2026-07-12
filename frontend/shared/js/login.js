@@ -17,15 +17,24 @@ document.getElementById('form-login').addEventListener('submit',async (evento)=>
         });
         const datos = await respuesta.json();
         if(respuesta.ok){
-            mensajeDiv.style.color = "green";
-            mensajeDiv.textContent = datos.mensaje;
+            // Redirigir al dashboard enviando una señal en la URL para mostrar el toast de éxito
+            window.location.href = "/frontend/admin/dashboardGlobal.html?login=success";
         }else{
-            mensajeDiv.style.color = "red";
-            mensajeDiv.textContent = datos.mensaje;
+            mostrarToastError();
         }
     }catch(error){
-        console.error("Error  en la conexión: ",error);
-        mensajeDiv.style.color="red";
-        mensajeDiv.textContent = "Error al conectar con el servidor";
+        console.error("Error en la conexión: ", error);
+        mostrarToastError();
     }
 });
+
+// Función para mostrar el toast de error y ocultarlo después de 3 segundos
+function mostrarToastError() {
+    const toast = document.getElementById('toast-container');
+    toast.classList.remove('hidden');
+    
+    // Ocultar automáticamente después de 3 segundos
+    setTimeout(() => {
+        toast.classList.add('hidden');
+    }, 3000);
+}

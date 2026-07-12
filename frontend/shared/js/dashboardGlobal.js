@@ -411,4 +411,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Renderizar datos iniciales
     fetchDashboardData();
+
+    // Comprobar si venimos de un login exitoso
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('login') === 'success') {
+        const toast = document.getElementById('toast-success');
+        if (toast) {
+            toast.classList.remove('hidden');
+            // Ocultar después de 4 segundos
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 4000);
+        }
+        
+        // Limpiar la URL para que no vuelva a salir si recargan la página
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
 });

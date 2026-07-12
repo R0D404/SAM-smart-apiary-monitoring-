@@ -10,6 +10,19 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" defer></script>
 </head>
 <body>
+    <!-- Toast de Notificación de Éxito -->
+    <div id="toast-success" class="toast-success hidden">
+        <div class="toast-success-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </div>
+        <div class="toast-success-content">
+            <h4 id="toast-success-title">Sesión iniciada</h4>
+            <p id="toast-success-msg">Bienvenido de nuevo</p>
+        </div>
+    </div>
+
     <div class="app-shell">
         <!-- ========== SIDEBAR ========== -->
         <aside class="sidebar" aria-label="Navegación principal">

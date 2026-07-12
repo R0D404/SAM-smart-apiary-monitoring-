@@ -8,9 +8,9 @@
     color: var(--color-primary);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-pill);
-    padding: 14px 32px;
+    padding: 8px 24px;
     font-family: var(--font-main);
-    font-size: 18px;
+    font-size: clamp(12px, 0.82vw, 16px);
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
