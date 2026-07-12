@@ -27,7 +27,7 @@
     --font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
     /* Sidebar */
-    --sidebar-width: clamp(240px, 20%, 300px);
+    --sidebar-width: 340px;
 
     /* Bordes */
     --radius-sm: 8px;
@@ -48,23 +48,26 @@ body {
    ========================================= */
 .app-shell {
     display: flex;
+    width: 100%;
     min-height: 100vh;
+    background-color: var(--color-bg-dark);
+    position: relative;
 }
 
 /* =========================================
    SIDEBAR
    ========================================= */
 .sidebar {
-    position: fixed;
+    position: sticky;
     top: 0;
-    left: 0;
+    flex-shrink: 0;
     width: var(--sidebar-width);
     height: 100vh;
     background-color: var(--color-bg-sidebar);
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: clamp(18px, 1.25vw, 30px);
+    padding-top: 40px;
     z-index: 100;
 }
 
@@ -75,14 +78,14 @@ body {
     display: flex;
     flex-direction: row;
     align-items: center;
-    margin-bottom: clamp(18px, 1.25vw, 30px);
-    gap: clamp(7px, 0.5vw, 12px);
+    margin-bottom: 50px;
+    gap: 18px;
 }
 
 .sidebar .logo .hexagon {
-    width: clamp(58px, 4.0vw, 96px);
-    min-width: clamp(58px, 4.0vw, 96px);
-    height: clamp(56px, 3.94vw, 95px);
+    width: 84px;
+    min-width: 84px;
+    height: 84px;
     background-color: var(--color-primary);
     clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
     display: flex;
@@ -91,7 +94,7 @@ body {
 }
 
 .sidebar .logo img {
-    width: clamp(49px, 3.43vw, 83px);
+    width: 78px;
     height: auto;
     object-fit: contain;
 }
@@ -106,7 +109,7 @@ body {
 .sidebar .logo-text h1 {
     font-family: var(--font-main);
     color: var(--color-primary);
-    font-size: clamp(18px, 1.25vw, 30px);
+    font-size: 32px;
     font-weight: bold;
     margin: 0;
     line-height: 1;
@@ -115,7 +118,7 @@ body {
 .sidebar .logo-text p {
     font-family: var(--font-main);
     color: var(--color-text-gray);
-    font-size: clamp(12px, 0.88vw, 22px);
+    font-size: 18px;
     margin: 0;
     margin-top: 2px;
     white-space: nowrap;
@@ -140,20 +143,20 @@ body {
 
 .sidebar .menu ul li a {
     font-family: var(--font-main);
-    font-size: clamp(12px, 0.88vw, 22px);
+    font-size: 20px;
     display: flex;
     align-items: center;
-    gap: clamp(13px, 0.94vw, 23px);
+    gap: 20px;
     width: auto;
-    padding: clamp(10px, 0.62vw, 14px) clamp(18px, 1.25vw, 30px);
+    padding: 16px 40px;
     color: var(--color-text-white);
     text-decoration: none;
     transition: all 0.2s ease;
 }
 
 .sidebar .menu ul li a .menu-icon {
-    width: clamp(18px, 1.25vw, 30px);
-    height: clamp(18px, 1.25vw, 30px);
+    width: 28px;
+    height: 28px;
     filter: brightness(0) invert(1);
     transition: filter 0.2s ease;
 }
@@ -190,10 +193,10 @@ body {
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: clamp(13px, 0.94vw, 23px);
-    padding: clamp(18px, 1.25vw, 30px);
+    gap: 20px;
+    padding: 40px;
     margin-top: auto;
-    margin-bottom: clamp(18px, 1.25vw, 30px);
+    margin-bottom: 30px;
     width: 100%;
     box-sizing: border-box;
 }
@@ -204,8 +207,8 @@ body {
 }
 
 .sidebar .user-profile .avatar-photo {
-    width: clamp(41px, 2.81vw, 67px);
-    height: clamp(41px, 2.81vw, 67px);
+    width: 64px;
+    height: 64px;
     border-radius: 50%;
     object-fit: cover;
     display: none; /* Oculta por defecto hasta que cargue */
@@ -222,13 +225,13 @@ body {
 }
 
 .sidebar .user-profile .avatar-initials {
-    width: clamp(41px, 2.81vw, 67px);
-    height: clamp(41px, 2.81vw, 67px);
+    width: 64px;
+    height: 64px;
     border-radius: 50%;
     background-color: var(--color-primary);
     color: var(--color-text-dark);
     font-family: var(--font-main);
-    font-size: clamp(16px, 1.1vw, 24px);
+    font-size: 22px;
     font-weight: 700;
     display: flex;
     justify-content: center;
@@ -240,8 +243,8 @@ body {
     position: absolute;
     bottom: 2px;
     left: 0;
-    width: 12px;
-    height: 12px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
     border: 2px solid var(--color-bg-sidebar);
 }
@@ -258,7 +261,7 @@ body {
 .sidebar .user-profile h2 {
     font-family: var(--font-main);
     color: var(--color-text-white);
-    font-size: clamp(14px, 1.0vw, 24px);
+    font-size: 20px;
     font-weight: bold;
     margin: 0;
     line-height: 1.2;
@@ -267,7 +270,7 @@ body {
 .sidebar .user-profile p {
     font-family: var(--font-main);
     color: var(--color-text-gray);
-    font-size: clamp(12px, 0.82vw, 19px);
+    font-size: 16px;
     margin: 0;
 }
 
@@ -275,8 +278,8 @@ body {
    CONTENIDO PRINCIPAL
    ========================================= */
 .main-content {
-    margin-left: var(--sidebar-width);
-    width: calc(100% - var(--sidebar-width));
+    flex: 1;
+    min-width: 0; /* Prevents flex children from overflowing their container */
     min-height: 100vh;
     background-color: var(--color-bg-dark);
     padding: clamp(18px, 1.5vw, 30px);
@@ -322,13 +325,13 @@ body {
 /* Botón Ver historial */
 .btn-historial {
     font-family: var(--font-main);
-    font-size: clamp(12px, 0.82vw, 16px);
+    font-size: 18px;
     font-weight: 500;
     color: var(--color-primary);
     background-color: transparent;
     border: 1.5px solid var(--color-primary);
     border-radius: var(--radius-pill);
-    padding: 10px 24px;
+    padding: 14px 32px;
     cursor: pointer;
     transition: all 0.25s ease;
     white-space: nowrap;
@@ -343,8 +346,8 @@ body {
 .user-account {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 6px 18px 6px 6px;
+    gap: 14px;
+    padding: 8px 24px 8px 8px;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-pill);
     background-color: transparent;
@@ -357,8 +360,8 @@ body {
 }
 
 .user-account-dot {
-    width: 34px;
-    height: 34px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     background-color: var(--color-primary);
     display: inline-block;
@@ -369,7 +372,7 @@ body {
     color: var(--color-text-white);
     font-family: var(--font-main);
     font-weight: 500;
-    font-size: clamp(12px, 0.78vw, 16px);
+    font-size: 18px;
     white-space: nowrap;
 }
 
@@ -438,6 +441,7 @@ body {
     display: grid;
     grid-template-columns: 1.6fr 1fr;
     gap: clamp(10px, 0.8vw, 16px);
+    flex: 1;
 }
 
 .chart-card {
@@ -448,6 +452,8 @@ body {
     display: flex;
     flex-direction: column;
     gap: 8px;
+    flex: 1; /* Make the card grow to fill its container */
+    min-height: 0; /* Important for flex container with charts */
 }
 
 .chart-header h2 {
@@ -468,11 +474,14 @@ body {
 .chart-body {
     flex: 1;
     position: relative;
-    min-height: 200px;
-    max-height: 280px;
+    min-height: 200px; /* Base minimum height */
+    height: 100%;
 }
 
 .chart-body canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100% !important;
     height: 100% !important;
 }
@@ -485,6 +494,8 @@ body {
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
     padding: clamp(16px, 1.2vw, 24px);
+    display: flex;
+    flex-direction: column;
 }
 
 .apiarios-title {
@@ -626,7 +637,14 @@ body {
 }
 
 /* =========================================
-   RESPONSIVE
+   BARRA DE NAVEGACIÓN MÓVIL (oculta en desktop)
+   ========================================= */
+.mobile-nav {
+    display: none;
+}
+
+/* =========================================
+   RESPONSIVE - TABLET (≤ 1100px)
    ========================================= */
 @media (max-width: 1100px) {
     .stats-cards {
@@ -637,19 +655,251 @@ body {
     }
 }
 
+/* =========================================
+   RESPONSIVE - MÓVIL (≤ 768px)
+   ========================================= */
 @media (max-width: 768px) {
+    /* Ocultar sidebar en móvil */
     .sidebar {
         display: none;
     }
+
+    /* Contenido principal ocupa toda la pantalla */
     .main-content {
-        margin-left: 0;
-        width: 100%;
+        padding: 16px;
+        padding-bottom: 90px; /* Espacio para la barra de navegación inferior */
+        gap: 16px;
     }
-    .stats-cards {
-        grid-template-columns: 1fr;
-    }
+
+    /* Header móvil */
     .main-header {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .header-left h1 {
+        font-size: 22px;
+    }
+
+    .header-left p {
+        font-size: 12px;
+    }
+
+    /* Ocultar botón "Mi Cuenta" en móvil (se accede desde Menú) */
+    .user-account {
+        display: none;
+    }
+
+    /* Renombrar "Ver historial" a "Filtrar" visualmente con CSS no es posible,
+       pero ajustamos el estilo del botón para móvil */
+    .btn-historial {
+        padding: 8px 18px;
+        font-size: 13px;
+    }
+
+    /* Stats en 2x2 */
+    .stats-cards {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .stat-card {
+        padding: 14px 16px;
+    }
+
+    .stat-label {
+        font-size: 10px;
+    }
+
+    .stat-value {
+        font-size: 24px;
+    }
+
+    /* Gráficas apiladas verticalmente */
+    .charts-section {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .chart-card {
+        padding: 16px;
+    }
+
+    .chart-body {
+        min-height: 160px;
+        max-height: 200px;
+    }
+
+    /* Apiarios: tarjetas verticales full-width */
+
+    .apiarios-title {
+        font-size: 18px;
+        margin-bottom: 12px;
+    }
+
+    .apiarios-scroll-container {
         flex-direction: column;
-        align-items: flex-start;
+        overflow-x: visible;
+        overflow-y: visible;
+        gap: 10px;
+        padding-bottom: 0;
+    }
+
+    /* Ocultar scrollbar en móvil (ya no hace falta) */
+    .apiarios-scroll-container::-webkit-scrollbar {
+        display: none;
+    }
+
+    .apiario-card {
+        min-width: 100%;
+        max-width: 100%;
+        background-color: var(--color-bg-card);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-md);
+        padding: 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        position: relative;
+    }
+
+    .apiario-card:hover {
+        transform: none;
+    }
+
+    /* Flecha chevron a la derecha en móvil */
+    .apiario-card::after {
+        content: "›";
+        position: absolute;
+        right: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 24px;
+        color: var(--color-text-gray);
+        font-weight: 300;
+    }
+
+    .apiario-info .apiario-estado {
+        display: none; /* Ocultar texto de estado en móvil, el dot ya lo indica */
+    }
+
+    .apiario-info .apiario-location {
+        font-size: 12px;
+    }
+
+    .apiario-info h3 {
+        font-size: 15px;
+    }
+
+    /* ===== BARRA DE NAVEGACIÓN INFERIOR ===== */
+    .mobile-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 70px;
+        background-color: var(--color-bg-sidebar);
+        border-top: 1px solid var(--color-border);
+        justify-content: flex-start;
+        align-items: center;
+        padding: 0 8px;
+        padding-bottom: env(safe-area-inset-bottom, 0); /* Para iPhones con notch */
+        z-index: 200;
+        overflow-x: auto;
+        white-space: nowrap;
+        gap: 8px;
+    }
+
+    /* Ocultar scrollbar en móvil */
+    .mobile-nav::-webkit-scrollbar {
+        display: none;
+    }
+
+    .mobile-nav-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        text-decoration: none;
+        padding: 8px 12px;
+        border-radius: 10px;
+        transition: all 0.2s ease;
+        -webkit-tap-highlight-color: transparent;
+        flex: 0 0 auto;
+        min-width: 72px;
+    }
+
+    .mobile-nav-item span {
+        font-family: var(--font-main);
+        font-size: 10px;
+        font-weight: 500;
+        color: var(--color-text-gray);
+        transition: color 0.2s ease;
+    }
+
+    .mobile-nav-icon {
+        width: 22px;
+        height: 22px;
+        filter: brightness(0) invert(0.6);
+        transition: filter 0.2s ease;
+    }
+
+    /* SVG inline (el icono de Menú) */
+    svg.mobile-nav-icon {
+        filter: none;
+        color: var(--color-text-gray);
+    }
+
+    /* Estado activo de la nav móvil */
+    .mobile-nav-item.active span {
+        color: var(--color-primary);
+    }
+
+    .mobile-nav-item.active .mobile-nav-icon {
+        filter: brightness(0) invert(1) sepia(1) saturate(10) hue-rotate(10deg);
+    }
+
+    .mobile-nav-item.active svg.mobile-nav-icon {
+        filter: none;
+        color: var(--color-primary);
+    }
+}
+
+/* =========================================
+   RESPONSIVE - MÓVIL PEQUEÑO (≤ 400px)
+   ========================================= */
+@media (max-width: 400px) {
+    .main-content {
+        padding: 12px;
+        padding-bottom: 85px;
+        gap: 12px;
+    }
+
+    .header-left h1 {
+        font-size: 20px;
+    }
+
+    .stat-value {
+        font-size: 20px;
+    }
+
+    .chart-body {
+        min-height: 140px;
+        max-height: 180px;
+    }
+
+    .mobile-nav {
+        height: 65px;
+    }
+
+    .mobile-nav-item span {
+        font-size: 9px;
+    }
+
+    .mobile-nav-icon {
+        width: 20px;
+        height: 20px;
     }
 }
