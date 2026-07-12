@@ -3,7 +3,6 @@ document.getElementById('form-login').addEventListener('submit',async (evento)=>
 
     const correo=document.getElementById('correo').value;
     const contrasena = document.getElementById('contrasena').value;
-    const mensajeDiv=document.getElementById('mensaje');
     try{
         const respuesta = await fetch('/api/auth/login',{
             method: 'POST',
