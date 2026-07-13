@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../shared/css/plantilla.css">
+    <link rel="stylesheet" href="../shared/css/gestionColemas.css">
+</head>
+<body>
+    <section class="sidebar">
+        <div class="logo">
+            <hexagon>
+                <img src="../assets/img/logo/logoSam.png" alt="">
+            </hexagon>
+            <div class="logo-text">
+                <h1>SAM</h1>
+                <p>Smart Apiary Monitoring</p>
+            </div>
+        </div>
+        <div class="menu">
+            <ul>
+                <li><a href=""><img src="../assets/icons/dashboard.svg" alt="" class="menu-icon"> Dashboard</a></li>
+                <li><a href=""><img src="../assets/icons/apiarios.svg" alt="" class="menu-icon"> Apiarios</a></li>
+                <li><a href=""><img src="../assets/icons/colmenas.svg" alt="" class="menu-icon"> Colmenas</a></li>
+                <li><a href=""><img src="../assets/icons/alertas.svg" alt="" class="menu-icon"> Alertas</a></li>
+                <li><a href=""><img src="../assets/icons/visitas.svg" alt="" class="menu-icon"> Visitas / Cosechas</a></li>
+                <li><a href=""><img src="../assets/icons/historial.svg" alt="" class="menu-icon"> Historial</a></li>
+                <li><a href=""><img src="../assets/icons/usuarios.svg" alt="" class="menu-icon"> Usuarios</a></li>
+            </ul>
+        </div>
+        <div class="user-profile">
+            <img src="./img/user.png" alt="">
+            <div class="profile-text">
+                <h2>Emmanuel U.</h2>
+                <p>Administrador</p>
+            </div>
+        </div>
+    </section>
+    
+    <section class="main-content">
+        <header>
+            <h1>Gestión de Colmenas</h1>
+            <!-- Estructura original respetada para no chocar con plantilla.css -->
+            <div id="btn-guardarColemena">
+                <button id="btn-abrir-formulario" class="btn-Colmena">Agregar Colmena</button>
+            </div>
+            <div class="user-info">
+                <img src="./img/user.png" alt="">
+                <p>Mi Cuenta</p>
+            </div>
+        </header>
+
+        <div class="table-container">
+            <table class="colmenas-table">
+                <thead>
+                    <tr>
+                        <th>CÓDIGO</th>
+                        <th>APIARIO</th>
+                        <th>MONITOREO</th>
+                        <th>ECOTIPO</th>
+                        <th>ESTADO</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-colmenas-body">
+                </tbody>
+            </table>
+        </div>
+        
+        <div id="input-form">
+            <form action="" id="form-gestionColmena">
+                <div style="text-align: right;">
+                    <span id="btn-cerrar-formulario" style="cursor: pointer; color: #8A7A5A; font-size: 20px; font-weight: bold;">&times;</span>
+                </div>
+        
+                <h2 class="info-form">Nueva Colmena</h2>
+                <p class="info-form" style="margin-bottom: 20px; font-size: 14px; color: #8A7A5A;">Registra una colmena, con o sin sensor</p>
+
+                <label for="codigo-Col" class="info-form">CÓDIGO DE COLMENA</label>
+                <input type="text" name="codigo-Col">
+                
+                <label for="apiario" class="info-form">APIARIO</label>
+                <select name="apiario" id="apiarioSelect"></select>
+                
+                <label class="info-form">¿TIENE SISTEMA DE MONITOREO?</label>
+                <div style="margin-bottom: 15px;">
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <label for="id-monitoreo" class="info-form">ID DE MONITOREO(ESP32)</label>
+                <input type="text" name="id-monitoreo">
+                
+                <label for="ecotipo" class="info-form">ECOTIPO(OPCIONAL)</label>
+                <input type="text" name="ecotipo">
+                
+                <label for="estado" class="info-form">ESTADO</label>
+                <select name="estado" id="estados"></select>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-form-cancelar" onclick="document.getElementById('input-form').classList.remove('activo');">Cancelar</button>
+                    <button type="submit" class="btn-form-guardar">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </section>
+</body>
+<script src="../shared/js/gestionColmenas.js"></script>
+</html>

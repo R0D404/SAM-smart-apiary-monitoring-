@@ -1,0 +1,158 @@
+.main-content {
+    position: fixed; 
+    top: 0; 
+    left: clamp(240px, 20%, 300px); 
+    height: 100vh; 
+    width: calc(100% - clamp(240px, 20%, 300px)); 
+    background-color: #1A1206; 
+    padding: clamp(30px, 2.5vw, 50px); /* Padding interno para que el contenido no pegue a los bordes */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto; /* Permite hacer scroll si hay muchos datos */
+}
+
+/* Cabecera (Título + Notificación) */
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: clamp(20px, 1.5vw, 30px);
+}
+
+.page-title h2 {
+    color: #F5F5F5;
+    font-size: clamp(24px, 1.8vw, 36px);
+    margin: 0 0 clamp(4px, 0.3vw, 8px) 0;
+    font-weight: bold;
+}
+
+.page-title p {
+    color: #9c9993;
+    margin: 0;
+    font-size: clamp(13px, 0.9vw, 16px);
+}
+
+/* Toast de éxito */
+.toast-success {
+    display: flex;
+    align-items: center;
+    background-color: #201810;
+    border: 1px solid #2e4d36; /* Borde verdoso sutil */
+    padding: clamp(10px, 0.8vw, 16px) clamp(16px, 1.2vw, 24px);
+    border-radius: clamp(8px, 0.6vw, 12px);
+    gap: clamp(12px, 0.9vw, 16px);
+}
+
+.toast-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: clamp(32px, 2.5vw, 40px);
+    height: clamp(32px, 2.5vw, 40px);
+    background-color: rgba(74, 222, 128, 0.1);
+    border-radius: 50%;
+}
+
+.toast-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.toast-content strong {
+    color: #F5F5F5;
+    font-size: clamp(13px, 0.9vw, 16px);
+}
+
+.toast-content span {
+    color: #9c9993;
+    font-size: clamp(11px, 0.8vw, 14px);
+    margin-top: 2px;
+}
+
+/* Filtros */
+.filters-container {
+    display: flex;
+    gap: clamp(10px, 0.8vw, 16px);
+    margin-bottom: clamp(24px, 2vw, 40px);
+}
+
+.filter-btn {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(12px, 0.85vw, 15px);
+    padding: clamp(6px, 0.5vw, 10px) clamp(16px, 1.2vw, 24px);
+    border-radius: 40px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.filter-btn.active {
+    background-color: #F2A900;
+    color: #1A1206;
+    font-weight: bold;
+}
+
+.filter-btn.outline {
+    background-color: transparent;
+    color: #9c9993;
+    border: 1px solid #3b3222;
+}
+
+.filter-btn.outline:hover {
+    background-color: #241A0B;
+    color: #F5F5F5;
+}
+
+/* Contenedor de la Tabla */
+.table-container {
+    background-color: #1f160c; /* Fondo un poco más claro que el main, según el diseño */
+    border: 1px solid #322616;
+    border-radius: clamp(12px, 1vw, 20px);
+    overflow: hidden;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+th, td {
+    padding: clamp(14px, 1.2vw, 20px) clamp(20px, 1.5vw, 30px);
+    font-size: clamp(13px, 0.9vw, 15px);
+}
+
+th {
+    color: #797165; /* Color gris/café atenuado para encabezados */
+    text-transform: uppercase;
+    font-size: clamp(11px, 0.8vw, 13px);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid #322616;
+}
+
+td {
+    color: #d1cdc7;
+    border-bottom: 1px solid #292015; /* Línea separadora sutil */
+}
+
+/* Quitar la línea del último registro para que se vea limpio */
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Efecto hover en las filas */
+tbody tr:hover {
+    background-color: #241A0B;
+}
+
+/* Estilos específicos inyectables vía JS (colores de texto de la tabla) */
+.text-colmena {
+    color: #F2A900;
+    font-weight: bold;
+}
+
+.text-muted {
+    color: #797165;
+}

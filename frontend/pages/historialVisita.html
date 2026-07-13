@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAM - Historial de visitas</title>
+    <link rel="stylesheet" href="../shared/css/historialVisita.css">
+    <link rel="stylesheet" href="../shared/css/plantilla.css">
+</head>
+<body>
+    <section class="sidebar">
+        <div class="logo">
+            <hexagon>
+                <img src="./frontend/assets/img/logo/logoSam.png" alt="">
+            </hexagon>
+            <div class="logo-text">
+                <h1>SAM</h1>
+                <p>Smart Apiary Monitoring</p>
+            </div>
+        </div>
+        <div class="menu">
+            <ul>
+                <li><a href=""><img src="./frontend/assets/icons/dashboard.svg" alt="" class="menu-icon"> Dashboard</a></li>
+                <li><a href=""><img src="./frontend/assets/icons/apiarios.svg" alt="" class="menu-icon"> Apiarios</a></li>
+                <li><a href=""><img src="./frontend/assets/icons/colmenas.svg" alt="" class="menu-icon"> Colmenas</a></li>
+                <li><a href=""><img src="./frontend/assets/icons/alertas.svg" alt="" class="menu-icon"> Alertas</a></li>
+                <!-- Añadida la clase "active" al enlace actual según el diseño -->
+                <li><a href="" class="active"><img src="./frontend/assets/icons/visitas.svg" alt="" class="menu-icon"> Visitas / Cosechas</a></li>
+                <li><a href=""><img src="./frontend/assets/icons/historial.svg" alt="" class="menu-icon"> Historial</a></li>
+                <li><a href=""><img src="./frontend/assets/icons/usuarios.svg" alt="" class="menu-icon"> Usuarios</a></li>
+            </ul>
+        </div>
+        <div class="user-profile">
+            <img src="./img/user.png" alt="">
+            <div class="profile-text">
+                <h2>Emmanuel U.</h2>
+                <p>Administrador</p>
+            </div>
+        </div>
+    </section>
+    
+    <section class="main-content">
+        <!-- Contenedor superior: Título y Notificación -->
+        <header class="header-container">
+            <div class="page-title">
+                <h2>Historial de visitas</h2>
+                <p>Apiario Norte · registros realizados por el apicultor</p>
+            </div>
+
+            <!-- Notificación de éxito -->
+            <div class="toast-success">
+                <div class="toast-icon">
+                    <!-- Icono SVG de check -->
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                </div>
+                <div class="toast-content">
+                    <strong>Visita registrada</strong>
+                    <span>Sesión del 18 may guardada</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Botones de filtros -->
+        <div class="filters-container">
+            <button class="filter-btn active">Todas</button>
+            <button class="filter-btn outline">Apiario Norte</button>
+            <button class="filter-btn outline">Mayo</button>
+        </div>
+
+        <!-- Contenedor de la Tabla -->
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>FECHA</th>
+                        <th>COLMENA</th>
+                        <th>APICULTOR</th>
+                        <th>ESTADO COLONIA</th>
+                        <th>REINA</th>
+                        <th>NOTAS</th>
+                    </tr>
+                </thead>
+                <!-- El tbody está vacío, listo para llenarse con JavaScript -->
+                <tbody id="tabla-visitas-body">
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Script para renderizar la tabla cuando conectes la base de datos -->
+    <script src="../shared/js/historialVisita.js"></script>
+</body>
+</html>

@@ -1,0 +1,213 @@
+/* =========================================
+   ESTILOS DEL CONTENIDO PRINCIPAL (UMBRALES)
+   ========================================= */
+.main-content {
+    position: fixed; 
+    top: 0; 
+    left: clamp(240px, 20%, 300px); 
+    height: 100vh; 
+    width: calc(100% - clamp(240px, 20%, 300px)); 
+    background-color: #1A1206; 
+    padding: clamp(30px, 2.5vw, 50px); 
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto; 
+    font-family: 'Inter', sans-serif;
+}
+
+/* =========================================
+   CABECERA
+========================================= */
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; 
+    margin-bottom: clamp(24px, 2vw, 40px);
+}
+
+.page-title h2 {
+    color: #F5F5F5;
+    font-size: clamp(22px, 1.8vw, 30px);
+    margin: 0;
+    font-weight: bold;
+}
+
+.header-actions {
+    display: flex;
+    gap: 16px;
+}
+
+/* Botones */
+.btn-primary {
+    background-color: #F2A900;
+    color: #1e160e;
+    border: none;
+    padding: clamp(10px, 1vw, 14px) clamp(20px, 1.5vw, 32px);
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: clamp(13px, 0.9vw, 14px);
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    transition: background-color 0.3s;
+    white-space: nowrap;
+}
+
+.btn-primary:hover {
+    background-color: #d49300;
+}
+
+.btn-outline-dark {
+    background-color: transparent;
+    color: #F2A900;
+    border: 1px solid #3b3222;
+    padding: clamp(10px, 1vw, 14px) clamp(20px, 1.5vw, 32px);
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: clamp(13px, 0.9vw, 14px);
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+}
+
+.btn-outline-dark:hover {
+    background-color: #241A0B;
+    border-color: #F2A900;
+}
+
+/* =========================================
+   TARJETA PRINCIPAL (TABLA/FORMULARIO)
+========================================= */
+.umbrales-card {
+    background-color: #1e160e;
+    border: 1px solid #4A3A1C;
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-header {
+    margin-bottom: 24px;
+}
+
+.card-header h3 {
+    color: #F5F5F5;
+    font-size: 18px;
+    margin: 0 0 8px 0;
+    font-weight: bold;
+}
+
+.card-header p {
+    color: #8A7A5A;
+    font-size: 13px;
+    margin: 0;
+}
+
+/* Contenedor de la tabla */
+.table-container {
+    width: 100%; 
+    overflow-x: auto; 
+}
+
+.umbrales-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.umbrales-table th {
+    color: #8A7A5A;
+    font-size: 11px;
+    font-weight: 600;
+    text-align: left;
+    padding: 0 15px 15px 15px;
+    border-bottom: 1px solid #3b3222;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.umbrales-table td {
+    color: #F5F5F5;
+    font-size: 14px;
+    padding: 15px;
+    border-bottom: 1px solid #292015;
+    vertical-align: middle;
+}
+
+.umbrales-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* Efecto hover suave en la fila */
+.umbrales-table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* Color amarillo para la primera columna */
+.text-variable {
+    color: #F2A900;
+    font-weight: 600;
+}
+
+/* Estilos de los inputs */
+.input-umbral {
+    background-color: transparent;
+    border: 1px solid #3b3222;
+    color: #F5F5F5;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    border-radius: 8px;
+    padding: 10px 14px;
+    width: 100%;
+    max-width: 120px;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.input-umbral:focus {
+    border-color: #F2A900;
+}
+
+.input-umbral::placeholder {
+    color: #8A7A5A;
+}
+
+/* =========================================
+   TARJETA DE INFORMACIÓN (INFERIOR)
+========================================= */
+.info-alert-card {
+    background-color: #1e160e;
+    border: 1px solid #2dd4bf; /* Color verde/teal del diseño */
+    border-radius: 12px;
+    padding: 20px 24px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.info-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #2dd4bf; /* Teal */
+    margin-top: 4px; /* Alinear con el título */
+    flex-shrink: 0;
+}
+
+.info-content h4 {
+    color: #2dd4bf; /* Teal */
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+}
+
+.info-content p {
+    color: #9c9993;
+    font-size: 13px;
+    line-height: 1.5;
+    margin: 0;
+}
