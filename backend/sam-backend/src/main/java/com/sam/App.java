@@ -2,7 +2,9 @@ package com.sam;
 
 import io.javalin.Javalin;
 import com.sam.controladores.AuthControlador;
+import com.sam.controladores.DashboardControlador;
 import static io.javalin.apibuilder.ApiBuilder.*;
+
 public class App 
 {
     public static void main( String[] args )
@@ -30,7 +32,10 @@ public class App
                 // Delegamos la lógica al AuthControlador
                 post("/login", AuthControlador::manejarLogin); 
             });  
-                      
+            
+            path("/api/dashboard", () -> {
+                get(DashboardControlador::obtenerDashboard);
+            });
         });
     }
 }

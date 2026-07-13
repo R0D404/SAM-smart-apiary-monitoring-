@@ -361,18 +361,6 @@ function updateDashboard(data) {
  * Descomenta y ajusta la URL cuando el backend esté listo.
  */
 function fetchDashboardData() {
-    /*
-    // ============================================================
-    // DESCOMENTAR CUANDO EL BACKEND JAVALIN ESTÉ LISTO
-    // El endpoint debe retornar JSON con esta estructura:
-    // {
-    //   "stats": { "produccionTotal": "312 kg", "colmenasActivas": "18 / 20", "alertasActivas": 3, "apicultores": 4 },
-    //   "produccionMensual": { "labels": ["Oct","Nov",...], "data": [10,15,...] },
-    //   "produccionColmena": { "labels": ["C1","C2",...], "data": [18,22,...] },
-    //   "apiarios": [{ "nombre": "...", "ubicacion": "...", "colmenas": 12, "estado": "verde", "estadoTexto": "Verde" }],
-    //   "usuario": { "nombre": "Emmanuel U." }
-    // }
-    // ============================================================
     fetch('/api/dashboard')
         .then(response => {
             if (!response.ok) throw new Error('Error al cargar datos del dashboard');
@@ -383,14 +371,11 @@ function fetchDashboardData() {
         })
         .catch(error => {
             console.error('Error cargando dashboard:', error);
+            // Fallback a los mock stats si falla
+            renderStats(dashboardStats);
+            renderApiarios(apiariosData);
+            renderUserProfile(userData);
         });
-    */
-
-    // Sin backend: solo renderizamos los estados vacíos/nulos
-    renderStats(dashboardStats);
-    renderApiarios(apiariosData);
-    renderUserProfile(userData);
-    console.log('Dashboard cargado en modo sin backend. Los datos se mostrarán como "--" hasta que el servidor esté disponible.');
 }
 
 // =========================================
