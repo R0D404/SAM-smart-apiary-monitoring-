@@ -57,4 +57,72 @@ public class AlertasControlador {
             ctx.status(500).json("{\"mensaje\": \"Error interno\"}");
         }
     }
+
+    public static void crearAlerta(Context ctx) {
+        try {
+            com.fasterxml.jackson.databind.JsonNode body = mapper.readTree(ctx.body());
+            try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+                String sql = "INSERT INTO ALERTA (colmena_id, tipo, nivel, mensaje, atendida) VALUES (?, ?, ?, ?, ?)";
+                try (PreparedStatement stmt = conn.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS)) {
+                    stmt.setInt(1, body.get("colmena_id").asInt());
+                    stmt.setString(2, body.has("tipo") ? body.get("tipo").asText() : "umbral");
+                    stmt.setString(3, body.has("nivel") ? body.get("nivel").asText() : "aviso");
+                    stmt.setString(4, body.has("mensaje") ? body.get("mensaje").asText() : "");
+                    stmt.setBoolean(5, body.has("atendida") ? body.get("atendida").asBoolean() : false);
+                    stmt.executeUpdate();
+
+                    try (ResultSet keys = stmt.getGeneratedKeys()) {
+                        if (keys.next()) {
+                            ObjectNode res = mapper.createObjectNode();
+                            res.put("mensaje", "Alerta creada");
+                            res.put("id", keys.getInt(1));
+                            ctx.status(201).json(res);
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            ctx.status(500).json("{\"mensaje\": \"Error interno\"}");
+        }
+    }
+
+    public static void actualizarAlerta(Context ctx) {
+        int id = Integer.parseInt(ctx.pathParam("id"));
+        try {
+            com.fasterxml.jackson.databind.JsonNode body = mapper.readTree(ctx.body());
+            try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+                String sql = "UPDATE ALERTA SET atendida=? WHERE id=?";
+                try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                    stmt.setBoolean(1, body.has("atendida") ? body.get("atendida").asBoolean() : true);
+                    stmt.setInt(2, id);
+                    stmt.executeUpdate();
+                    
+                    ObjectNode res = mapper.createObjectNode();
+                    res.put("mensaje", "Alerta actualizada");
+                    ctx.status(200).json(res);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            ctx.status(500).json("{\"mensaje\": \"Error interno\"}");
+        }
+    }
+
+    public static void eliminarAlerta(Context ctx) {
+        int id = Integer.parseInt(ctx.pathParam("id"));
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            String sql = "DELETE FROM ALERTA WHERE id=?";
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setInt(1, id);
+                stmt.executeUpdate();
+                ObjectNode res = mapper.createObjectNode();
+                res.put("mensaje", "Alerta eliminada");
+                ctx.status(200).json(res);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            ctx.status(500).json("{\"mensaje\": \"Error interno\"}");
+        }
+    }
 }

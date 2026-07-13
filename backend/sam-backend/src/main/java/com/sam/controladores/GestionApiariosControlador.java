@@ -28,9 +28,13 @@ public class GestionApiariosControlador {
 
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             ArrayNode apiarios = mapper.createArrayNode();
-            String sql = "SELECT a.id, a.nombre, a.estado, a.municipio, a.localidad, m.nombre as microclima, " +
-                         "(SELECT count(*) FROM COLMENA c WHERE c.apiario_id = a.id) as num_colmenas " +
-                         "FROM APIARIO a LEFT JOIN CATALAGO_MICROCLIMA m ON a.microclima_id = m.id";
+            String sql = "SELECT a.id, a.nombre, a.estado, a.municipio, a.localidad, a.microclima_id, " +
+                         "COUNT(c.id) as colmenas, cm.nombre as microclima " +
+                         "FROM APIARIO a " +
+                         "LEFT JOIN COLMENA c ON a.id = c.apiario_id " +
+                         "LEFT JOIN CATALAGO_MICROCLIMA cm ON a.microclima_id = cm.id " +
+                         "GROUP BY a.id, a.nombre, a.estado, a.municipio, a.localidad, a.microclima_id, cm.nombre";
+                         
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                 try (ResultSet rs = stmt.executeQuery()) {
                     while (rs.next()) {
@@ -40,8 +44,12 @@ public class GestionApiariosControlador {
                         node.put("estado", rs.getString("estado"));
                         node.put("municipio", rs.getString("municipio"));
                         node.put("localidad", rs.getString("localidad"));
-                        node.put("microclima", rs.getString("microclima") != null ? rs.getString("microclima") : "--");
-                        node.put("colmenas", rs.getInt("num_colmenas"));
+                        node.put("colmenas", rs.getInt("colmenas"));
+                        
+                        String mc = rs.getString("microclima");
+                        node.put("microclima", mc != null ? mc : "Desconocido");
+                        node.put("microclima_id", rs.getInt("microclima_id"));
+                        
                         apiarios.add(node);
                     }
                 }
@@ -124,6 +132,35 @@ public class GestionApiariosControlador {
                             ctx.status(201).json(res);
                         }
                     }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            ctx.status(500).json("{\"mensaje\": \"Error interno\"}");
+        }
+    }
+
+    public static void actualizarApiario(Context ctx) {
+        if (ctx.sessionAttribute("usuarioLogueado") == null) {
+            ctx.status(401).json("{\"mensaje\": \"No autorizado\"}");
+            return;
+        }
+        int id = Integer.parseInt(ctx.pathParam("id"));
+        try {
+            JsonNode body = mapper.readTree(ctx.body());
+            try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+                String sql = "UPDATE APIARIO SET nombre=?, estado=?, municipio=?, localidad=?, microclima_id=? WHERE id=?";
+                try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                    stmt.setString(1, body.get("nombre").asText());
+                    stmt.setString(2, body.has("estado") ? body.get("estado").asText() : "");
+                    stmt.setString(3, body.has("municipio") ? body.get("municipio").asText() : "");
+                    stmt.setString(4, body.has("localidad") ? body.get("localidad").asText() : "");
+                    stmt.setInt(5, body.has("microclimaId") ? body.get("microclimaId").asInt() : 1);
+                    stmt.setInt(6, id);
+                    stmt.executeUpdate();
+                    ObjectNode res = mapper.createObjectNode();
+                    res.put("mensaje", "Apiario actualizado");
+                    ctx.status(200).json(res);
                 }
             }
         } catch (Exception e) {

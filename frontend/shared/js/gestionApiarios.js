@@ -36,6 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         <td><span style="color: var(--color-text-white); font-weight: 600;">${api.colmenas}</span> <span style="color: var(--color-text-gray); font-size: 13px;">colmenas</span></td>
                         <td><span style="color: var(--color-text-gray); text-transform: capitalize;">${api.microclima}</span></td>
                         <td>
+                            <button class="btn-primary" onclick="editarApiario(event, ${api.id}, '${api.nombre}', '${api.estado}', '${api.municipio}', '${api.localidad}', ${api.microclima_id || 1})" style="margin-right: 8px;">Editar</button>
                             <button class="btn-baja" onclick="darDeBaja(event, ${api.id}, '${api.nombre}')">Dar de baja</button>
                         </td>
                     `;
@@ -89,16 +90,41 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Modal Logic
+    let currentEditId = null;
+
     btnNuevo.addEventListener("click", () => {
+        currentEditId = null;
+        document.querySelector("#modal-nuevo h2").innerText = "Nuevo apiario";
         modal.classList.remove("hidden");
+        formNuevo.reset();
     });
 
     btnCerrar.addEventListener("click", () => {
         modal.classList.add("hidden");
         formNuevo.reset();
+        currentEditId = null;
     });
 
-    // Form Submit (Create Apiario)
+    window.editarApiario = function(event, id, nombre, estado, municipio, localidad, microclimaId) {
+        event.preventDefault();
+        event.stopPropagation();
+        
+        currentEditId = id;
+        document.querySelector("#modal-nuevo h2").innerText = "Editar apiario";
+        
+        document.getElementById("api-nombre").value = nombre;
+        document.getElementById("api-estado").value = estado;
+        document.getElementById("api-municipio").value = municipio;
+        document.getElementById("api-localidad").value = localidad;
+        
+        // Setup hidden input and visually update dropdown
+        document.getElementById("api-microclima").value = microclimaId;
+        document.querySelector("#dropdown-microclima .dropdown-selected").innerText = "Microclima ID: " + microclimaId;
+        
+        modal.classList.remove("hidden");
+    };
+
+    // Form Submit (Create or Update Apiario)
     formNuevo.addEventListener("submit", (e) => {
         e.preventDefault();
         
@@ -110,18 +136,22 @@ document.addEventListener("DOMContentLoaded", () => {
             microclimaId: document.getElementById("api-microclima").value
         };
 
-        fetch("/api/gestion/apiarios", {
-            method: "POST",
+        const url = currentEditId ? `/api/gestion/apiarios/${currentEditId}` : "/api/gestion/apiarios";
+        const method = currentEditId ? "PUT" : "POST";
+
+        fetch(url, {
+            method: method,
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload)
         })
         .then(res => {
             if(res.ok) return res.json();
-            throw new Error("Error al crear apiario");
+            throw new Error(currentEditId ? "Error al actualizar apiario" : "Error al crear apiario");
         })
         .then(() => {
             modal.classList.add("hidden");
             formNuevo.reset();
+            currentEditId = null;
             cargarApiarios();
         })
         .catch(err => alert(err.message));

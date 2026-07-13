@@ -42,13 +42,37 @@ public class App
             path("/api/gestion", () -> {
                 get("/apiarios", com.sam.controladores.GestionApiariosControlador::listarApiarios);
                 post("/apiarios", com.sam.controladores.GestionApiariosControlador::crearApiario);
+                put("/apiarios/{id}", com.sam.controladores.GestionApiariosControlador::actualizarApiario);
                 delete("/apiarios/{id}", com.sam.controladores.GestionApiariosControlador::eliminarApiario);
                 get("/microclimas", com.sam.controladores.GestionApiariosControlador::listarMicroclimas);
+                
                 get("/usuarios", com.sam.controladores.GestionUsuariosControlador::listarUsuarios);
+                post("/usuarios", com.sam.controladores.GestionUsuariosControlador::crearUsuario);
+                put("/usuarios/{id}", com.sam.controladores.GestionUsuariosControlador::actualizarUsuario);
+                delete("/usuarios/{id}", com.sam.controladores.GestionUsuariosControlador::eliminarUsuario);
+                
                 get("/colmenas", com.sam.controladores.GestionColmenasControlador::listarColmenas);
+                post("/colmenas", com.sam.controladores.GestionColmenasControlador::crearColmena);
+                put("/colmenas/{id}", com.sam.controladores.GestionColmenasControlador::actualizarColmena);
+                delete("/colmenas/{id}", com.sam.controladores.GestionColmenasControlador::eliminarColmena);
             });
-            get("/api/alertas", com.sam.controladores.AlertasControlador::listarAlertas);
-            get("/api/visitas", com.sam.controladores.VisitasControlador::listarVisitas);
+            path("/alertas", () -> {
+                get(com.sam.controladores.AlertasControlador::listarAlertas);
+                post(com.sam.controladores.AlertasControlador::crearAlerta);
+                put("/{id}", com.sam.controladores.AlertasControlador::actualizarAlerta);
+                delete("/{id}", com.sam.controladores.AlertasControlador::eliminarAlerta);
+            });
+            path("/visitas", () -> {
+                get(com.sam.controladores.VisitasControlador::listarVisitas);
+                post(com.sam.controladores.VisitasControlador::crearVisita);
+                put("/{id}", com.sam.controladores.VisitasControlador::actualizarVisita);
+                delete("/{id}", com.sam.controladores.VisitasControlador::eliminarVisita);
+            });
+            path("/cosechas", () -> {
+                get("/resumen", com.sam.controladores.CosechasControlador::obtenerResumen);
+                get("/grafica", com.sam.controladores.CosechasControlador::graficaProduccion);
+                get(com.sam.controladores.CosechasControlador::listarCosechas);
+            });
         });
     }
 }

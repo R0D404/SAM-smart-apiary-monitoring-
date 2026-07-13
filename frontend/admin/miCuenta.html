@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAM - Mi cuenta</title>
+    <!-- Tu CSS global -->
+    <link rel="stylesheet" href="../shared/css/plantilla.css"> 
+    <!-- CSS específico de esta vista -->
+    <link rel="stylesheet" href="../shared/css/miCuenta.css">
+</head>
+<body>
+    <section class="sidebar">
+        <div class="logo">
+            <hexagon>
+                <img src="../assets/img/logo/logoSam.png" alt="">
+            </hexagon>
+            <div class="logo-text">
+                <h1>SAM</h1>
+                <p>Smart Apiary Monitoring</p>
+            </div>
+        </div>
+        <div class="menu">
+            <ul>
+                <li><a href=""><img src="../assets/icons/dashboard.svg" alt="" class="menu-icon"> Dashboard</a></li>
+                <li><a href=""><img src="../assets/icons/apiarios.svg" alt="" class="menu-icon"> Apiarios</a></li>
+                <li><a href=""><img src="../assets/icons/colmenas.svg" alt="" class="menu-icon"> Colmenas</a></li>
+                <li><a href=""><img src="../assets/icons/alertas.svg" alt="" class="menu-icon"> Alertas</a></li>
+                <li><a href=""><img src="../assets/icons/visitas.svg" alt="" class="menu-icon"> Visitas / Cosechas</a></li>
+                <li><a href=""><img src="../assets/icons/historial.svg" alt="" class="menu-icon"> Historial</a></li>
+                <!-- Clase active en Usuarios según el diseño -->
+                <li><a href="" class="active"><img src="../assets/icons/usuarios.svg" alt="" class="menu-icon"> Usuarios</a></li>
+            </ul>
+        </div>
+        <div class="user-profile">
+            <!-- Avatar Teal -->
+            <div style="width: 41px; height: 41px; border-radius: 50%; background-color: #4ade80;"></div>
+            <div class="profile-text">
+                <h2>Emmanuel U.</h2>
+                <p>Administrador</p>
+            </div>
+        </div>
+    </section>
+    
+    <section class="main-content">
+        <!-- Cabecera principal y Contenedor de Notificaciones (Toasts) -->
+        <header class="header-container">
+            <div class="page-title">
+                <h2>Mi cuenta</h2>
+                <p>Administra tu perfil, tu correo y tu contraseña</p>
+            </div>
+            
+            <!-- Aquí se inyectarán las notificaciones desde JS -->
+            <div id="toast-container" class="header-actions">
+                <!-- Ejemplo de Toast (Estará oculto por defecto hasta que JS lo llame) -->
+            </div>
+        </header>
+
+        <!-- Contenedor Grid a dos columnas -->
+        <div class="account-grid">
+            
+            <!-- COLUMNA IZQUIERDA: Formulario Principal -->
+            <div class="main-card form-section">
+                <div class="card-header">
+                    <h3>Información personal</h3>
+                    <p>Tu nombre y datos de contacto</p>
+                </div>
+
+                <form id="form-mi-cuenta">
+                    <div class="form-group">
+                        <label class="form-label">NOMBRE COMPLETO</label>
+                        <input type="text" id="input-nombre" class="input-field" value="Emmanuel Domínguez Urbina">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">CORREO ELECTRÓNICO</label>
+                        <input type="email" id="input-correo" class="input-field" value="emmanuel@sam.mx">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">TELÉFONO</label>
+                        <input type="tel" id="input-telefono" class="input-field" value="+52 961 123 4567">
+                    </div>
+
+                    <h4 class="section-subtitle mt-4">Seguridad · Contraseña</h4>
+
+                    <div class="password-grid">
+                        <div class="form-group">
+                            <label class="form-label">CONTRASEÑA ACTUAL</label>
+                            <input type="password" id="pwd-actual" class="input-field" value="1234567890">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">NUEVA CONTRASEÑA</label>
+                            <input type="password" id="pwd-nueva" class="input-field" value="1234567890">
+                        </div>
+                    </div>
+
+                    <div class="form-group checkbox-group">
+                        <label class="custom-checkbox">
+                            <input type="checkbox" checked>
+                            <span class="checkmark"></span>
+                            Cerrar sesión en los demás dispositivos al cambiar la contraseña
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn-primary w-100 mt-2">Guardar cambios</button>
+                </form>
+            </div>
+
+            <!-- COLUMNA DERECHA: Resumen de Perfil -->
+            <aside class="profile-summary-section">
+                
+                <!-- Sección: Foto de Perfil -->
+                <div class="section-header">
+                    <h3>Foto de perfil</h3>
+                    <p>Se muestra en tu encabezado y registros</p>
+                </div>
+                
+                <div class="bordered-box mb-4 hover-box" id="btn-cambiar-foto">
+                    <div class="avatar-lg bg-teal">EU</div>
+                    <div class="box-text">
+                        <span class="box-title">Cambiar foto</span>
+                        <span class="box-subtitle">PNG o JPG · máx. 2 MB</span>
+                    </div>
+                    <!-- Input oculto para simular la subida de archivo -->
+                    <input type="file" id="file-upload" accept=".png, .jpg, .jpeg" style="display: none;">
+                </div>
+
+                <!-- Sección: Información del Perfil -->
+                <div class="section-header mt-4">
+                    <h3>Informacion del perfil</h3>
+                </div>
+                
+                <div class="bordered-box mb-4">
+                    <div class="info-grid">
+                        <div class="info-row">
+                            <span class="info-label">Nombre completo:</span>
+                            <span class="info-value">Emmanuel Domínguez Urbina</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Correo electronico:</span>
+                            <span class="info-value">emmanuel@sam.mx</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Telefono:</span>
+                            <span class="info-value">+52 961 123 4567</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección: Rol -->
+                <div class="alert-box-teal">
+                    <div class="info-dot"></div>
+                    <div class="info-content">
+                        <h4>Rol: Administrador</h4>
+                        <p>Tu rol define lo que puedes ver y administrar en SAM.</p>
+                    </div>
+                </div>
+
+            </aside>
+        </div>
+    </section>
+
+    <script src="../shared/js/miCuenta.js"></script>
+</body>
+</html>
