@@ -132,6 +132,35 @@ public class GestionApiariosControlador {
         }
     }
 
+    public static void actualizarApiario(Context ctx) {
+        if (ctx.sessionAttribute("usuarioLogueado") == null) {
+            ctx.status(401).json("{\"mensaje\": \"No autorizado\"}");
+            return;
+        }
+        int id = Integer.parseInt(ctx.pathParam("id"));
+        try {
+            JsonNode body = mapper.readTree(ctx.body());
+            try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+                String sql = "UPDATE APIARIO SET nombre=?, estado=?, municipio=?, localidad=?, microclima_id=? WHERE id=?";
+                try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                    stmt.setString(1, body.get("nombre").asText());
+                    stmt.setString(2, body.has("estado") ? body.get("estado").asText() : "");
+                    stmt.setString(3, body.has("municipio") ? body.get("municipio").asText() : "");
+                    stmt.setString(4, body.has("localidad") ? body.get("localidad").asText() : "");
+                    stmt.setInt(5, body.has("microclimaId") ? body.get("microclimaId").asInt() : 1);
+                    stmt.setInt(6, id);
+                    stmt.executeUpdate();
+                    ObjectNode res = mapper.createObjectNode();
+                    res.put("mensaje", "Apiario actualizado");
+                    ctx.status(200).json(res);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            ctx.status(500).json("{\"mensaje\": \"Error interno\"}");
+        }
+    }
+
     public static void eliminarApiario(Context ctx) {
         if (ctx.sessionAttribute("usuarioLogueado") == null) {
             ctx.status(401).json("{\"mensaje\": \"No autorizado\"}");

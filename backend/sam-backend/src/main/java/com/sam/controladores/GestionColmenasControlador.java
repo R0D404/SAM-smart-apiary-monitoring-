@@ -62,4 +62,74 @@ public class GestionColmenasControlador {
             ctx.status(500).json("{\"mensaje\": \"Error interno\"}");
         }
     }
+
+    public static void crearColmena(Context ctx) {
+        try {
+            com.fasterxml.jackson.databind.JsonNode body = mapper.readTree(ctx.body());
+            try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+                String sql = "INSERT INTO COLMENA (apiario_id, codigo, ecotipo, estado, fecha_instalacion) VALUES (?, ?, ?, ?, CURRENT_DATE)";
+                try (PreparedStatement stmt = conn.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS)) {
+                    stmt.setInt(1, body.get("apiario_id").asInt());
+                    stmt.setString(2, body.get("codigo").asText());
+                    stmt.setString(3, body.has("ecotipo") ? body.get("ecotipo").asText() : "Hibrida");
+                    stmt.setString(4, body.has("estado") ? body.get("estado").asText() : "activa");
+                    stmt.executeUpdate();
+
+                    try (ResultSet keys = stmt.getGeneratedKeys()) {
+                        if (keys.next()) {
+                            ObjectNode res = mapper.createObjectNode();
+                            res.put("mensaje", "Colmena creada");
+                            res.put("id", keys.getInt(1));
+                            ctx.status(201).json(res);
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            ctx.status(500).json("{\"mensaje\": \"Error interno\"}");
+        }
+    }
+
+    public static void actualizarColmena(Context ctx) {
+        int id = Integer.parseInt(ctx.pathParam("id"));
+        try {
+            com.fasterxml.jackson.databind.JsonNode body = mapper.readTree(ctx.body());
+            try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+                String sql = "UPDATE COLMENA SET apiario_id=?, codigo=?, ecotipo=?, estado=? WHERE id=?";
+                try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                    stmt.setInt(1, body.get("apiario_id").asInt());
+                    stmt.setString(2, body.get("codigo").asText());
+                    stmt.setString(3, body.get("ecotipo").asText());
+                    stmt.setString(4, body.get("estado").asText());
+                    stmt.setInt(5, id);
+                    stmt.executeUpdate();
+                    
+                    ObjectNode res = mapper.createObjectNode();
+                    res.put("mensaje", "Colmena actualizada");
+                    ctx.status(200).json(res);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            ctx.status(500).json("{\"mensaje\": \"Error interno\"}");
+        }
+    }
+
+    public static void eliminarColmena(Context ctx) {
+        int id = Integer.parseInt(ctx.pathParam("id"));
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            String sql = "DELETE FROM COLMENA WHERE id=?";
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setInt(1, id);
+                stmt.executeUpdate();
+                ObjectNode res = mapper.createObjectNode();
+                res.put("mensaje", "Colmena eliminada");
+                ctx.status(200).json(res);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            ctx.status(500).json("{\"mensaje\": \"Error interno\"}");
+        }
+    }
 }

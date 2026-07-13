@@ -69,4 +69,79 @@ public class GestionUsuariosControlador {
         if (str == null || str.isEmpty()) return str;
         return str.substring(0, 1).toUpperCase() + str.substring(1);
     }
+
+    public static void crearUsuario(Context ctx) {
+        try {
+            com.fasterxml.jackson.databind.JsonNode body = mapper.readTree(ctx.body());
+            String nombre = body.get("nombre").asText();
+            String email = body.get("email").asText();
+            String password = body.has("password") ? body.get("password").asText() : "123456";
+            int rolId = body.has("rol_id") ? body.get("rol_id").asInt() : 2;
+
+            try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+                String sql = "INSERT INTO USUARIO (rol_id, nombre, email, password_hash, activo, creado_en) VALUES (?, ?, ?, ?, 1, CURRENT_DATE)";
+                try (PreparedStatement stmt = conn.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS)) {
+                    stmt.setInt(1, rolId);
+                    stmt.setString(2, nombre);
+                    stmt.setString(3, email);
+                    stmt.setString(4, password); // Should hash in real prod
+                    stmt.executeUpdate();
+
+                    try (ResultSet keys = stmt.getGeneratedKeys()) {
+                        if (keys.next()) {
+                            ObjectNode res = mapper.createObjectNode();
+                            res.put("mensaje", "Usuario creado con éxito");
+                            res.put("id", keys.getInt(1));
+                            ctx.status(201).json(res);
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            ctx.status(500).json("{\"mensaje\": \"Error interno\"}");
+        }
+    }
+
+    public static void actualizarUsuario(Context ctx) {
+        int id = Integer.parseInt(ctx.pathParam("id"));
+        try {
+            com.fasterxml.jackson.databind.JsonNode body = mapper.readTree(ctx.body());
+            try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+                String sql = "UPDATE USUARIO SET nombre = ?, email = ?, rol_id = ?, activo = ? WHERE id = ?";
+                try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                    stmt.setString(1, body.get("nombre").asText());
+                    stmt.setString(2, body.get("email").asText());
+                    stmt.setInt(3, body.get("rol_id").asInt());
+                    stmt.setBoolean(4, body.has("activo") ? body.get("activo").asBoolean() : true);
+                    stmt.setInt(5, id);
+                    stmt.executeUpdate();
+                    
+                    ObjectNode res = mapper.createObjectNode();
+                    res.put("mensaje", "Usuario actualizado con éxito");
+                    ctx.status(200).json(res);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            ctx.status(500).json("{\"mensaje\": \"Error interno\"}");
+        }
+    }
+
+    public static void eliminarUsuario(Context ctx) {
+        int id = Integer.parseInt(ctx.pathParam("id"));
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            String sql = "DELETE FROM USUARIO WHERE id = ?";
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setInt(1, id);
+                stmt.executeUpdate();
+                ObjectNode res = mapper.createObjectNode();
+                res.put("mensaje", "Usuario eliminado con éxito");
+                ctx.status(200).json(res);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            ctx.status(500).json("{\"mensaje\": \"Error interno\"}");
+        }
+    }
 }
