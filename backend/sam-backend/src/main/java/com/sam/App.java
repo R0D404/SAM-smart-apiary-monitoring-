@@ -9,9 +9,21 @@ public class App
 {
     public static void main( String[] args )
     {
+        // Cargar .env para obtener STATIC_DIR si existe
+        io.github.cdimascio.dotenv.Dotenv dotenv = null;
+        try {
+            dotenv = io.github.cdimascio.dotenv.Dotenv.load();
+        } catch(Exception e) {
+            System.out.println("No se encontro archivo .env, usando defaults.");
+        }
+        
+        final String staticDir = (dotenv != null && dotenv.get("STATIC_DIR") != null) 
+                                  ? dotenv.get("STATIC_DIR") 
+                                  : System.getProperty("user.dir");
+
         var app = Javalin.create(config -> {
             config.staticFiles.add(staticFiles -> {
-                staticFiles.directory = "/home/emma/SAM";
+                staticFiles.directory = staticDir;
                 staticFiles.location = io.javalin.http.staticfiles.Location.EXTERNAL;
             });
         }).start(7070);
