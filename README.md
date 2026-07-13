@@ -17,8 +17,8 @@ El sistema SAM cuenta con seguridad de sesiones mediante cookies. Para poder rea
 4. Pega el siguiente cuerpo:
    ```json
    {
-       "email": "admin@sam.com",
-       "password": "admin"
+       "username": "admin@sam.com",
+       "password": "1234"
    }
    ```
 5. Haz clic en **Send**. Deberías recibir un código `200 OK`. Postman automáticamente guardará la cookie `JSESSIONID` para tus siguientes peticiones.

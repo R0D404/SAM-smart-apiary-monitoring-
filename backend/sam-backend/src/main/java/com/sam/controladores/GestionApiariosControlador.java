@@ -29,11 +29,11 @@ public class GestionApiariosControlador {
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             ArrayNode apiarios = mapper.createArrayNode();
             String sql = "SELECT a.id, a.nombre, a.estado, a.municipio, a.localidad, a.microclima_id, " +
-                         "COUNT(c.id) as colmenas, cm.tipo as microclima " +
+                         "COUNT(c.id) as colmenas, cm.nombre as microclima " +
                          "FROM APIARIO a " +
                          "LEFT JOIN COLMENA c ON a.id = c.apiario_id " +
                          "LEFT JOIN CATALAGO_MICROCLIMA cm ON a.microclima_id = cm.id " +
-                         "GROUP BY a.id, a.nombre, a.estado, a.municipio, a.localidad, a.microclima_id, cm.tipo";
+                         "GROUP BY a.id, a.nombre, a.estado, a.municipio, a.localidad, a.microclima_id, cm.nombre";
                          
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                 try (ResultSet rs = stmt.executeQuery()) {
