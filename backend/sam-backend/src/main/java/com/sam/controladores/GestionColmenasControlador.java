@@ -26,7 +26,7 @@ public class GestionColmenasControlador {
 
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             ArrayNode colmenas = mapper.createArrayNode();
-            String sql = "SELECT c.codigo, a.nombre as apiario, c.ecotipo, c.estado, m.identificador as monitoreo " +
+            String sql = "SELECT c.id as db_id, c.codigo, a.nombre as apiario, c.ecotipo, c.estado, m.identificador as monitoreo " +
                          "FROM COLMENA c " +
                          "JOIN APIARIO a ON c.apiario_id = a.id " +
                          "LEFT JOIN MODULO_MONITOREO m ON m.colmena_id = c.id";
@@ -35,6 +35,7 @@ public class GestionColmenasControlador {
                 try (ResultSet rs = stmt.executeQuery()) {
                     while (rs.next()) {
                         ObjectNode node = mapper.createObjectNode();
+                        node.put("db_id", rs.getInt("db_id"));
                         node.put("id", rs.getString("codigo"));
                         node.put("apiario", rs.getString("apiario"));
                         

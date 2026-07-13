@@ -76,10 +76,26 @@ document.addEventListener('DOMContentLoaded', () => {
                     ${col.estadoTexto}
                 </td>
                 <td>
-                    <button class="btn-baja">Dar de baja</button>
+                    <button class="btn-baja" data-id="${col.db_id}">Dar de baja</button>
                 </td>
             `;
             tbody.appendChild(tr);
+        });
+
+        // Add event listeners for delete buttons
+        document.querySelectorAll('.btn-baja').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent row click
+                const id = e.target.getAttribute('data-id');
+                if (confirm('¿Estás seguro de que deseas eliminar esta colmena?')) {
+                    fetch(`/api/gestion/colmenas/${id}`, { method: 'DELETE' })
+                        .then(res => {
+                            if (!res.ok) throw new Error('Error deleting');
+                            cargarColmenas(); // Reload table
+                        })
+                        .catch(err => console.error(err));
+                }
+            });
         });
     }
 
