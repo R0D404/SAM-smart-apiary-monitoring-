@@ -207,6 +207,20 @@ Bitácora de inspecciones y visitas a los apiarios.
 
 ---
 
+### 6. Historial de Cosechas (`/api/cosechas`)
+Módulo de recolección de miel y métricas calculadas.
+
+* **GET** `/api/cosechas`
+  * **Descripción:** Lista todo el historial de las cosechas cruzado con los nombres de los apicultores y sus fechas.
+
+* **GET** `/api/cosechas/resumen`
+  * **Descripción:** Retorna métricas generales (Total de temporada, Promedio por colmena y % de validación con sensor).
+
+* **GET** `/api/cosechas/grafica`
+  * **Descripción:** Agrupa la producción total (kg) por cada colmena para graficar.
+
+---
+
 ## 💡 Consejos para Pruebas
 - Si alguna petición te devuelve **Error 401: No autorizado** o te redirige a un HTML de login, significa que la sesión caducó o que reiniciaste el servidor en Java. Simplemente **vuelve a ejecutar el Paso 1** de Iniciar Sesión.
 - Asegúrate de que en Postman el tipo de contenido al hacer envíos (POST/PUT) esté estrictamente en `JSON (application/json)`.

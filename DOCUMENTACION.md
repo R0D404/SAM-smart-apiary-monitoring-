@@ -59,10 +59,11 @@ Todos los controladores leen el `.env` para extraer credenciales, se conectan a 
 3. **`DashboardApiarioControlador.java` / `DashboardColmenaControlador.java`**: Filtran información y sensores estadísticos de elementos particulares mediante sus IDs.
 4. **Módulos CRUD (Create, Read, Update, Delete)**:
    * **`GestionUsuariosControlador.java`**: Administra cuentas (Apicultores/Admin).
-   * **`GestionApiariosControlador.java`**: Administra ubicaciones.
-   * **`GestionColmenasControlador.java`**: Administra cajas individuales y módulos ESP-32 vinculados.
+   * **`GestionApiariosControlador.java`**: Administra ubicaciones (Soporta edición y creación).
+   * **`GestionColmenasControlador.java`**: Administra cajas individuales y módulos ESP-32 vinculados (Soporta edición y creación).
    * **`AlertasControlador.java`**: Historial de avisos y marcas de atención.
-   * **`VisitasControlador.java`**: Bitácora de operaciones manuales y cosechas.
+   * **`VisitasControlador.java`**: Bitácora de operaciones manuales y visitas.
+   * **`CosechasControlador.java`**: API que agrupa los rendimientos de miel y genera datos para gráficas cruzando visitas y colmenas.
 
 ---
 
@@ -73,7 +74,7 @@ El Frontend está diseñado para ser moderno, oscuro ("dark mode"), modular y fl
 ### 4.1 Diseño Visual (CSS)
 * El archivo **`base.css`** contiene variables CSS globales (colores dorados, grises, tipografía) y componentes base como botones y menús.
 * En **`layout.css`** se encuentra la arquitectura principal (la caja contenedora `app-shell`, la barra lateral `sidebar`, el encabezado `topbar`).
-* Archivos individuales como **`gestionUsuarios.css`** añaden reglas visuales específicas para sus tablas o ventanas flotantes (Modales).
+* Archivos individuales como **`gestionUsuarios.css`** o **`historialVisita.css`** añaden reglas visuales específicas para sus tablas o ventanas flotantes (Modales).
 
 ### 4.2 Lógica Dinámica (JavaScript)
 Todos los archivos JS del frontend funcionan conectándose al backend. Siguen este flujo de ejecución básico:
@@ -81,14 +82,14 @@ Todos los archivos JS del frontend funcionan conectándose al backend. Siguen es
 2. Hace un **`fetch()`** asíncrono a una URL (`/api/gestion/...`).
 3. Procesa el `res.json()`.
 4. Utiliza **`document.createElement`** o **`innerHTML`** para generar las filas de tablas dinámicas (`<tr>`, `<td>`), calcular colores de avatares (por nombre) o badges según estados (Crítico, Excelente).
-5. Escucha eventos click de ventanas Modales para mostrar/ocultar los formularios de "Crear Nuevo".
+5. Escucha eventos click de ventanas Modales para mostrar/ocultar los formularios de "Crear Nuevo", e inteligentemente cambia a modo "Editar" enviando peticiones `PUT` cuando es necesario.
 
 ### 4.3 Vistas HTML (`/frontend/admin`)
 1. **`dashboard.html`**: Resumen general de todos los apiarios de la empresa.
 2. **`dashboardApiario.html`**: Vista detallada de un apiario en concreto (clima, salud general de ese recinto).
 3. **`dashboardColmena.html`**: Lo más profundo; la estadística interna de temperatura/humedad/peso en tiempo real de una sola colmena enviada por un ESP-32.
 4. **Vistas de Gestión** (`gestionUsuarios.html`, `gestionColmenas.html`, `gestionApiarios.html`): Interfaces donde se administran y operan los CRUD a nivel usuario a través de modales visuales oscuros sobrepuestos.
-5. **Vistas de Registros** (`alertas.html`, `historialVisita.html`): Bitácoras interactivas.
+5. **Vistas de Registros** (`alertas.html`, `historialVisita.html`, `historialCosechas.html`): Bitácoras interactivas. `historialCosechas.html` destaca por incluir analíticas y gráficas de barras automáticas.
 
 ---
 
