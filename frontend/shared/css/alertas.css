@@ -1,224 +1,126 @@
 /* =========================================
-   ESTILOS DEL CONTENIDO PRINCIPAL (ALERTAS)
+   ESTILOS ESPECÍFICOS PARA ALERTAS
    ========================================= */
-.main-content {
-    position: fixed; 
-    top: 0; 
-    left: clamp(240px, 20%, 300px); 
-    height: 100vh; 
-    width: calc(100% - clamp(240px, 20%, 300px)); 
-    background-color: #1A1206; 
-    padding: clamp(30px, 2.5vw, 50px); 
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto; 
-}
-
-/* Botón superior derecho "Mi cuenta" */
-.user-info-btn {
-    position: absolute; 
-    top: clamp(18px, 1.25vw, 30px); 
-    right: clamp(18px, 1.25vw, 30px); 
-    display: flex; 
-    align-items: center; 
-    gap: clamp(10px, 0.62vw, 14px); 
-    padding: clamp(5px, 0.37vw, 10px) clamp(14px, 1.0vw, 24px) clamp(5px, 0.37vw, 10px) clamp(5px, 0.37vw, 10px); 
-    border: clamp(1px, 0.06vw, 1px) solid #3b3222; 
-    border-radius: clamp(46px, 3.12vw, 74px); 
-    background-color: transparent; 
-    cursor: pointer;
-    z-index: 10;
-}
-
-.user-info-btn .circle-avatar {
-    width: clamp(26px, 2.18vw, 36px); 
-    height: clamp(26px, 2.18vw, 36px); 
-    border-radius: 50%; 
-    background-color: #F2A900;
-}
-
-.user-info-btn p {
-    color: #F5F5F5; 
-    font-size: clamp(11px, 0.74vw, 14px); 
-    margin: 0; 
-    white-space: nowrap; 
-}
-
-/* Cabecera (Título + Botón) */
-.header-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-bottom: clamp(20px, 1.5vw, 32px);
-    margin-top: 10px; /* Espacio para el botón superior derecho */
-}
-
-.page-title h2 {
-    color: #F5F5F5;
-    font-size: clamp(24px, 1.8vw, 32px);
-    margin: 0 0 clamp(4px, 0.3vw, 8px) 0;
-    font-weight: bold;
-}
-
-.page-title p {
-    color: #9c9993;
-    margin: 0;
-    font-size: clamp(13px, 0.9vw, 15px);
-}
-
-.btn-outline {
-    background-color: transparent;
-    color: #F2A900;
-    border: 1px solid #3b3222;
-    padding: clamp(8px, 0.8vw, 12px) clamp(16px, 1.2vw, 24px);
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: clamp(12px, 0.85vw, 14px);
-    font-weight: 500;
-    font-family: 'Inter', sans-serif;
-    transition: all 0.2s;
-}
-
-.btn-outline:hover {
-    background-color: rgba(242, 169, 0, 0.1);
-    border-color: #F2A900;
-}
 
 /* Tarjetas de Resumen */
 .summary-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: clamp(12px, 1vw, 20px);
-    margin-bottom: clamp(24px, 2vw, 40px);
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 24px;
+    margin-top: 24px;
 }
-
-.card {
-    background-color: #221810;
-    border: 1px solid #322616;
-    border-radius: 12px;
-    padding: clamp(16px, 1.5vw, 24px);
-}
-
-.card-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 11px;
-    color: #797165;
-    letter-spacing: 0.5px;
-    margin-bottom: clamp(8px, 0.8vw, 12px);
-}
-
-.card-value {
-    font-size: clamp(28px, 2.5vw, 36px);
-    font-weight: bold;
-    line-height: 1;
-}
-
-/* Colores y Puntos de Estado */
-.dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    display: inline-block;
-}
-
-.dot-red { background-color: #ef4444; }
-.dot-yellow { background-color: #F2A900; }
-.dot-teal { background-color: #4ade80; }
-.dot-teal-dark { background-color: #3b82f6; /* Ajusta según el tono exacto, o teal si prefieres */ filter: hue-rotate(160deg); }
-
-.text-red { color: #ef4444; }
-.text-yellow { color: #F2A900; }
-.text-teal { color: #4ade80; }
-.text-teal-dark { color: #2dd4bf; }
 
 /* Filtros */
 .filters-container {
     display: flex;
-    gap: clamp(10px, 0.8vw, 16px);
-    margin-bottom: clamp(20px, 1.5vw, 30px);
+    gap: 12px;
+    margin-bottom: 24px;
 }
 
 .filter-btn {
-    font-family: 'Inter', sans-serif;
-    font-size: clamp(12px, 0.85vw, 14px);
-    padding: clamp(6px, 0.5vw, 10px) clamp(16px, 1.2vw, 24px);
-    border-radius: 40px;
+    background: transparent;
+    color: var(--color-text-gray);
+    border: 1px solid var(--color-border);
+    padding: 8px 24px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 13px;
     cursor: pointer;
-    border: 1px solid transparent;
-    transition: all 0.2s ease;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.filter-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--color-text-white);
 }
 
 .filter-btn.active {
-    background-color: #F2A900;
-    color: #1A1206;
-    font-weight: bold;
+    background: var(--color-primary);
+    color: var(--color-text-dark);
+    border-color: var(--color-primary);
 }
 
-.filter-btn.outline {
-    background-color: transparent;
-    color: #9c9993;
-    border: 1px solid #3b3222;
+/* Tabla de Alertas */
+.table-section {
+    background-color: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 24px;
+    overflow-x: auto;
 }
 
-.filter-btn.outline:hover {
-    background-color: #241A0B;
-    color: #F5F5F5;
-}
-
-/* Contenedor de la Tabla */
-.table-container {
-    background-color: #1f160c; 
-    border: 1px solid #322616;
-    border-radius: clamp(12px, 1vw, 20px);
-    overflow: hidden;
-}
-
-table {
+.data-table {
     width: 100%;
     border-collapse: collapse;
     text-align: left;
 }
 
-th, td {
-    padding: clamp(14px, 1.2vw, 18px) clamp(20px, 1.5vw, 24px);
-    font-size: clamp(13px, 0.9vw, 14px);
-}
-
-th {
-    color: #797165; 
-    text-transform: uppercase;
-    font-size: clamp(10px, 0.75vw, 12px);
+.data-table th {
+    color: var(--color-text-gray);
+    font-size: 12px;
     font-weight: 600;
-    letter-spacing: 0.5px;
-    border-bottom: 1px solid #322616;
+    text-transform: uppercase;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--color-border);
 }
 
-td {
-    color: #d1cdc7;
-    border-bottom: 1px solid #292015; 
+.data-table td {
+    padding: 16px 0;
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-text-white);
+    font-size: 14px;
 }
 
-tbody tr:last-child td {
+.data-table tr:last-child td {
     border-bottom: none;
 }
 
-tbody tr:hover {
-    background-color: #241A0B;
+.text-red { color: var(--color-alert-red); font-weight: 600; }
+.text-yellow { color: var(--color-alert-yellow); font-weight: 600; }
+.text-green { color: var(--color-alert-green); font-weight: 600; }
+
+.dot-status {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+.dot-status.verde { background-color: var(--color-alert-green); }
+.dot-status.amarillo { background-color: var(--color-alert-yellow); }
+.dot-status.rojo { background-color: var(--color-alert-red); }
+
+.badge {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+.badge.critico {
+    background: rgba(229, 57, 53, 0.1);
+    color: var(--color-alert-red);
+    border: 1px solid rgba(229, 57, 53, 0.3);
+}
+.badge.aviso {
+    background: rgba(242, 169, 0, 0.1);
+    color: var(--color-alert-yellow);
+    border: 1px solid rgba(242, 169, 0, 0.3);
 }
 
-/* Utilidades para celdas dinámicas */
-.td-colmena {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    color: #F2A900;
-    font-weight: bold;
+.btn-atender {
+    background: transparent;
+    color: var(--color-primary);
+    border: 1px solid rgba(242, 169, 0, 0.3);
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.2s;
 }
 
-.td-mensaje {
-    color: #e5e0d8;
-    max-width: 350px;
+.btn-atender:hover {
+    background: rgba(242, 169, 0, 0.1);
+    border-color: var(--color-primary);
 }

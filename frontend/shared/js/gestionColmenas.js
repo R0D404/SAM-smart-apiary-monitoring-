@@ -1,22 +1,87 @@
 document.addEventListener('DOMContentLoaded', () => {
-            const btnAbrir = document.getElementById('btn-abrir-formulario');
-            const btnCerrar = document.getElementById('btn-cerrar-formulario');
-            const modal = document.getElementById('input-form');
+    const btnAbrir = document.getElementById('btn-abrir-formulario');
+    const btnCerrar = document.getElementById('btn-cerrar-formulario');
+    const btnCancelar = document.getElementById('btn-cancelar-formulario');
+    const modal = document.getElementById('modal-nueva-colmena');
+    const switchMonitoreo = document.getElementById('tiene-monitoreo');
+    const groupMonitoreo = document.getElementById('group-monitoreo');
 
-            // Abrir el formulario
-            btnAbrir.addEventListener('click', () => {
-                modal.classList.add('activo');
-            });
+    // Manejo de Modal
+    const openModal = () => modal.classList.add('activo');
+    const closeModal = () => {
+        modal.classList.remove('activo');
+        document.getElementById('form-gestionColmena').reset();
+        groupMonitoreo.style.display = 'none'; // reset switch
+    };
 
-            // Cerrar el formulario desde la "X"
-            btnCerrar.addEventListener('click', () => {
-                modal.classList.remove('activo');
-            });
+    if (btnAbrir) btnAbrir.addEventListener('click', openModal);
+    if (btnCerrar) btnCerrar.addEventListener('click', closeModal);
+    if (btnCancelar) btnCancelar.addEventListener('click', closeModal);
 
-            // (Opcional) Cerrar el formulario si el usuario hace clic fuera de la caja
-            window.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    modal.classList.remove('activo');
-                }
-            });
+    // Cerrar clickeando afuera
+    window.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+
+    // Toggle para ID Monitoreo
+    if (switchMonitoreo) {
+        switchMonitoreo.addEventListener('change', (e) => {
+            if (e.target.checked) {
+                groupMonitoreo.style.display = 'block';
+            } else {
+                groupMonitoreo.style.display = 'none';
+            }
         });
+    }
+
+    const tbody = document.getElementById('tabla-colmenas-body');
+    
+    function cargarColmenas() {
+        fetch('/api/gestion/colmenas')
+            .then(res => {
+                if (!res.ok) throw new Error("Error fetching");
+                return res.json();
+            })
+            .then(datos => {
+                renderizarColmenas(datos);
+            })
+            .catch(err => {
+                console.error(err);
+                if(tbody) tbody.innerHTML = '<tr><td colspan="5">Error al cargar datos</td></tr>';
+            });
+    }
+
+    function renderizarColmenas(datos) {
+        if (!tbody) return;
+        tbody.innerHTML = '';
+        
+        datos.forEach(col => {
+            const tr = document.createElement('tr');
+            tr.style.cursor = 'pointer';
+            
+            tr.onclick = (e) => {
+                if(e.target.tagName.toLowerCase() === 'button') return;
+                window.location.href = `dashboardColmena.html?id=${col.id}`;
+            };
+
+            tr.innerHTML = `
+                <td><strong>${col.id}</strong></td>
+                <td>${col.apiario}</td>
+                <td>${col.monitoreo}</td>
+                <td>${col.ecotipo}</td>
+                <td>
+                    <span class="dot-status ${col.estado}"></span>
+                    ${col.estadoTexto}
+                </td>
+                <td>
+                    <button class="btn-baja">Dar de baja</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    cargarColmenas();
+});

@@ -8,6 +8,21 @@
 </head>
 <body>
     
+    <!-- Toast de Notificación -->
+    <div id="toast-container" class="toast hidden">
+        <div class="toast-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+        </div>
+        <div class="toast-content">
+            <h4 id="toast-title">Correo o contraseña incorrectos</h4>
+            <p id="toast-msg">Verifica tus credenciales e inténtalo de nuevo</p>
+        </div>
+    </div>
+
     <section id="present-card">
        <div id="banner-login">
             <div id="logo">
@@ -42,7 +57,6 @@
             <input type="password" id="contrasena" placeholder="ingresa la contraseña">
 
             <button id="iniciar" type="submit">Iniciar Sesión</button>
-            <p id="mensaje"></p>
         </form>
     </section>
     <script src="./frontend/shared/js/login.js" defer></script>
