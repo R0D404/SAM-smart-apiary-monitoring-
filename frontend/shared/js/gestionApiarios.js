@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         <td><span style="color: var(--color-text-white); font-weight: 600;">${api.colmenas}</span> <span style="color: var(--color-text-gray); font-size: 13px;">colmenas</span></td>
                         <td><span style="color: var(--color-text-gray); text-transform: capitalize;">${api.microclima}</span></td>
                         <td>
-                            <button class="btn-primary" onclick="editarApiario(event, ${api.id}, '${api.nombre}', '${api.estado}', '${api.municipio}', '${api.localidad}')" style="margin-right: 8px;">Editar</button>
+                            <button class="btn-primary" onclick="editarApiario(event, ${api.id}, '${api.nombre}', '${api.estado}', '${api.municipio}', '${api.localidad}', ${api.microclima_id || 1})" style="margin-right: 8px;">Editar</button>
                             <button class="btn-baja" onclick="darDeBaja(event, ${api.id}, '${api.nombre}')">Dar de baja</button>
                         </td>
                     `;
@@ -105,7 +105,7 @@ document.addEventListener("DOMContentLoaded", () => {
         currentEditId = null;
     });
 
-    window.editarApiario = function(event, id, nombre, estado, municipio, localidad) {
+    window.editarApiario = function(event, id, nombre, estado, municipio, localidad, microclimaId) {
         event.preventDefault();
         event.stopPropagation();
         
@@ -116,6 +116,10 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("api-estado").value = estado;
         document.getElementById("api-municipio").value = municipio;
         document.getElementById("api-localidad").value = localidad;
+        
+        // Setup hidden input and visually update dropdown
+        document.getElementById("api-microclima").value = microclimaId;
+        document.querySelector("#dropdown-microclima .dropdown-selected").innerText = "Microclima ID: " + microclimaId;
         
         modal.classList.remove("hidden");
     };

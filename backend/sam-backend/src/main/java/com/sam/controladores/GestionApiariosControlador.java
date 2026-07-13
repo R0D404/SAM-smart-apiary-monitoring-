@@ -28,9 +28,13 @@ public class GestionApiariosControlador {
 
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             ArrayNode apiarios = mapper.createArrayNode();
-            String sql = "SELECT a.id, a.nombre, a.estado, a.municipio, a.localidad, m.nombre as microclima, " +
-                         "(SELECT count(*) FROM COLMENA c WHERE c.apiario_id = a.id) as num_colmenas " +
-                         "FROM APIARIO a LEFT JOIN CATALAGO_MICROCLIMA m ON a.microclima_id = m.id";
+            String sql = "SELECT a.id, a.nombre, a.estado, a.municipio, a.localidad, a.microclima_id, " +
+                         "COUNT(c.id) as colmenas, cm.tipo as microclima " +
+                         "FROM APIARIO a " +
+                         "LEFT JOIN COLMENA c ON a.id = c.apiario_id " +
+                         "LEFT JOIN CATALAGO_MICROCLIMA cm ON a.microclima_id = cm.id " +
+                         "GROUP BY a.id, a.nombre, a.estado, a.municipio, a.localidad, a.microclima_id, cm.tipo";
+                         
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                 try (ResultSet rs = stmt.executeQuery()) {
                     while (rs.next()) {
@@ -40,8 +44,12 @@ public class GestionApiariosControlador {
                         node.put("estado", rs.getString("estado"));
                         node.put("municipio", rs.getString("municipio"));
                         node.put("localidad", rs.getString("localidad"));
-                        node.put("microclima", rs.getString("microclima") != null ? rs.getString("microclima") : "--");
-                        node.put("colmenas", rs.getInt("num_colmenas"));
+                        node.put("colmenas", rs.getInt("colmenas"));
+                        
+                        String mc = rs.getString("microclima");
+                        node.put("microclima", mc != null ? mc : "Desconocido");
+                        node.put("microclima_id", rs.getInt("microclima_id"));
+                        
                         apiarios.add(node);
                     }
                 }
