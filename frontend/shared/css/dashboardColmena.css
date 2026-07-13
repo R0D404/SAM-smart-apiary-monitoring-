@@ -1,0 +1,258 @@
+/* =========================================
+   ESTILOS ESPECÍFICOS PARA DASHBOARD COLMENA
+   ========================================= */
+
+.layout-colmena {
+    display: flex;
+    flex-direction: column;
+}
+
+.main-header {
+    margin-bottom: 24px;
+}
+
+.monitoreo-status {
+    color: var(--color-text-gray);
+}
+
+.btn-primary {
+    background-color: var(--color-primary);
+    color: var(--color-bg-dark);
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 16px;
+    cursor: pointer;
+}
+
+.btn-teal {
+    background-color: var(--color-alert-green);
+    color: var(--color-bg-dark);
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 16px;
+    cursor: pointer;
+}
+
+/* GRID LAYOUT */
+.dashboard-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding-right: 32px;
+    padding-bottom: 32px;
+}
+
+.top-row {
+    display: grid;
+    grid-template-columns: 320px repeat(5, 1fr);
+    gap: 16px;
+}
+
+.middle-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 16px;
+}
+
+.bottom-row {
+    display: block;
+}
+
+/* TOP CARDS */
+.state-card, .metric-card {
+    background-color: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.state-card {
+    gap: 16px;
+}
+
+.metric-label {
+    color: var(--color-text-gray);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.state-content {
+    display: flex;
+    gap: 16px;
+}
+
+.state-dots {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-top: 4px;
+}
+
+.state-dots .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background-color: var(--color-border);
+}
+
+.state-dots .dot.yellow {
+    background-color: var(--color-primary);
+}
+
+.state-text h2 {
+    margin: 0 0 4px 0;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.text-aviso {
+    color: var(--color-primary);
+}
+
+.state-text p {
+    margin: 0;
+    color: var(--color-text-gray);
+    font-size: 13px;
+}
+
+.ia-subtitle {
+    color: var(--color-text-gray);
+    font-size: 11px;
+}
+
+.metric-body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.metric-val {
+    color: var(--color-text-white);
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.metric-status {
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.dot-indicator {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.dot-indicator.green { background-color: var(--color-alert-green); }
+.dot-indicator.yellow { background-color: var(--color-primary); }
+.dot-indicator.gray { background-color: var(--color-text-gray); }
+
+.status-normal { color: var(--color-alert-green); }
+.status-aviso { color: var(--color-primary); }
+.status-ctx { color: var(--color-text-gray); }
+
+/* CHART & ALERTS (MIDDLE) */
+.chart-section, .alerts-section, .history-section {
+    background-color: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 24px;
+}
+
+.chart-header h3, .section-title h3 {
+    margin: 0 0 20px 0;
+    color: var(--color-text-white);
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.chart-container {
+    height: 250px;
+    width: 100%;
+}
+
+.alert-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.alert-item {
+    background-color: rgba(255,255,255,0.02);
+    border-radius: 8px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.alert-item-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.alert-title {
+    color: var(--color-text-white);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.alert-meta {
+    color: var(--color-text-gray);
+    font-size: 12px;
+}
+
+/* HISTORY GRID (BOTTOM) */
+.activity-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    list-style: none;
+    padding: 0; margin: 0;
+}
+
+.history-card {
+    background-color: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.h-tag {
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.h-tag.cosecha { color: var(--color-primary); }
+.h-tag.visita { color: var(--color-alert-green); }
+
+.h-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.h-date {
+    color: var(--color-text-white);
+    font-size: 14px;
+}
+
+.h-desc {
+    color: var(--color-text-gray);
+    font-size: 12px;
+}

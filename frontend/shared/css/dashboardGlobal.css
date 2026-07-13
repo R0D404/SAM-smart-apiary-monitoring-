@@ -342,6 +342,45 @@ body {
     color: var(--color-text-dark);
 }
 
+/* Botón Outline Genérico (.btn-secondary) */
+.btn-secondary {
+    font-family: var(--font-main);
+    font-size: clamp(12px, 0.82vw, 16px);
+    font-weight: 500;
+    color: var(--color-primary);
+    background-color: transparent;
+    border: 1.5px solid var(--color-primary);
+    border-radius: var(--radius-pill);
+    padding: clamp(8px, 0.6vw, 12px) clamp(16px, 1.1vw, 24px);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    white-space: nowrap;
+}
+
+.btn-secondary:hover {
+    background-color: var(--color-primary);
+    color: var(--color-text-dark);
+}
+
+/* Botón Sólido Genérico (.btn-primary) */
+.btn-primary {
+    font-family: var(--font-main);
+    font-size: clamp(12px, 0.82vw, 16px);
+    font-weight: 600;
+    color: var(--color-text-dark);
+    background-color: var(--color-primary);
+    border: none;
+    border-radius: var(--radius-pill);
+    padding: clamp(8px, 0.6vw, 12px) clamp(16px, 1.1vw, 24px);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    white-space: nowrap;
+}
+
+.btn-primary:hover {
+    background-color: var(--color-primary-hover);
+}
+
 /* Botón Mi Cuenta */
 .user-account {
     display: flex;

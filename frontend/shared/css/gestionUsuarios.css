@@ -1,224 +1,336 @@
 /* =========================================
-   ESTILOS DEL CONTENIDO PRINCIPAL
+   ESTILOS ESPECÍFICOS PARA GESTIÓN DE USUARIOS
    ========================================= */
-.main-content {
-    position: fixed; 
-    top: 0; 
-    left: clamp(240px, 20%, 300px); 
-    height: 100vh; 
-    width: calc(100% - clamp(240px, 20%, 300px)); 
-    background-color: #1A1206; 
-    padding: clamp(30px, 2.5vw, 50px); 
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto; 
-}
 
-/* Cabecera */
-.header-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center; 
-    margin-bottom: clamp(24px, 2vw, 40px);
-}
-
-.page-title h2 {
-    color: #F5F5F5;
-    font-size: clamp(24px, 1.8vw, 32px);
-    margin: 0;
-    font-weight: bold;
-}
-
-.header-actions {
-    display: flex;
-    gap: 16px;
-}
-
-/* Botones principales de la vista */
-.btn-primary {
-    background-color: #F2A900;
-    color: #1e160e;
-    border: none;
-    padding: clamp(10px, 1vw, 14px) clamp(20px, 1.5vw, 32px);
+/* Tabla */
+.table-section {
+    background-color: var(--color-bg-card);
+    border: 1px solid var(--color-border);
     border-radius: 12px;
-    cursor: pointer;
-    font-size: clamp(13px, 0.9vw, 14px);
-    font-weight: 600;
-    font-family: 'Inter', sans-serif;
-    transition: background-color 0.3s;
-    white-space: nowrap;
+    padding: 24px;
+    overflow-x: auto;
 }
 
-.btn-primary:hover {
-    background-color: #d49300;
-}
-
-.btn-primary.w-100 {
-    width: 100%;
-}
-
-.btn-outline-dark {
-    background-color: transparent;
-    color: #F2A900;
-    border: 1px solid #3b3222;
-    padding: clamp(10px, 1vw, 14px) clamp(20px, 1.5vw, 32px);
-    border-radius: 12px;
-    cursor: pointer;
-    font-size: clamp(13px, 0.9vw, 14px);
-    font-weight: 600;
-    font-family: 'Inter', sans-serif;
-    transition: all 0.3s;
-}
-
-.btn-outline-dark:hover {
-    background-color: #241A0B;
-    border-color: #F2A900;
-}
-
-/* =========================================
-   TABLA PRINCIPAL (A pantalla completa)
-========================================= */
-.table-container {
-    background-color: #1e160e;
-    border: 1px solid #4A3A1C;
-    border-radius: 15px;
-    padding: 20px 30px;
-    width: 100%; 
-    height: fit-content;
-    overflow-x: auto; 
-    box-sizing: border-box;
-}
-
-.colmenas-table {
+.data-table {
     width: 100%;
     border-collapse: collapse;
-    font-family: 'Inter', sans-serif;
-}
-
-.colmenas-table th {
-    color: #8A7A5A;
-    font-size: 11px;
-    font-weight: 600;
     text-align: left;
-    padding: 15px 10px;
-    border-bottom: 1px solid #3b3222;
+}
+
+.data-table th {
+    color: var(--color-text-gray);
+    font-size: 12px;
+    font-weight: 600;
     text-transform: uppercase;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--color-border);
 }
 
-.colmenas-table td {
-    color: #F5F5F5;
+.data-table td {
+    padding: 16px 0;
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-text-white);
     font-size: 14px;
-    padding: 15px 10px;
-    border-bottom: 1px solid #3b3222;
+    vertical-align: middle;
 }
 
-.colmenas-table tr:last-child td { border-bottom: none; }
-.colmenas-table tbody tr:hover { background-color: rgba(242, 169, 0, 0.05); }
+.data-table tr:last-child td {
+    border-bottom: none;
+}
 
-/* Celdas de la tabla */
-.user-cell { display: flex; align-items: center; gap: 16px; }
-.avatar { width: 36px; height: 36px; border-radius: 50%; }
-.bg-yellow { background-color: #F2A900; }
-.bg-teal { background-color: #4ade80; }
-.user-details { display: flex; flex-direction: column; gap: 2px; }
-.user-name { color: #F5F5F5; font-weight: bold; font-size: 14px; }
-.status-cell { display: flex; align-items: center; gap: 8px; }
-.dot { width: 8px; height: 8px; border-radius: 50%; }
-.dot-active { background-color: #4ade80; }
-.dot-inactive { background-color: #8A7A5A; }
-.text-active { color: #4ade80; }
-.text-inactive { color: #8A7A5A; }
-
-/* =========================================
-   MODAL FLOTANTE Y CONTENIDO DE ASIGNACIÓN
-========================================= */
-#input-form {
+/* Modal superpuesto */
+.modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    pointer-events: none; 
-    display: none; 
-    justify-content: center; 
-    align-items: center; 
-    z-index: 9999; 
-    background-color: rgba(0, 0, 0, 0.6); 
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    display: none; /* Oculto por defecto */
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
-#input-form.activo {
+.modal-overlay.active {
     display: flex;
-    pointer-events: auto; 
+    opacity: 1;
 }
 
-#form-gestionColmena {
-    background-color: #1e160e;
-    width: 450px; /* Un poco más ancho para las tarjetas de checkbox */
-    max-width: 90%;
-    max-height: 90vh; 
-    overflow-y: auto; 
-    padding: 30px;
-    border-radius: 25px;
-    border: 1px solid #4A3A1C;
+.modal-content {
+    background-color: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 480px;
+    padding: 32px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    transform: translateY(20px);
+    transition: transform 0.3s ease;
+}
+
+.modal-overlay.active .modal-content {
+    transform: translateY(0);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+}
+
+.modal-title {
+    color: var(--color-text-white);
+    font-size: 20px;
+    margin: 0 0 4px 0;
+}
+
+.modal-subtitle {
+    color: var(--color-text-gray);
+    font-size: 13px;
+    margin: 0;
+}
+
+.btn-close-modal {
+    background: transparent;
+    border: none;
+    color: var(--color-text-gray);
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.btn-close-modal:hover {
+    color: var(--color-alert-red);
+}
+
+.modal-form .form-group {
+    margin-bottom: 20px;
+}
+
+.modal-form .form-label {
+    display: block;
+    color: var(--color-text-gray);
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+
+/* CUSTOM DROPDOWN UI */
+.custom-dropdown {
+    position: relative;
+    width: 100%;
+    user-select: none;
+}
+
+.dropdown-selected {
+    width: 100%;
+    background-color: var(--color-bg-dark);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    color: var(--color-text-white);
+    padding: 12px;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dropdown-selected::after {
+    content: "▼";
+    font-size: 10px;
+    color: var(--color-text-gray);
+}
+
+.custom-dropdown.active .dropdown-selected {
+    border-color: var(--color-primary);
+}
+
+.dropdown-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    margin-top: 4px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    list-style: none;
+    padding: 0;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 100;
+    display: none;
+}
+
+.custom-dropdown.active .dropdown-options {
+    display: block;
+}
+
+.dropdown-options li {
+    padding: 12px 16px;
+    font-size: 14px;
+    color: var(--color-text-white);
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.dropdown-options li:hover {
+    background-color: var(--color-primary);
+    color: var(--color-text-dark);
+}
+
+/* Checkbox cards (similar a la vista original pero estilizado) */
+.checkbox-list {
     display: flex;
     flex-direction: column;
-    box-shadow: 0px 15px 35px rgba(0,0,0,0.8); 
-    box-sizing: border-box; 
-    font-family: 'Inter', sans-serif;
+    gap: 12px;
 }
 
-#form-gestionColmena::-webkit-scrollbar { width: 6px; }
-#form-gestionColmena::-webkit-scrollbar-thumb { background-color: #F2A900; border-radius: 10px; }
-
-/* Elementos dentro del form */
-.form-group { margin-bottom: 24px; }
-.form-label { display: block; color: #8A7A5A; text-transform: uppercase; font-size: 11px; font-weight: 600; margin-bottom: 12px; }
-
-/* Select Personalizado */
-.custom-select-wrapper {
-    background-color: #1e160e;
-    border: 1px solid #4A3A1C;
-    border-radius: 12px;
-    padding: 0 16px;
-    position: relative;
-}
-.custom-select {
-    width: 100%; background: transparent; color: #F5F5F5; border: none; padding: 14px 0; font-family: 'Inter', sans-serif; font-size: 14px; outline: none; cursor: pointer; appearance: none; 
-}
-.custom-select-wrapper::after {
-    content: '▼'; font-size: 10px; color: #8A7A5A; position: absolute; right: 16px; top: 50%; transform: translateY(-50%); pointer-events: none;
-}
-
-/* Checkbox Card */
-.checkbox-list { display: flex; flex-direction: column; gap: 12px; }
 .checkbox-card {
-    display: flex; align-items: center; gap: 16px; padding: 14px 16px; border: 1px solid #4A3A1C; border-radius: 12px; background-color: transparent; cursor: pointer; transition: all 0.2s ease;
-}
-.checkbox-card input[type="checkbox"] { display: none; }
-.checkbox-box {
-    width: 20px; height: 20px; border: 1px solid #8A7A5A; border-radius: 4px; display: flex; justify-content: center; align-items: center; transition: all 0.2s ease;
-}
-.check-icon { display: none; color: #1e160e; }
-.checkbox-label { color: #F5F5F5; font-size: 14px; }
-.checkbox-card.active { border-color: #F2A900; }
-.checkbox-card.active .checkbox-box { background-color: #F2A900; border-color: #F2A900; }
-.checkbox-card.active .check-icon { display: block; }
-
-.form-help-text { color: #8A7A5A; font-size: 12px; line-height: 1.5; margin-bottom: 24px; }
-
-/* Botón cancelar del modal */
-.btn-form-cancelar {
-    background-color: transparent;
-    color: #ffff;
-    border: 1px solid #4A3A1C;
-    padding: 12px 20px;
-    border-radius: 12px;
-    font-family: 'Inter', sans-serif;
-    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background-color: var(--color-bg-dark);
+    border: 1px solid var(--color-border);
+    padding: 12px 16px;
+    border-radius: 8px;
+    color: var(--color-text-white);
+    font-size: 14px;
     cursor: pointer;
-    transition: background 0.3s;
-    margin-top: 10px;
+    transition: all 0.2s;
 }
-.btn-form-cancelar.w-100 { width: 100%; }
-.btn-form-cancelar:hover { background-color: rgba(255, 255, 255, 0.05); }
+
+.checkbox-card:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.checkbox-card.active {
+    border-color: var(--color-primary);
+    background-color: rgba(242, 169, 0, 0.05);
+}
+
+.checkbox-card input[type="checkbox"] {
+    accent-color: var(--color-primary);
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 32px;
+}
+
+/* Modal Large (Crear Apicultor) */
+.modal-large {
+    width: 800px;
+    max-width: 90vw;
+}
+
+.split-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+}
+
+.form-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-col h4 {
+    margin: 0 0 4px 0;
+    color: var(--color-text-white);
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.section-desc {
+    margin: 0 0 20px 0;
+    color: var(--color-text-gray);
+    font-size: 13px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.mt-4 {
+    margin-top: 24px;
+}
+
+.flex-fill {
+    flex: 1;
+}
+
+/* Campos de entrada */
+.input-field {
+    width: 100%;
+    background-color: var(--color-bg-dark);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-white);
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 14px;
+    transition: all 0.2s;
+    box-sizing: border-box;
+}
+
+.input-field:focus {
+    border-color: var(--color-primary);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(242, 169, 0, 0.2);
+}
+
+.input-field::placeholder {
+    color: var(--color-text-gray);
+}
+
+.card-meta {
+    display: block;
+    margin-top: 4px;
+    color: var(--color-text-gray);
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.recommendation-card {
+    background-color: rgba(242, 169, 0, 0.05);
+    border: 1px solid rgba(242, 169, 0, 0.2);
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 24px;
+}
+
+.recommendation-card h5 {
+    margin: 0 0 8px 0;
+    color: var(--color-primary);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.recommendation-card p {
+    margin: 0;
+    color: var(--color-text-gray);
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.full-width-actions {
+    border-top: 1px solid var(--color-border);
+    padding-top: 20px;
+}

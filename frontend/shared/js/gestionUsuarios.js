@@ -6,91 +6,66 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnAbrir = document.getElementById('btn-abrir-formulario');
     const btnCerrar = document.getElementById('btn-cerrar-formulario');
     const btnCancelar = document.getElementById('btn-cancelar-formulario');
-    const modal = document.getElementById('input-form');
+    const modal = document.getElementById('modal-asignar');
 
-    // Abrir modal al darle clic al botón amarillo
+    // Abrir modal
     btnAbrir.addEventListener('click', () => {
-        modal.classList.add('activo');
+        modal.classList.add('active');
     });
 
-    // Función genérica para cerrar
+    // Cerrar modal
     function cerrarModal() {
-        modal.classList.remove('activo');
+        modal.classList.remove('active');
     }
 
     btnCerrar.addEventListener('click', cerrarModal);
-    btnCancelar.addEventListener('click', cerrarModal);
+    if(btnCancelar) btnCancelar.addEventListener('click', cerrarModal);
 
-    // Cerrar si se da clic en la parte oscura (fuera del formulario)
     window.addEventListener('click', (e) => {
         if (e.target === modal) {
             cerrarModal();
         }
+        if (e.target === modalCrear) {
+            cerrarModalCrear();
+        }
     });
 
     // ==========================================
-    // 2. LÓGICA DE LA TABLA
+    // 1.5 LÓGICA DEL MODAL (CREAR APICULTOR)
     // ==========================================
-    const tbody = document.getElementById('tabla-usuarios-body');
+    const btnAbrirCrear = document.getElementById('btn-abrir-crear');
+    const btnCerrarCrear = document.getElementById('btn-cerrar-crear');
+    const btnCancelarCrear = document.getElementById('btn-cancelar-crear');
+    const modalCrear = document.getElementById('modal-crear-apicultor');
 
-    function renderizarTablaUsuarios(datos) {
-        tbody.innerHTML = ''; 
-
-        if (!datos || datos.length === 0) {
-            tbody.innerHTML = `
-                <tr>
-                    <td colspan="4" style="text-align: center; padding: 40px; color: #8A7A5A;">
-                        No hay usuarios registrados.
-                    </td>
-                </tr>
-            `;
-            return;
-        }
-
-        datos.forEach(usuario => {
-            const tr = document.createElement('tr');
-            
-            const avatarClass = usuario.rol === 'Administrador' ? 'bg-yellow' : 'bg-teal';
-            const dotClass = usuario.estado === 'Activo' ? 'dot-active' : 'dot-inactive';
-            const textStateClass = usuario.estado === 'Activo' ? 'text-active' : 'text-inactive';
-            const apiariosText = usuario.apiarios || '— sin asignar';
-
-            tr.innerHTML = `
-                <td>
-                    <div class="user-cell">
-                        <div class="avatar ${avatarClass}"></div>
-                        <div class="user-details">
-                            <span class="user-name">${usuario.nombre}</span>
-                        </div>
-                    </div>
-                </td>
-                <td style="color: #8A7A5A; font-size: 13px;">${usuario.rol}</td>
-                <td style="${!usuario.apiarios ? 'color: #8A7A5A;' : 'color: #F5F5F5;'}">${apiariosText}</td>
-                <td>
-                    <div class="status-cell">
-                        <span class="dot ${dotClass}"></span>
-                        <span class="${textStateClass}">${usuario.estado}</span>
-                    </div>
-                </td>
-            `;
-
-            tbody.appendChild(tr);
+    if (btnAbrirCrear) {
+        btnAbrirCrear.addEventListener('click', () => {
+            modalCrear.classList.add('active');
         });
     }
 
-    // ==========================================
-    // 3. LÓGICA VISUAL DE LOS CHECKBOXES (Tarjetas)
-    // ==========================================
-    const checkboxCards = document.querySelectorAll('.checkbox-card');
+    function cerrarModalCrear() {
+        modalCrear.classList.remove('active');
+    }
 
+    if (btnCerrarCrear) btnCerrarCrear.addEventListener('click', cerrarModalCrear);
+    if (btnCancelarCrear) btnCancelarCrear.addEventListener('click', cerrarModalCrear);
+
+    // Toggle de las tarjetas de checkbox (Apiarios)
+    const checkboxCards = document.querySelectorAll('.checkbox-card');
     checkboxCards.forEach(card => {
-        const input = card.querySelector('input[type="checkbox"]');
+        const checkbox = card.querySelector('input[type="checkbox"]');
         
-        card.addEventListener('click', (e) => {
-            if (e.target !== input) {
-                input.checked = !input.checked;
-            }
-            if (input.checked) {
+        // Sincronizar estado visual inicial
+        if (checkbox.checked) {
+            card.classList.add('active');
+        } else {
+            card.classList.remove('active');
+        }
+
+        // Cambiar estado al hacer click
+        checkbox.addEventListener('change', () => {
+            if (checkbox.checked) {
                 card.classList.add('active');
             } else {
                 card.classList.remove('active');
@@ -98,20 +73,104 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    /* 
-    ========================================================================
-    PLANTILLA DE DATOS PARA PROBAR 
-    ========================================================================
-    */
-    /*
-    const usuariosMock = [
-        { nombre: 'Emmanuel Urbina', rol: 'Administrador', apiarios: 'Todos', estado: 'Activo' },
-        { nombre: 'Rodrigo González', rol: 'Apicultor', apiarios: 'Apiario Norte', estado: 'Activo' },
-        { nombre: 'Edgar Solís', rol: 'Apicultor', apiarios: 'Apiario Sur, Río', estado: 'Activo' },
-        { nombre: 'Ivanna López', rol: 'Apicultor', apiarios: 'Apiario Norte', estado: 'Activo' },
-        { nombre: 'José Martínez', rol: 'Apicultor', apiarios: null, estado: 'Inactivo' }
+    // Custom Dropdown UI para el apicultor
+    const dropdownApicultor = document.getElementById("dropdown-apicultor");
+    const selectedDisplay = dropdownApicultor.querySelector(".dropdown-selected");
+    const optionsList = document.getElementById("apicultor-list").querySelectorAll("li");
+    const hiddenInput = document.getElementById("apicultor_id");
+
+    selectedDisplay.addEventListener("click", () => {
+        dropdownApicultor.classList.toggle("active");
+    });
+
+    optionsList.forEach(li => {
+        li.addEventListener("click", () => {
+            hiddenInput.value = li.dataset.value;
+            selectedDisplay.textContent = li.textContent;
+            dropdownApicultor.classList.remove("active");
+        });
+    });
+
+    document.addEventListener("click", (e) => {
+        if (!dropdownApicultor.contains(e.target)) {
+            dropdownApicultor.classList.remove("active");
+        }
+    });
+
+
+    // ==========================================
+    // 2. LÓGICA DE LA TABLA (USUARIOS)
+    // ==========================================
+    const tbody = document.getElementById('tabla-usuarios-body');
+    
+    function cargarUsuarios() {
+        fetch('/api/gestion/usuarios')
+            .then(res => {
+                if (!res.ok) throw new Error("Error fetching usuarios");
+                return res.json();
+            })
+            .then(usuarios => {
+                renderizarUsuarios(usuarios);
+            })
+            .catch(err => {
+                console.error(err);
+                if(tbody) tbody.innerHTML = '<tr><td colspan="4">Error al cargar usuarios</td></tr>';
+            });
+    }
+
+    function renderizarUsuarios(usuarios) {
+        if (!tbody) return;
+        tbody.innerHTML = '';
+        
+        usuarios.forEach(user => {
+            const tr = document.createElement('tr');
+            
+            // Generate initials for avatar (e.g., "Emmanuel U." -> "EU")
+            const parts = user.nombre.split(' ');
+            let initials = parts[0].charAt(0).toUpperCase();
+            if (parts.length > 1) initials += parts[parts.length - 1].charAt(0).toUpperCase();
+
+            // Avatar color based on role or id
+            let avatarColor = '#F2A900'; // Default admin
+            if (user.rol.toLowerCase() === 'apicultor') {
+                const colors = ['#4CAF50', '#8BC34A', '#CDDC39'];
+                avatarColor = colors[user.id % colors.length];
+            }
+
+            const estadoDot = user.activo ? 'green' : 'red';
+            const estadoText = user.activo ? 'Activo' : 'Inactivo';
+            const apisAsignados = user.apiariosAsignados;
+            
+            tr.innerHTML = `
+                <td>
+                    <div class="user-cell">
+                        <div class="user-avatar-circle" style="background-color: ${avatarColor};">
+                            ${initials}
+                        </div>
+                        <span style="font-weight: 600; color: var(--color-text-white);">${user.nombre}</span>
+                    </div>
+                </td>
+                <td><span style="color: var(--color-text-gray);">${user.rol}</span></td>
+                <td><span style="color: var(--color-text-white);">${apisAsignados}</span></td>
+                <td>
+                    <span class="dot-status ${estadoDot}" style="width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 8px;"></span>
+                    <span style="color: var(--color-text-gray);">${estadoText}</span>
+                </td>
+            `;
+            
+            tbody.appendChild(tr);
+        });
+    }
+
+    cargarUsuarios();
+
+    const datosEjemplo = [
+        { nombre: 'Emmanuel U.', rol: 'Administrador', apiarios: 'Todos', estado: 'Activo' },
+        { nombre: 'Rodrigo G.', rol: 'Apicultor', apiarios: 'Norte', estado: 'Activo' },
+        { nombre: 'Edgar S.', rol: 'Apicultor', apiarios: 'Sur', estado: 'Activo' },
+        { nombre: 'Andrea L.', rol: 'Apicultor', apiarios: '', estado: 'Inactivo' }
     ];
-    renderizarTablaUsuarios(usuariosMock);
-    */
+
+    renderizarTablaUsuarios(datosEjemplo);
 
 });

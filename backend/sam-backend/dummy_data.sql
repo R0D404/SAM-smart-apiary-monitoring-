@@ -1,5 +1,12 @@
--- Insertar microclima (si no existe)
-INSERT IGNORE INTO CATALAGO_MICROCLIMA (id, nombre, descripcion) VALUES (1, 'selva alta', 'Clima cálido húmedo');
+-- Insertar microclimas (si no existen)
+INSERT IGNORE INTO CATALAGO_MICROCLIMA (id, nombre, descripcion) VALUES 
+(1, 'selva alta', 'Clima cálido húmedo'),
+(2, 'Selva baja', 'Clima cálido subhúmedo con temporada seca'),
+(3, 'Bosque templado', 'Clima templado con lluvias en verano'),
+(4, 'Bosque mesófilo', 'Bosque de niebla, alta humedad'),
+(5, 'Matorral xerófilo', 'Clima árido y semiárido'),
+(6, 'Pastizal', 'Zonas semiáridas y templadas'),
+(7, 'Manglar', 'Zonas costeras con alta salinidad y humedad');
 
 -- Insertar Apiario
 INSERT IGNORE INTO APIARIO (id, admin_id, microclima_id, nombre, estado, municipio, localidad, referencia, latitud, longitud, creado_en)

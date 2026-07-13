@@ -1,20 +1,23 @@
 document.addEventListener('DOMContentLoaded', () => {
     
-    // Referencia al cuerpo de la tabla en el HTML
     const tbody = document.getElementById('tabla-visitas-body');
+    const filterBtns = document.querySelectorAll('.filter-btn');
 
-    /**
-     * Función que recibe los datos de la base de datos y los dibuja en el HTML
-     * @param {Array} datos - Arreglo de objetos con las visitas.
-     */
+    // Filtros interactivos
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        });
+    });
+
     function renderizarTabla(datos) {
-        tbody.innerHTML = ''; // Limpiamos la tabla por si ya tenía datos
+        tbody.innerHTML = ''; 
 
-        // Si la base de datos no trae nada, mostramos un mensaje vacío
         if (!datos || datos.length === 0) {
             tbody.innerHTML = `
                 <tr>
-                    <td colspan="6" style="text-align: center; color: #797165; padding: 40px;">
+                    <td colspan="6" style="text-align: center; color: var(--color-text-gray); padding: 40px;">
                         No hay registros de visitas disponibles.
                     </td>
                 </tr>
@@ -22,39 +25,49 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Iteramos los datos y construimos las filas (<tr>)
         datos.forEach(visita => {
             const tr = document.createElement('tr');
             
-            // Lógica para atenuar visualmente los datos faltantes como en el diseño original ("No vista")
-            const claseReina = visita.reina === 'No vista' ? 'text-muted' : '';
-            const claseNotas = visita.notas === 'Poca población' || visita.notas === 'Posible saqueo, vigilar' ? 'text-muted' : '';
+            // Clase para la reina (si no fue vista)
+            const claseReina = visita.reina === 'No vista' ? 'text-subtle' : '';
+            
+            // Etiqueta visual para el estado de la colonia
+            let badgeClase = '';
+            if (visita.estado_colonia === 'Excelente' || visita.estado_colonia === 'Buena') {
+                badgeClase = 'excelente';
+            } else if (visita.estado_colonia === 'Regular') {
+                badgeClase = 'regular';
+            } else if (visita.estado_colonia === 'Crítico' || visita.estado_colonia === 'Mala') {
+                badgeClase = 'critico';
+            }
 
             tr.innerHTML = `
-                <td>${visita.fecha}</td>
-                <td class="text-colmena">${visita.colmena}</td>
-                <td>${visita.apicultor}</td>
-                <td>${visita.estado_colonia}</td>
+                <td><span class="text-subtle">${visita.fecha}</span></td>
+                <td style="font-weight: 600; color: var(--color-primary);">${visita.colmena}</td>
+                <td><span style="color: var(--color-text-white);">${visita.apicultor}</span></td>
+                <td><span class="badge-estado ${badgeClase}">${visita.estado_colonia}</span></td>
                 <td class="${claseReina}">${visita.reina}</td>
-                <td class="${claseNotas}">${visita.notas}</td>
+                <td class="text-subtle">${visita.notas}</td>
             `;
             
             tbody.appendChild(tr);
         });
     }
 
-    /* 
-    ========================================================================
-    AQUÍ CONECTARÁS TU BASE DE DATOS O FETCH EN EL FUTURO
-    ========================================================================
-    Solo tendrás que hacer tu petición al backend y luego llamar a la función 
-    pasándole la respuesta JSON. Ejemplo:
-    
-    fetch('tu_url_del_backend/visitas')
-        .then(res => res.json())
-        .then(datos => {
-            renderizarTabla(datos);
-        });
-    */
+    function cargarVisitas() {
+        fetch('/api/visitas')
+            .then(res => {
+                if (!res.ok) throw new Error("Error fetching visitas");
+                return res.json();
+            })
+            .then(datos => {
+                renderizarTabla(datos);
+            })
+            .catch(err => {
+                console.error(err);
+                if(tbody) tbody.innerHTML = '<tr><td colspan="6">Error al cargar historial</td></tr>';
+            });
+    }
 
+    cargarVisitas();
 });

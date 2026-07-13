@@ -26,15 +26,15 @@ document.addEventListener("DOMContentLoaded", () => {
                     };
 
                     tr.innerHTML = `
-                        <td class="api-nombre">${api.nombre}</td>
+                        <td><span style="font-weight: 600; color: var(--color-primary);">${api.nombre}</span></td>
                         <td>
-                            <div class="api-estado">
-                                <span class="dot-status"></span>
-                                ${api.localidad}, ${api.municipio}, ${api.estado}
+                            <div style="display: flex; align-items: center; font-weight: 500; color: var(--color-text-white);">
+                                <span class="dot-status" style="width: 8px; height: 8px; border-radius: 50%; background-color: var(--color-alert-green); display: inline-block; margin-right: 8px;"></span>
+                                ${api.localidad}, ${api.municipio}, <span style="color: var(--color-text-gray); margin-left: 4px;">${api.estado}</span>
                             </div>
                         </td>
-                        <td>${api.colmenas}</td>
-                        <td>${api.microclima}</td>
+                        <td><span style="color: var(--color-text-white); font-weight: 600;">${api.colmenas}</span> <span style="color: var(--color-text-gray); font-size: 13px;">colmenas</span></td>
+                        <td><span style="color: var(--color-text-gray); text-transform: capitalize;">${api.microclima}</span></td>
                         <td>
                             <button class="btn-baja" onclick="darDeBaja(event, ${api.id}, '${api.nombre}')">Dar de baja</button>
                         </td>
@@ -45,20 +45,47 @@ document.addEventListener("DOMContentLoaded", () => {
             .catch(err => console.error("Error al cargar apiarios:", err));
     }
 
-    // Load microclimates for the select
+    // Load microclimates for the select (CUSTOM DROPDOWN)
+    const dropdownMicroclima = document.getElementById("dropdown-microclima");
+    const selectedDisplay = dropdownMicroclima.querySelector(".dropdown-selected");
+    const optionsList = document.getElementById("api-microclima-list");
+    const hiddenInput = document.getElementById("api-microclima");
+
+    // Toggle dropdown
+    selectedDisplay.addEventListener("click", () => {
+        dropdownMicroclima.classList.toggle("active");
+    });
+
+    // Close when clicking outside
+    document.addEventListener("click", (e) => {
+        if (!dropdownMicroclima.contains(e.target)) {
+            dropdownMicroclima.classList.remove("active");
+        }
+    });
+
     function cargarMicroclimas() {
         fetch("/api/gestion/microclimas")
             .then(res => res.json())
             .then(data => {
-                selectMicroclima.innerHTML = "";
+                optionsList.innerHTML = "";
                 data.forEach(m => {
-                    const opt = document.createElement("option");
-                    opt.value = m.id;
-                    opt.textContent = m.nombre;
-                    selectMicroclima.appendChild(opt);
+                    const li = document.createElement("li");
+                    li.dataset.value = m.id;
+                    li.textContent = m.nombre;
+                    
+                    li.addEventListener("click", () => {
+                        hiddenInput.value = m.id;
+                        selectedDisplay.textContent = m.nombre;
+                        dropdownMicroclima.classList.remove("active");
+                    });
+
+                    optionsList.appendChild(li);
                 });
             })
-            .catch(err => console.error("Error al cargar microclimas:", err));
+            .catch(err => {
+                console.error("Error al cargar microclimas:", err);
+                optionsList.innerHTML = '<li data-value="">Error al cargar</li>';
+            });
     }
 
     // Modal Logic

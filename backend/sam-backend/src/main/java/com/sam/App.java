@@ -36,6 +36,7 @@ public class App
             path("/api/dashboard", () -> {
                 get(DashboardControlador::obtenerDashboard);
                 get("/apiario/{id}", com.sam.controladores.DashboardApiarioControlador::obtenerDashboardApiario);
+                get("/colmena", com.sam.controladores.DashboardColmenaControlador::obtenerDashboardColmena);
             });
             
             path("/api/gestion", () -> {
@@ -43,7 +44,11 @@ public class App
                 post("/apiarios", com.sam.controladores.GestionApiariosControlador::crearApiario);
                 delete("/apiarios/{id}", com.sam.controladores.GestionApiariosControlador::eliminarApiario);
                 get("/microclimas", com.sam.controladores.GestionApiariosControlador::listarMicroclimas);
+                get("/usuarios", com.sam.controladores.GestionUsuariosControlador::listarUsuarios);
+                get("/colmenas", com.sam.controladores.GestionColmenasControlador::listarColmenas);
             });
+            get("/api/alertas", com.sam.controladores.AlertasControlador::listarAlertas);
+            get("/api/visitas", com.sam.controladores.VisitasControlador::listarVisitas);
         });
     }
 }
