@@ -35,6 +35,14 @@ public class App
             
             path("/api/dashboard", () -> {
                 get(DashboardControlador::obtenerDashboard);
+                get("/apiario/{id}", com.sam.controladores.DashboardApiarioControlador::obtenerDashboardApiario);
+            });
+            
+            path("/api/gestion", () -> {
+                get("/apiarios", com.sam.controladores.GestionApiariosControlador::listarApiarios);
+                post("/apiarios", com.sam.controladores.GestionApiariosControlador::crearApiario);
+                delete("/apiarios/{id}", com.sam.controladores.GestionApiariosControlador::eliminarApiario);
+                get("/microclimas", com.sam.controladores.GestionApiariosControlador::listarMicroclimas);
             });
         });
     }

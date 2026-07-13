@@ -141,6 +141,10 @@ function renderApiarios(apiarios) {
         const card = document.createElement("article");
         card.className = "apiario-card";
         card.setAttribute("role", "listitem");
+        card.style.cursor = "pointer";
+        card.onclick = () => {
+            window.location.href = `dashboardApiario.html?id=${apiario.id}`;
+        };
 
         card.innerHTML = `
             <span class="apiario-status-dot ${apiario.estado}" aria-label="Estado: ${apiario.estadoTexto}"></span>

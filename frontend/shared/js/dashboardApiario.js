@@ -209,14 +209,25 @@ function renderChartEvolucionPeso(chartData) {
 // 5. OBTENCIÓN DE DATOS (Backend)
 // =========================================
 function updateDashboard(data) {
+    if (data.apiario) {
+        const titleEl = document.getElementById("page-title");
+        const subtitleEl = document.getElementById("page-subtitle");
+        if (titleEl) titleEl.textContent = data.apiario.nombre;
+        if (subtitleEl) subtitleEl.textContent = data.apiario.ubicacion;
+    }
+
     if (data.stats) {
         apiarioStats = data.stats;
         renderStats(apiarioStats);
     }
 
     if (data.evolucionPeso) {
+        document.getElementById("chart-evolucion-peso-card").style.display = "block";
         evolucionPesoData = data.evolucionPeso;
         renderChartEvolucionPeso(evolucionPesoData);
+    } else {
+        const chartCard = document.getElementById("chart-evolucion-peso-card");
+        if (chartCard) chartCard.style.display = "none";
     }
 
     if (data.colmenas) {
@@ -231,20 +242,26 @@ function updateDashboard(data) {
 }
 
 function fetchDashboardData() {
-    /*
-    // ============================================================
-    // DESCOMENTAR CUANDO EL BACKEND JAVALIN ESTÉ LISTO
-    // ============================================================
-    fetch('/api/dashboardApiario/norte')
-        .then(response => response.json())
-        .then(data => updateDashboard(data))
-        .catch(error => console.error('Error:', error));
-    */
+    const urlParams = new URLSearchParams(window.location.search);
+    const apiarioId = urlParams.get('id');
 
-    renderStats(apiarioStats);
-    renderColmenas(colmenasData);
-    renderUserProfile(userData);
-    console.log('Dashboard Apiario cargado en modo sin backend.');
+    if (!apiarioId) {
+        console.error("No se proporcionó ID de apiario en la URL");
+        return;
+    }
+
+    fetch(`/api/dashboard/apiario/${apiarioId}`)
+        .then(response => {
+            if (!response.ok) throw new Error('Error al cargar datos del apiario');
+            return response.json();
+        })
+        .then(data => updateDashboard(data))
+        .catch(error => {
+            console.error('Error:', error);
+            renderStats(apiarioStats);
+            renderColmenas(colmenasData);
+            renderUserProfile(userData);
+        });
 }
 
 // =========================================

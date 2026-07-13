@@ -96,6 +96,7 @@ public class DashboardControlador {
                 try (ResultSet rs = stmt.executeQuery()) {
                     while (rs.next()) {
                         ObjectNode apiario = mapper.createObjectNode();
+                        apiario.put("id", rs.getInt("id"));
                         apiario.put("nombre", rs.getString("nombre"));
                         apiario.put("ubicacion", rs.getString("ubicacion"));
                         apiario.put("colmenas", rs.getInt("num_colmenas"));
