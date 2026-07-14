@@ -3,10 +3,11 @@
 const GEMINI_API_KEY = "AQ.Ab8RN6KRP0r_hTANlkxfbj0qFj6C_KZh5EbzttbnSbt9XcUFKA";
 
 // URL de tu API Java — el {id} se reemplaza dinámicamente
-const API_SAM = "http://localhost:7070/api/diagnostico";
+const API_SAM = "/api/diagnostico";
 
-// ID de la colmena — por ahora fijo en 1, después vendrá de la URL
-const COLMENA_ID = 1;
+// ID de la colmena — obtenido desde la URL (?id=3), fallback a 1
+const urlParams = new URLSearchParams(window.location.search);
+const COLMENA_ID = urlParams.get('id') || 1;
 
 // ── REFERENCIAS AL HTML ──────────────────────────────────────────────────────
 // Guardamos referencias a los elementos del HTML que vamos a modificar
@@ -92,7 +93,7 @@ async function generarDiagnostico() {
     try {
         // Ahora llamamos a NUESTRA API Java, no a Groq directamente
         // La API Java es la que tiene la key guardada en el .env de forma segura
-        const respuesta = await fetch("http://localhost:7070/api/groq/diagnostico", {
+        const respuesta = await fetch("/api/groq/diagnostico", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

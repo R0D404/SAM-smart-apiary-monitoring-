@@ -184,4 +184,11 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("btn-mantenimiento").addEventListener("click", () => {
         alert("Funcionalidad de mantenimiento en construcción.");
     });
+
+    const btnIa = document.getElementById("btn-ia");
+    if (btnIa) {
+        btnIa.addEventListener("click", () => {
+            window.location.href = `diagnosticoIA.html?id=${colmenaId}`;
+        });
+    }
 });
