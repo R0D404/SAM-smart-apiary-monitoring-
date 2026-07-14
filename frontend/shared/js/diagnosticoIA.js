@@ -111,6 +111,11 @@ async function generarDiagnostico() {
             signal: signal
         });
 
+        if (!respuesta.ok) {
+            const errText = await respuesta.text();
+            throw new Error(errText || "Error al conectar con la API del servidor.");
+        }
+
         // Leemos la respuesta como texto porque ya viene como JSON limpio
         const texto = await respuesta.text();
 
@@ -142,6 +147,15 @@ async function generarDiagnostico() {
         }
         console.error("Error:", error);
         estadoValor.textContent = "Error al generar el diagnóstico. Intenta de nuevo.";
+        
+        // Show beautiful error toast
+        const isGroqError = error.message.toLowerCase().includes("groq");
+        showErrorToast(
+            "Error de Diagnóstico",
+            isGroqError 
+                ? "No se pudo conectar con el servicio de IA de Groq. Reintente en unos momentos." 
+                : "Error al obtener el diagnóstico del servidor. Por favor verifique la conexión."
+        );
     } finally {
         // Solo restauramos el estado si no fue una cancelación
         if (!signal.aborted) {

@@ -6,6 +6,7 @@
     <title>SAM - Nuevo Apicultor</title>
     <link rel="stylesheet" href="../shared/css/plantilla.css"> 
     <link rel="stylesheet" href="../shared/css/crearUsuario.css">
+    <link rel="stylesheet" href="../shared/css/notifications.css">
 </head>
 <body>
     <section class="sidebar">
@@ -25,7 +26,7 @@
                 <li><a href="gestionColmenas.html"><img src="../assets/icons/colmenas.svg" alt="" class="menu-icon"> Colmenas</a></li>
                 <li><a href="alertas.html"><img src="../assets/icons/alertas.svg" alt="" class="menu-icon"> Alertas</a></li>
                 <li><a href="historialVisita.html"><img src="../assets/icons/visitas.svg" alt="" class="menu-icon"> Visitas / Cosechas</a></li>
-                <li><a href=""><img src="../assets/icons/historial.svg" alt="" class="menu-icon"> Historial</a></li>
+                <li><a href="historial.html"><img src="../assets/icons/historial.svg" alt="" class="menu-icon"> Historial</a></li>
                 <!-- Clase active en Usuarios -->
                 <li><a href="gestionUsuarios.html" class="active"><img src="../assets/icons/usuarios.svg" alt="" class="menu-icon"> Usuarios</a></li>
             </ul>
@@ -75,17 +76,17 @@
                 <form id="form-nuevo-apicultor">
                     <div class="form-group">
                         <label class="form-label">NOMBRE COMPLETO</label>
-                        <input type="text" class="input-field" value="Rodrigo González Morales" required>
+                        <input type="text" id="input-nombre" class="input-field" value="Rodrigo González Morales" required>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">CORREO ELECTRÓNICO</label>
-                        <input type="email" class="input-field" value="rodgonza@gmail.com" required>
+                        <input type="email" id="input-email" class="input-field" value="rodgonza@gmail.com" required>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">TELÉFONO (OPCIONAL)</label>
-                        <input type="tel" class="input-field" value="+52 962 000 0000">
+                        <input type="tel" id="input-telefono" class="input-field" value="+52 962 000 0000">
                     </div>
 
                     <div class="divider"></div>
@@ -185,6 +186,7 @@
         </div>
     </section>
 
+    <script src="../shared/js/notifications.js"></script>
     <script src="../shared/js/crearUsuario.js"></script>
 </body>
 </html>
