@@ -77,13 +77,23 @@ async function cargarDatosColmena() {
 }
 
 // ── FUNCIÓN 2: LLAMAR A GEMINI ───────────────────────────────────────────────
-// Esta función arma el prompt con los datos de la colmena y se lo manda a Gemini
+// Variable global para poder cancelar la petición de la IA si el usuario sale de la vista
+let groqAbortController = null;
+
+// Esta función arma el prompt con los datos de la colmena y se lo manda a la IA
 async function generarDiagnostico() {
 
     if (!datosDeLaColmena) {
         alert("Espera a que carguen los datos de la colmena");
         return;
     }
+
+    // Si ya hay una petición cargándose, la cancelamos antes de iniciar la nueva
+    if (groqAbortController) {
+        groqAbortController.abort();
+    }
+    groqAbortController = new AbortController();
+    const signal = groqAbortController.signal;
 
     // Deshabilitamos el botón mientras carga
     btnDiagnostico.disabled = true;
@@ -92,15 +102,13 @@ async function generarDiagnostico() {
 
     try {
         // Ahora llamamos a NUESTRA API Java, no a Groq directamente
-        // La API Java es la que tiene la key guardada en el .env de forma segura
         const respuesta = await fetch("/api/groq/diagnostico", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            // Mandamos los datos de la colmena como texto plano
-            // El Java los recibe con ctx.body() y los manda a Groq
-            body: JSON.stringify(datosDeLaColmena)
+            body: JSON.stringify(datosDeLaColmena),
+            signal: signal
         });
 
         // Leemos la respuesta como texto porque ya viene como JSON limpio
@@ -128,17 +136,31 @@ async function generarDiagnostico() {
         });
 
     } catch (error) {
+        if (error.name === 'AbortError') {
+            console.log("Petición de diagnóstico cancelada de forma segura.");
+            return;
+        }
         console.error("Error:", error);
         estadoValor.textContent = "Error al generar el diagnóstico. Intenta de nuevo.";
     } finally {
-        btnDiagnostico.disabled = false;
-        btnDiagnostico.textContent = "Generar nuevo diagnóstico";
+        // Solo restauramos el estado si no fue una cancelación
+        if (!signal.aborted) {
+            btnDiagnostico.disabled = false;
+            btnDiagnostico.textContent = "Generar nuevo diagnóstico";
+        }
     }
 }
 
 // ── EVENTOS ──────────────────────────────────────────────────────────────────
 // Cuando se haga clic en el botón, llamamos a generarDiagnostico
 btnDiagnostico.addEventListener("click", generarDiagnostico);
+
+// Si el usuario sale de la página o navega a otra vista, cancelamos la petición inmediatamente
+window.addEventListener("beforeunload", () => {
+    if (groqAbortController) {
+        groqAbortController.abort();
+    }
+});
 
 // ── INICIO ───────────────────────────────────────────────────────────────────
 // Cuando carga la página, lo primero que hace es cargar los datos de la colmena
