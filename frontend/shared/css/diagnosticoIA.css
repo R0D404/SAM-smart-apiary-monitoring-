@@ -1,0 +1,437 @@
+/* ── VARIABLES GLOBALES ─────────────────────────────────────────────
+   Aquí definimos los colores del proyecto SAM en un solo lugar.
+   Si necesitas cambiar un color, solo lo cambias aquí y se aplica en toda la página.
+   Se acceden con var(--nombre-variable)
+────────────────────────────────────────────────────────────────────── */
+:root {
+    --fondo-oscuro:    #1A1206;   /* Fondo principal café muy oscuro */
+    --fondo-sidebar:   #241A0B;   /* Sidebar un poco más claro */
+    --fondo-card:      #2A1F0E;   /* Fondo de las tarjetas */
+    --amarillo:        #F2A900;   /* Color ámbar principal de SAM */
+    --texto-blanco:    #F5F5F5;   /* Texto principal claro */
+    --texto-gris:      #9C9993;   /* Texto secundario gris */
+    --borde-sutil:     #3B3222;   /* Color de bordes sutiles */
+    --verde:           #3FB8A0;   /* Color para estado OK */
+    --rojo:            #E26248;   /* Color para alertas críticas */
+    --amarillo-alerta: #F2A900;   /* Color para avisos */
+}
+
+/* ── RESET GENERAL ──────────────────────────────────────────────────
+   Quitamos márgenes y paddings por defecto del navegador
+   y hacemos que el padding no agregue tamaño extra a los elementos
+────────────────────────────────────────────────────────────────────── */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Fondo general de toda la página */
+body {
+    background-color: var(--fondo-oscuro);
+    color: var(--texto-blanco);
+    min-height: 100vh;
+}
+
+/* ── SIDEBAR ────────────────────────────────────────────────────────
+   La barra lateral fija a la izquierda
+────────────────────────────────────────────────────────────────────── */
+.sidebar {
+    position: fixed;        /* Se queda fija aunque hagas scroll */
+    top: 0;
+    left: 0;
+    width: 18%;             /* Ocupa el 18% del ancho de la pantalla */
+    min-width: 200px;       /* Nunca baja de 200px en pantallas chicas */
+    height: 100vh;          /* Altura completa de la ventana */
+    background-color: var(--fondo-sidebar);
+    display: flex;
+    flex-direction: column; /* Apila logo, menú y perfil verticalmente */
+    padding-top: 2%;
+}
+
+/* ── LOGO ───────────────────────────────────────────────────────────*/
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 3%;
+    padding: 0 8% 5% 8%;
+    border-bottom: 1px solid var(--borde-sutil);
+}
+
+/* Hexágono amarillo que contiene la abeja */
+.logo-hexagon {
+    width: 45px;
+    height: 45px;
+    background-color: var(--amarillo);
+    /* clip-path recorta el div cuadrado en forma de hexágono */
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0; /* Evita que el hexágono se encoja */
+}
+
+.logo-hexagon img {
+    width: 75%;
+    height: auto;
+}
+
+.logo-text h1 {
+    color: var(--amarillo);
+    font-size: clamp(14px, 1.2vw, 22px); /* Se adapta al tamaño de pantalla */
+    font-weight: 700;
+    line-height: 1;
+}
+
+.logo-text p {
+    color: var(--texto-gris);
+    font-size: clamp(8px, 0.7vw, 12px);
+    white-space: nowrap; /* Evita que el texto salte de línea */
+}
+
+/* ── MENÚ ───────────────────────────────────────────────────────────*/
+.menu {
+    width: 100%;
+    margin-top: 5%;
+    flex: 1; /* Ocupa el espacio disponible empujando el perfil hacia abajo */
+}
+
+.menu ul {
+    list-style: none; /* Quita las viñetas de la lista */
+}
+
+.menu ul li a {
+    display: flex;
+    align-items: center;
+    gap: 8%;
+    padding: 4% 8%;
+    color: var(--texto-blanco);
+    text-decoration: none; /* Quita el subrayado de los enlaces */
+    font-size: clamp(11px, 0.9vw, 16px);
+    transition: background-color 0.2s; /* Animación suave al hacer hover */
+}
+
+.menu ul li a:hover {
+    background-color: var(--amarillo);
+    color: var(--fondo-oscuro);
+    border-radius: 8px;
+}
+
+/* Cuando el hover cambia el fondo a amarillo, el icono se pone negro */
+.menu ul li a:hover .menu-icon {
+    filter: brightness(0);
+}
+
+.menu-icon {
+    width: clamp(14px, 1.1vw, 20px);
+    height: clamp(14px, 1.1vw, 20px);
+    filter: brightness(0) invert(1); /* Hace el icono blanco */
+}
+
+/* Elemento activo del menú (la página donde estamos) */
+.menu ul li.activo a {
+    background-color: var(--amarillo);
+    color: var(--fondo-oscuro);
+    border-radius: 8px;
+}
+
+.menu ul li.activo a .menu-icon {
+    filter: brightness(0);
+}
+
+/* ── PERFIL DE USUARIO (abajo del sidebar) ──────────────────────────*/
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 8%;
+    padding: 5% 8%;
+    border-top: 1px solid var(--borde-sutil);
+    margin-top: auto; /* Lo empuja hasta el fondo del sidebar */
+}
+
+/* Avatar circular con iniciales cuando no hay foto */
+.user-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background-color: var(--verde);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 13px;
+    color: white;
+    flex-shrink: 0;
+}
+
+.profile-text h2 {
+    color: var(--texto-blanco);
+    font-size: clamp(11px, 0.9vw, 15px);
+    font-weight: 600;
+}
+
+.profile-text p {
+    color: var(--texto-gris);
+    font-size: clamp(9px, 0.75vw, 13px);
+}
+
+/* ── CONTENIDO PRINCIPAL ────────────────────────────────────────────
+   Todo lo que está a la derecha del sidebar
+────────────────────────────────────────────────────────────────────── */
+.main-content {
+    margin-left: 18%;      /* Mismo valor que el width del sidebar */
+    min-width: calc(100% - 18%);
+    min-height: 100vh;
+    padding: 2% 3%;
+    background-color: var(--fondo-oscuro);
+}
+
+/* ── ENCABEZADO ─────────────────────────────────────────────────────*/
+.encabezado {
+    display: flex;
+    justify-content: space-between; /* Título a la izquierda, botón a la derecha */
+    align-items: flex-start;
+    margin-bottom: 2%;
+}
+
+.encabezado-texto h1 {
+    font-size: clamp(16px, 1.6vw, 28px);
+    font-weight: 700;
+    color: var(--texto-blanco);
+}
+
+.encabezado-texto p {
+    color: var(--texto-gris);
+    font-size: clamp(11px, 0.85vw, 15px);
+    margin-top: 0.3%;
+}
+
+/* Botón Mi Cuenta arriba a la derecha */
+.btn-mi-cuenta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: 1px solid var(--borde-sutil);
+    border-radius: 50px;  /* Forma de pastilla */
+    padding: 1% 3%;
+    color: var(--texto-blanco);
+    cursor: pointer;
+    font-size: clamp(11px, 0.85vw, 15px);
+    white-space: nowrap;
+}
+
+.cuenta-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background-color: var(--amarillo);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 11px;
+    color: var(--fondo-oscuro);
+}
+
+/* ── CUERPO: DOS COLUMNAS ───────────────────────────────────────────*/
+.cuerpo {
+    display: flex;
+    gap: 2%;
+    align-items: stretch; /* esto ya lo tienes */
+}
+
+/* ── CARDS (tarjetas) ───────────────────────────────────────────────*/
+.card {
+    background-color: var(--fondo-card);
+    border-radius: 12px;
+    padding: 3%;
+    border: 1px solid var(--borde-sutil);
+}
+
+/* Columna izquierda: contexto */
+.contexto {
+     width: 40%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Columna derecha: diagnóstico */
+.diagnostico {
+    width: 58%;
+}
+
+.card-header h2 {
+    font-size: clamp(13px, 1.1vw, 18px);
+    font-weight: 600;
+    color: var(--texto-blanco);
+}
+
+.card-header p {
+    color: var(--texto-gris);
+    font-size: clamp(10px, 0.8vw, 14px);
+    margin-top: 0.5%;
+}
+
+/* ── LISTA DE CONTEXTO ──────────────────────────────────────────────*/
+.lista-contexto {
+    list-style: none;
+    margin-top: 5%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+}
+
+.lista-contexto li {
+    
+    list-style: none;
+    margin-top: 5%;
+    display: flex;
+    flex-direction: column;
+    flex: 1; /* ocupa todo el espacio disponible */
+    justify-content: space-between; /* distribuye los items uniformemente */
+}
+
+.lista-contexto li strong {
+    font-size: clamp(11px, 0.9vw, 15px);
+    color: var(--texto-blanco);
+    display: block;
+}
+
+.lista-contexto li p {
+    font-size: clamp(10px, 0.78vw, 13px);
+    color: var(--texto-gris);
+    margin-top: 1%;
+}
+
+/* ── PUNTOS DE COLOR (dots) ─────────────────────────────────────────
+   Los circulitos de colores que indican el estado
+────────────────────────────────────────────────────────────────────── */
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 4px; /* Lo alinea con el texto */
+}
+
+.dot-verde    { background-color: var(--verde); }
+.dot-amarillo { background-color: var(--amarillo-alerta); }
+.dot-rojo     { background-color: var(--rojo); }
+
+/* ── BADGE GEMINI ───────────────────────────────────────────────────*/
+.badge-gemini {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background-color: var(--fondo-sidebar);
+    border: 1px solid var(--borde-sutil);
+    border-radius: 50px;
+    padding: 1% 3%;
+    font-size: clamp(10px, 0.8vw, 14px);
+    color: var(--texto-blanco);
+    margin-bottom: 3%;
+}
+
+/* ── SECCIÓN DE DIAGNÓSTICO ─────────────────────────────────────────*/
+.diagnostico h2 {
+    font-size: clamp(14px, 1.2vw, 20px);
+    font-weight: 700;
+    margin-bottom: 3%;
+}
+
+/* Caja del estado general de la colonia */
+.estado-box {
+    border: 1px solid var(--amarillo);
+    border-radius: 8px;
+    padding: 3%;
+    margin-bottom: 4%;
+}
+
+.estado-label {
+    font-size: clamp(9px, 0.7vw, 12px);
+    color: var(--texto-gris);
+    letter-spacing: 0.05em; /* Separa un poco las letras */
+    margin-bottom: 1%;
+}
+
+.estado-valor {
+    color: var(--amarillo);
+    font-size: clamp(12px, 1vw, 16px);
+    font-weight: 600;
+}
+
+/* Secciones de causa y acciones */
+.seccion-diagnostico {
+    margin-bottom: 4%;
+}
+
+.seccion-label {
+    font-size: clamp(9px, 0.7vw, 12px);
+    color: var(--texto-gris);
+    letter-spacing: 0.05em;
+    margin-bottom: 2%;
+}
+
+.seccion-diagnostico p,
+.seccion-diagnostico ul {
+    font-size: clamp(11px, 0.88vw, 15px);
+    color: var(--texto-blanco);
+    line-height: 1.6;
+}
+
+.seccion-diagnostico ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.seccion-diagnostico ul li {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+/* ── BOTÓN GENERAR DIAGNÓSTICO ──────────────────────────────────────*/
+.btn-diagnostico {
+    width: 100%;
+    padding: 3%;
+    background-color: var(--amarillo);
+    color: var(--fondo-oscuro);
+    border: none;
+    border-radius: 8px;
+    font-size: clamp(12px, 1vw, 16px);
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 4%;
+    /* Animación suave al hacer hover */
+    transition: opacity 0.2s;
+}
+
+.btn-diagnostico:hover {
+    opacity: 0.85; /* Se vuelve un poco transparente al pasar el mouse */
+}
+
+/* Estado de carga del botón */
+.btn-diagnostico:disabled {
+    opacity: 0.5;
+    cursor: not-allowed; /* Cursor de prohibido cuando está deshabilitado */
+}
+
+/* ── DISCLAIMER ─────────────────────────────────────────────────────*/
+.nota-disclaimer {
+    color: var(--texto-gris);
+    font-size: clamp(9px, 0.72vw, 12px);
+    margin-top: 2%;
+    text-align: center;
+}
+.contexto, .diagnostico {
+    height: 100%; /* Ambas cards toman la misma altura */
+}
+
+.cuerpo {
+    align-items: stretch; /* Estira las cards para que sean iguales */
+}

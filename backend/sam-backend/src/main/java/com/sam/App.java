@@ -3,6 +3,7 @@ package com.sam;
 import io.javalin.Javalin;
 import com.sam.controladores.AuthControlador;
 import com.sam.controladores.DashboardControlador;
+import com.sam.controladores.HistorialControlador;
 import static io.javalin.apibuilder.ApiBuilder.*;
 
 public class App 
@@ -51,6 +52,10 @@ public class App
                 get("/colmena", com.sam.controladores.DashboardColmenaControlador::obtenerDashboardColmena);
             });
             
+            path("/api/historial", () -> {
+                get(HistorialControlador::obtenerHistorial);
+            });
+            
             path("/api/gestion", () -> {
                 get("/apiarios", com.sam.controladores.GestionApiariosControlador::listarApiarios);
                 post("/apiarios", com.sam.controladores.GestionApiariosControlador::crearApiario);
@@ -84,6 +89,14 @@ public class App
                 get("/resumen", com.sam.controladores.CosechasControlador::obtenerResumen);
                 get("/grafica", com.sam.controladores.CosechasControlador::graficaProduccion);
                 get(com.sam.controladores.CosechasControlador::listarCosechas);
+            });
+
+            path("/api/diagnostico", () -> {
+                get("/{id}", com.sam.controladores.DiagnosticoController::getDatosColmena);
+            });
+
+            path("/api/groq", () -> {
+                post("/diagnostico", com.sam.controladores.GroqController::generarDiagnostico);
             });
         });
     }
