@@ -1,19 +1,4 @@
 /* =========================================
-   ESTILOS DEL CONTENIDO PRINCIPAL (MI CUENTA) - CORREGIDO
-   ========================================= */
-.main-content {
-    background-color: #1A1206; 
-    padding: 40px 50px; 
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    overflow-y: auto; 
-    overflow-x: hidden; /* Previene el desbordamiento horizontal */
-    font-family: 'Inter', sans-serif;
-}
-
-/* =========================================
    CABECERA Y TOASTS
 ========================================= */
 .header-container {
@@ -79,19 +64,19 @@
     display: grid;
     grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); 
     gap: 32px;
-    align-items: start; /* Cambiado para que las tarjetas se alineen arriba */
+    align-items: start; /* Mantiene las tarjetas alineadas arriba */
     justify-content: left;
     width: 100%;
-    max-width: 1000px; /* Aumentado para que las columnas tengan más espacio */
+    max-width: 1000px; /* Ancho optimizado */
 }
 
-/* Tarjeta Principal Izquierda */
+/* Tarjeta Principal Izquierda (Formulario) */
 .main-card {
-    background-color: #1e160e;
-    border: 1px solid #3b3222;
+    background-color: var(--color-bg-card, #1e160e);
+    border: 1px solid var(--color-border, #3b3222);
     border-radius: 16px;
     padding: 30px;
-    width: 100%; /* Corregido el salto de línea */
+    width: 100%;
     display: flex;
     flex-direction: column;
 }
@@ -142,7 +127,7 @@
 .custom-checkbox input:checked ~ .checkmark { background-color: #F2A900; border-color: #F2A900; }
 .checkmark:after { content: ""; position: absolute; display: none; }
 .custom-checkbox input:checked ~ .checkmark:after { display: block; }
-.custom-checkbox .checkmark:after { left: 5px; top: 2px; width: 3px; height: 8px; border: solid #1A1206; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+.custom-checkbox .checkmark:after { left: 5px; top: 2px; width: 3px; height: 8px; border: solid var(--color-bg-dark, #1A1206); border-width: 0 2px 2px 0; transform: rotate(45deg); }
 
 /* Botones */
 .btn-primary { background-color: #F2A900; color: #1e160e; border: none; padding: 12px 24px; border-radius: 12px; cursor: pointer; font-size: 13px; font-weight: 600; font-family: 'Inter', sans-serif; transition: background-color 0.3s; }
@@ -162,7 +147,6 @@
 .section-header h3 { color: #F5F5F5; font-size: 15px; margin: 0 0 4px 0; font-weight: bold; }
 .section-header p { color: #8A7A5A; font-size: 12px; margin: 0; }
 .mb-4 { margin-bottom: 24px; }
-.mt-4 { margin-top: 24px; }
 
 .bordered-box {
     background-color: transparent;
@@ -170,31 +154,23 @@
     border-radius: 12px;
     padding: 16px;
     display: flex;
-    align-items: center;
-    gap: 12px;
 }
 
-.hover-box { cursor: pointer; transition: background-color 0.2s; }
-.hover-box:hover { background-color: rgba(255,255,255,0.02); border-color: #4A3A1C; }
-
-/* Avatar y Textos de "Cambiar Foto" */
+/* Avatar de iniciales */
 .avatar-lg {
-    width: 40px;
-    height: 40px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #1e160e;
     font-weight: bold;
-    font-size: 14px;
     flex-shrink: 0;
 }
 .bg-teal { background-color: #2dd4bf; }
 
 .box-text { display: flex; flex-direction: column; gap: 2px; }
-.box-title { color: #F5F5F5; font-size: 13px; font-weight: 600; }
-.box-subtitle { color: #8A7A5A; font-size: 11px; }
+.box-title { color: #F5F5F5; font-weight: 600; }
+.box-subtitle { color: #8A7A5A; }
 
 /* Grid de Información Read-only */
 .info-grid {
