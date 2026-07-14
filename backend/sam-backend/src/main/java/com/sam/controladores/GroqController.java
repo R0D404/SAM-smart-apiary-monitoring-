@@ -62,10 +62,14 @@ public class GroqController {
             String jsonBody = requestBody.toString();
             System.out.println("Mandando a Groq: " + jsonBody.substring(0, Math.min(200, jsonBody.length())));
 
-            // Hacemos la petición a Groq
-            HttpClient client = HttpClient.newHttpClient();
+            // Hacemos la petición a Groq con límites de tiempo (timeout) para evitar bloqueos indefinidos
+            HttpClient client = HttpClient.newBuilder()
+                .connectTimeout(java.time.Duration.ofSeconds(6))
+                .build();
+
             HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(GROQ_URL))
+                .timeout(java.time.Duration.ofSeconds(6))
                 .header("Content-Type", "application/json")
                 .header("Authorization", "Bearer " + API_KEY)
                 .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
@@ -101,6 +105,9 @@ public class GroqController {
                    .result("Error de Groq: " + response.body());
             }
 
+        } catch (java.net.http.HttpTimeoutException e) {
+            System.out.println("Tiempo de espera agotado al conectar con Groq: " + e.getMessage());
+            ctx.status(504).result("Error de Groq: Tiempo de espera agotado al conectar con el servicio.");
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
             e.printStackTrace();
