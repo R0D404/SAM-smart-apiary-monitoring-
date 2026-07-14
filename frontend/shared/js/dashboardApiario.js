@@ -110,7 +110,7 @@ function renderColmenas(colmenas) {
         const estadoClase = colmena.estado || "verde";
         
         const cardHtml = `
-            <article class="colmena-card" tabindex="0" role="button">
+            <article class="colmena-card" tabindex="0" role="button" onclick="window.location.href='dashboardColmena.html?id=${colmena.id}'">
                 <div class="colmena-status-dot ${estadoClase}"></div>
                 <div class="colmena-info-wrapper">
                     <h3 class="colmena-id">${colmena.id || "C-?"}</h3>
@@ -127,57 +127,53 @@ function renderColmenas(colmenas) {
 // =========================================
 let chartEvolucionPesoInstance = null;
 
-function renderChartEvolucionPeso(chartData) {
+function renderChartEvolucionPeso() {
     const canvas = document.getElementById("chart-evolucion-peso");
     if (!canvas) return;
 
-    if (!chartData || !chartData.labels || !chartData.datasets) return;
+    if (!colmenasData || colmenasData.length === 0) return;
 
     if (chartEvolucionPesoInstance) {
         chartEvolucionPesoInstance.destroy();
     }
 
-    const isMobile = window.innerWidth <= 768;
+    // Dynamic width for many colmenas
+    const wrapper = document.getElementById("barChartWrapperApiario");
+    if (wrapper) {
+        wrapper.style.width = Math.max(1000, colmenasData.length * 40) + 'px';
+    }
+
+    // Extract labels and weights
+    const labels = colmenasData.map(c => c.id);
+    const dataValues = colmenasData.map(c => {
+        const val = parseFloat(c.peso);
+        return isNaN(val) ? 0.0 : val;
+    });
 
     chartEvolucionPesoInstance = new Chart(canvas, {
-        type: 'line',
+        type: 'bar',
         data: {
-            labels: chartData.labels,
-            datasets: chartData.datasets.map((dataset, index) => ({
-                label: dataset.label,
-                data: dataset.data,
-                borderColor: index === 0 ? '#F2A900' : '#4CAF50', // Yellow for first, Green for second
-                backgroundColor: 'transparent',
-                borderWidth: 2,
-                pointBackgroundColor: index === 0 ? '#F2A900' : '#4CAF50',
-                pointRadius: isMobile ? 2 : 4,
-                pointHoverRadius: 6,
-                tension: 0.1
-            }))
+            labels: labels,
+            datasets: [{
+                label: 'Peso (kg)',
+                data: dataValues,
+                backgroundColor: '#F2A900',
+                borderRadius: 4,
+                barPercentage: 0.6
+            }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-                legend: {
-                    position: 'bottom',
-                    align: 'start',
-                    labels: {
-                        color: '#9c9993',
-                        font: { family: "'Inter', sans-serif", size: 11 },
-                        usePointStyle: false,
-                        boxWidth: 12,
-                        boxHeight: 2
-                    }
-                },
+                legend: { display: false },
                 tooltip: {
                     backgroundColor: 'rgba(26, 18, 6, 0.9)',
                     titleColor: '#F5F5F5',
                     bodyColor: '#F2A900',
                     borderColor: '#3b3222',
                     borderWidth: 1,
-                    padding: 10,
-                    displayColors: true
+                    padding: 10
                 }
             },
             scales: {
@@ -185,20 +181,17 @@ function renderChartEvolucionPeso(chartData) {
                     grid: { display: false, drawBorder: false },
                     ticks: {
                         color: '#9c9993',
-                        font: { family: "'Inter', sans-serif", size: 10 },
-                        maxTicksLimit: isMobile ? 4 : 6
+                        font: { family: "'Inter', sans-serif", size: 10 }
                     }
                 },
                 y: {
+                    beginAtZero: true,
                     grid: { color: '#3b3222', drawBorder: false },
                     border: { display: false },
                     ticks: {
                         color: '#9c9993',
-                        font: { family: "'Inter', sans-serif", size: 10 },
-                        stepSize: 5
-                    },
-                    min: 30,
-                    max: 50
+                        font: { family: "'Inter', sans-serif", size: 10 }
+                    }
                 }
             }
         }
@@ -221,18 +214,10 @@ function updateDashboard(data) {
         renderStats(apiarioStats);
     }
 
-    if (data.evolucionPeso) {
-        document.getElementById("chart-evolucion-peso-card").style.display = "block";
-        evolucionPesoData = data.evolucionPeso;
-        renderChartEvolucionPeso(evolucionPesoData);
-    } else {
-        const chartCard = document.getElementById("chart-evolucion-peso-card");
-        if (chartCard) chartCard.style.display = "none";
-    }
-
     if (data.colmenas) {
         colmenasData = data.colmenas;
         renderColmenas(colmenasData);
+        renderChartEvolucionPeso();
     }
 
     if (data.usuario) {
@@ -280,8 +265,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Resize listener para gráficas
     window.addEventListener('resize', () => {
-        if (evolucionPesoData) {
-            renderChartEvolucionPeso(evolucionPesoData);
+        if (colmenasData && colmenasData.length > 0) {
+            renderChartEvolucionPeso();
         }
     });
 });
