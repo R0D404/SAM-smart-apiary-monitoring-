@@ -130,13 +130,13 @@ body {
 }
 
 /* Elemento activo del menú (la página donde estamos) */
-.menu ul li.activo a {
+.sidebar .menu ul li a.active {
     background-color: var(--amarillo);
     color: var(--fondo-oscuro);
     border-radius: 8px;
 }
 
-.menu ul li.activo a .menu-icon {
+.sidebar .menu ul li a.active .menu-icon {
     filter: brightness(0);
 }
 

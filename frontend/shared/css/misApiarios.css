@@ -125,11 +125,11 @@ body {
 }
 
 /* Estado activo (la vista en la que estás parado) */
-.sidebar .menu ul li a.activo {
+.sidebar .menu ul li a.active {
     background-color: var(--amarillo);
     color: #1A1206;
 }
-.sidebar .menu ul li a.activo .menu-icon {
+.sidebar .menu ul li a.active .menu-icon {
     filter: brightness(0);
 }
 
