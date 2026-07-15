@@ -208,9 +208,12 @@ document.addEventListener("DOMContentLoaded", () => {
     // Initialize
     fetchDashboardData();
 
-    document.getElementById("btn-mantenimiento").addEventListener("click", () => {
-        alert("Funcionalidad de mantenimiento en construcción.");
-    });
+    const btnMantenimiento = document.getElementById("btn-mantenimiento");
+    if (btnMantenimiento) {
+        btnMantenimiento.addEventListener("click", () => {
+            alert("Funcionalidad de mantenimiento en construcción.");
+        });
+    }
 
     const btnIa = document.getElementById("btn-ia");
     if (btnIa) {
