@@ -38,6 +38,19 @@ public class DashboardApiarioControlador {
         ObjectNode response = mapper.createObjectNode();
 
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            // Obtener nombre del usuario
+            String nombreUsuario = "Apicultor";
+            try (PreparedStatement stmt = conn.prepareStatement("SELECT nombre FROM USUARIO WHERE email = ?")) {
+                stmt.setString(1, usuarioActual);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    if (rs.next()) {
+                        nombreUsuario = rs.getString("nombre");
+                    }
+                }
+            }
+            ObjectNode usuarioNode = mapper.createObjectNode();
+            usuarioNode.put("nombre", nombreUsuario);
+            response.set("usuario", usuarioNode);
             // 1. Apiario Info
             ObjectNode apiarioNode = mapper.createObjectNode();
             try (PreparedStatement stmt = conn.prepareStatement("SELECT nombre, localidad, municipio FROM APIARIO WHERE id = ?")) {
