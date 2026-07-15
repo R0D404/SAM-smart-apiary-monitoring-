@@ -53,15 +53,15 @@ body {
 .logo {
     display: flex;
     align-items: center;
-    gap: 3%;
-    padding: 0 8% 5% 8%;
-    border-bottom: 1px solid var(--borde-sutil);
+    gap: clamp(13px, 0.94vw, 23px);
+    padding: clamp(18px, 1.25vw, 30px);
 }
 
 /* Hexágono amarillo que contiene la abeja */
 .logo-hexagon {
-    width: 45px;
-    height: 45px;
+    width: clamp(58px, 4.0vw, 96px);
+    min-width: clamp(58px, 4.0vw, 96px);
+    height: clamp(56px, 3.94vw, 95px);
     background-color: var(--amarillo);
     /* clip-path recorta el div cuadrado en forma de hexágono */
     clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
@@ -72,20 +72,20 @@ body {
 }
 
 .logo-hexagon img {
-    width: 75%;
+    width: clamp(49px, 3.43vw, 83px);
     height: auto;
 }
 
 .logo-text h1 {
     color: var(--amarillo);
-    font-size: clamp(14px, 1.2vw, 22px); /* Se adapta al tamaño de pantalla */
+    font-size: clamp(18px, 1.25vw, 30px);
     font-weight: 700;
     line-height: 1;
 }
 
 .logo-text p {
     color: var(--texto-gris);
-    font-size: clamp(8px, 0.7vw, 12px);
+    font-size: clamp(12px, 0.88vw, 22px);
     white-space: nowrap; /* Evita que el texto salte de línea */
 }
 
@@ -143,45 +143,51 @@ body {
 /* ── PERFIL DE USUARIO (abajo del sidebar) ──────────────────────────*/
 .user-profile {
     display: flex;
+    flex-direction: row;
     align-items: center;
-    gap: 8%;
-    padding: 5% 8%;
-    border-top: 1px solid var(--borde-sutil);
-    margin-top: auto; /* Lo empuja hasta el fondo del sidebar */
+    gap: clamp(13px, 0.94vw, 23px);
+    padding: clamp(18px, 1.25vw, 30px);
+    margin-top: auto;
+    margin-bottom: clamp(18px, 1.25vw, 30px);
+    width: 100%;
+    box-sizing: border-box;
 }
 
 /* Avatar circular con iniciales cuando no hay foto */
 .user-avatar {
-    width: 38px;
-    height: 38px;
+    width: clamp(41px, 2.81vw, 67px);
+    height: clamp(41px, 2.81vw, 67px);
     border-radius: 50%;
-    background-color: var(--verde);
+    background-color: var(--amarillo);
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 700;
-    font-size: 13px;
-    color: white;
+    font-size: clamp(16px, 1.1vw, 24px);
+    color: var(--fondo-oscuro);
     flex-shrink: 0;
 }
 
 .profile-text h2 {
     color: var(--texto-blanco);
-    font-size: clamp(11px, 0.9vw, 15px);
-    font-weight: 600;
+    font-size: clamp(14px, 1.0vw, 24px);
+    font-weight: bold;
+    margin: 0;
+    line-height: 1.2;
 }
 
 .profile-text p {
     color: var(--texto-gris);
-    font-size: clamp(9px, 0.75vw, 13px);
+    font-size: clamp(12px, 0.82vw, 19px);
+    margin: 0;
 }
 
 /* ── CONTENIDO PRINCIPAL ────────────────────────────────────────────
    Todo lo que está a la derecha del sidebar
 ────────────────────────────────────────────────────────────────────── */
 .main-content {
-    margin-left: 18%;      /* Mismo valor que el width del sidebar */
-    min-width: calc(100% - 18%);
+    margin-left: clamp(240px, 20%, 300px);
+    min-width: calc(100% - clamp(240px, 20%, 300px));
     min-height: 100vh;
     padding: 2% 3%;
     background-color: var(--fondo-oscuro);
