@@ -214,14 +214,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const btnIa = document.getElementById("btn-ia");
     if (btnIa) {
-        if (colmenaId) {
-            btnIa.href = `diagnosticoIA.html?id=${colmenaId}`;
-        } else {
-            btnIa.addEventListener("click", (e) => {
-                e.preventDefault();
+        btnIa.addEventListener("click", () => {
+            if (colmenaId) {
+                window.location.href = `diagnosticoIA.html?id=${colmenaId}`;
+            } else {
                 alert("Por favor, selecciona una colmena válida primero.");
-            });
-        }
+            }
+        });
     }
 
 
