@@ -112,11 +112,10 @@ body {
     align-items: center;
     gap: clamp(13px, 0.94vw, 23px);
     width: auto;
-    margin: 0 clamp(10px, 0.7vw, 16px);
     padding: clamp(10px, 0.62vw, 14px) clamp(18px, 1.25vw, 30px);
     color: var(--texto-blanco);
     text-decoration: none;
-    border-radius: clamp(10px, 0.62vw, 14px);
+    transition: all 0.2s ease;
 }
 .sidebar .menu ul li a .menu-icon {
     width: clamp(18px, 1.25vw, 30px);
@@ -128,6 +127,8 @@ body {
 .sidebar .menu ul li a.active {
     background-color: var(--amarillo);
     color: #1A1206;
+    border-radius: clamp(10px, 0.62vw, 14px);
+    font-weight: 600;
 }
 .sidebar .menu ul li a.active .menu-icon {
     filter: brightness(0);

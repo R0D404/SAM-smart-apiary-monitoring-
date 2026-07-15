@@ -41,8 +41,7 @@ body {
     position: fixed;        /* Se queda fija aunque hagas scroll */
     top: 0;
     left: 0;
-    width: 18%;             /* Ocupa el 18% del ancho de la pantalla */
-    min-width: 200px;       /* Nunca baja de 200px en pantallas chicas */
+    width: clamp(240px, 20%, 300px); /* Ancho estandarizado del sidebar */
     height: 100vh;          /* Altura completa de la ventana */
     background-color: var(--fondo-sidebar);
     display: flex;
@@ -104,18 +103,18 @@ body {
 .menu ul li a {
     display: flex;
     align-items: center;
-    gap: 8%;
-    padding: 4% 8%;
+    gap: clamp(13px, 0.94vw, 23px);
+    padding: clamp(10px, 0.62vw, 14px) clamp(18px, 1.25vw, 30px);
     color: var(--texto-blanco);
     text-decoration: none; /* Quita el subrayado de los enlaces */
-    font-size: clamp(11px, 0.9vw, 16px);
+    font-size: clamp(12px, 0.88vw, 22px);
     transition: background-color 0.2s; /* Animación suave al hacer hover */
 }
 
 .menu ul li a:hover {
     background-color: var(--amarillo);
     color: var(--fondo-oscuro);
-    border-radius: 8px;
+    border-radius: clamp(10px, 0.62vw, 14px);
 }
 
 /* Cuando el hover cambia el fondo a amarillo, el icono se pone negro */
@@ -124,8 +123,8 @@ body {
 }
 
 .menu-icon {
-    width: clamp(14px, 1.1vw, 20px);
-    height: clamp(14px, 1.1vw, 20px);
+    width: clamp(18px, 1.25vw, 30px);
+    height: clamp(18px, 1.25vw, 30px);
     filter: brightness(0) invert(1); /* Hace el icono blanco */
 }
 
@@ -133,7 +132,8 @@ body {
 .sidebar .menu ul li a.active {
     background-color: var(--amarillo);
     color: var(--fondo-oscuro);
-    border-radius: 8px;
+    border-radius: clamp(10px, 0.62vw, 14px);
+    font-weight: 600;
 }
 
 .sidebar .menu ul li a.active .menu-icon {

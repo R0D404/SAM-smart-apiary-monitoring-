@@ -139,6 +139,18 @@
     filter: brightness(0); /* Le quita todo el brillo a la imagen, convirtiendo el icono blanco a color negro puro instantáneamente */
 }
 
+/* Estado activo del menú (página actual) */
+.sidebar .menu ul li a.active {
+    background-color: var(--color-primary, #F2A900);
+    color: var(--color-text-dark, #1A1206);
+    border-radius: var(--radius-md, clamp(10px, 0.62vw, 14px));
+    font-weight: 600;
+}
+
+.sidebar .menu ul li a.active .menu-icon {
+    filter: brightness(0);
+}
+
 /* =========================================
    ESTILOS DEL PERFIL DE USUARIO EN LA BARRA LATERAL
    ========================================= */
