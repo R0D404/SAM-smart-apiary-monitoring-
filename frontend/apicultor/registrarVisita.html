@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAM · Registrar Visita</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../shared/css/registrarVisita.css">
+</head>
+<body>
+
+    
+    <section class="sidebar">
+        <div class="logo">
+            <hexagon>
+                <img src="../assets/img/logo/logoSam.png" alt="">
+            </hexagon>
+            <div class="logo-text">
+                <h1>SAM</h1>
+                <p>Smart Apiary Monitoring</p>
+            </div>
+        </div>
+        <div class="menu">
+            <ul>
+                <li><a href="dashboardApiario.html"><img src="../assets/icons/dashboard.svg" alt="" class="menu-icon"> Dashboard</a></li>
+                <li><a href="misApiarios.html"><img src="../assets/icons/apiarios.svg" alt="" class="menu-icon"> Mis apiarios</a></li>
+                <li><a href="colmenas.html"><img src="../assets/icons/colmenas.svg" alt="" class="menu-icon"> Colmenas</a></li>
+                <li><a href="alertas.html"><img src="../assets/icons/alertas.svg" alt="" class="menu-icon"> Alertas</a></li>
+                <li><a aria-current="page" class="active" href="registrarVisita.html"><img src="../assets/icons/visitas.svg" alt="" class="menu-icon"> Registrar visita</a></li>
+                <li><a href="historial.html"><img src="../assets/icons/historial.svg" alt="" class="menu-icon"> Historial</a></li>
+            </ul>
+        </div>
+        <div class="user-profile">
+            <div class="user-avatar-indicator" style="background-color: #ffbb00; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: #1e1e1e; font-weight: bold; width: 41px; height: 41px;" id="sidebar-user-avatar">--</div>
+            <div class="profile-text">
+                <h2 id="sidebar-user-name">---</h2>
+                <p>Apicultor</p>
+            </div>
+        </div>
+    </section>
+
+   
+    <section class="main-content">
+
+        
+        <div class="encabezado">
+            <div class="encabezado-texto">
+                <h1>Registrar visita</h1>
+                <p>Registra tu inspección. Si hubo cosecha, añádela en el mismo formulario.</p>
+            </div>
+            <div class="encabezado-acciones">
+                <a href="historial.html" class="btn-secundario" id="btn-volver" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center; height: 38px;">← Visitas</a>
+                <a href="miCuenta.html" class="btn-mi-cuenta" style="text-decoration: none;">
+                    <div class="cuenta-avatar" id="header-user-avatar" style="background-color: #f2a900;">--</div>
+                    <span>Mi cuenta</span>
+                </a>
+            </div>
+        </div>
+
+        
+        <div class="breadcrumb">
+            <span>Visitas</span>
+            <span class="breadcrumb-sep">›</span>
+            <span class="breadcrumb-actual">Nueva visita</span>
+        </div>
+
+        
+        <div class="cuerpo">
+
+           
+            <div class="card formulario">
+
+                <div class="card-header">
+                    <h2>Datos de la visita</h2>
+                    <p>Información de la inspección en campo</p>
+                </div>
+
+                
+                <div class="campo">
+                    <label for="colmena">COLMENA</label>
+                    <select id="colmena" name="colmena">
+                        <option value="">Selecciona una colmena</option>
+                        <!-- JS llenará estas opciones dinámicamente desde la API -->
+                    </select>
+                </div>
+
+                <!-- Campo: Fecha -->
+                <div class="campo">
+                    <label for="fecha">FECHA DE LA VISITA</label>
+                    <input type="date" id="fecha" name="fecha">
+                </div>
+
+                <!-- Campo: Estado de la colonia -->
+                <div class="campo">
+                    <label for="estado-colonia">ESTADO DE LA COLONIA</label>
+                    <input 
+                        type="text" 
+                        id="estado-colonia" 
+                        name="estado_colonia"
+                        placeholder="Ej. Fuerte y activa"
+                    >
+                </div>
+
+                <!-- Sección cosecha opcional -->
+                <div class="seccion-cosecha">
+                    <p class="label-cosecha">Cosecha del día (opcional)</p>
+                    <div class="fila-cosecha">
+                        <div class="campo">
+                            <label for="kg-cosechados">KG COSECHADOS</label>
+                            <input 
+                                type="number" 
+                                id="kg-cosechados" 
+                                name="kg_cosechados"
+                                placeholder="0.0"
+                                step="0.1"
+                                min="0"
+                            >
+                        </div>
+                        <div class="campo">
+                            <label for="calidad-miel">CALIDAD / TIPO DE MIEL</label>
+                            <input 
+                                type="text" 
+                                id="calidad-miel" 
+                                name="calidad_miel"
+                                placeholder="Ej. Multifloral"
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Checkbox reina -->
+                <div class="campo-checkbox">
+                    <input type="checkbox" id="reina-vista" name="reina_vista">
+                    <label for="reina-vista">Marcar si la reina fue vista durante la inspección</label>
+                </div>
+
+                <!-- Textarea notas -->
+                <div class="campo">
+                    <div class="notas-header">
+                        <span class="dot-verde"></span>
+                        <label for="notas">Notas de la visita</label>
+                    </div>
+                    <textarea 
+                        id="notas" 
+                        name="notas"
+                        placeholder="Escribe observaciones de la inspección (opcional)"
+                        rows="3"
+                    ></textarea>
+                </div>
+
+                <!-- Botón guardar -->
+                <button class="btn-guardar" id="btn-guardar">
+                    Guardar visita
+                </button>
+
+            </div>
+
+            <!-- ── COLUMNA DERECHA: Resumen ── -->
+            <div class="card resumen">
+
+                <div class="card-header">
+                    <h2>Resumen</h2>
+                    <p>Revisa antes de guardar</p>
+                </div>
+
+                <!-- Item 1: Colmena seleccionada -->
+                <div class="resumen-item resumen-item-activo">
+                    <input type="checkbox" checked disabled>
+                    <div class="resumen-texto">
+                        <!-- JS llenará esto cuando el usuario seleccione la colmena -->
+                        <strong id="resumen-colmena">Colmena —</strong>
+                        <span id="resumen-apiario">Apiario —</span>
+                    </div>
+                </div>
+
+                <!-- Item 2: Estado de la colonia -->
+                <div class="resumen-item">
+                    <input type="checkbox" id="check-estado" disabled>
+                    <div class="resumen-texto">
+                        <strong id="resumen-estado">Estado: —</strong>
+                        <span id="resumen-reina">—</span>
+                    </div>
+                </div>
+
+                <!-- Item 3: Cosecha -->
+                <div class="resumen-item">
+                    <input type="checkbox" id="check-cosecha" disabled>
+                    <div class="resumen-texto">
+                        <strong id="resumen-cosecha-kg">Cosecha: — kg</strong>
+                        <span id="resumen-cosecha-calidad">—</span>
+                    </div>
+                </div>
+
+                <!-- Tip -->
+                <div class="tip-box">
+                    <p class="tip-titulo">Tip</p>
+                    <p class="tip-texto">Registra la cosecha el mismo día para que cuadre con el peso del sensor.</p>
+                </div>
+
+                <!-- Estado final -->
+                <div class="estado-final">
+                    <p class="estado-label">ESTADO</p>
+                    <p class="estado-valor" id="estado-formulario">Completa los datos</p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+    <script src="../shared/js/sidebar.js" defer></script>
+</body>
+</html>

@@ -41,6 +41,30 @@
         <artifactId>jackson-databind</artifactId>
         <version>2.15.0</version>
     </dependency>
+    <!-- MariaDB JDBC Driver -->
+    <dependency>
+        <groupId>org.mariadb.jdbc</groupId>
+        <artifactId>mariadb-java-client</artifactId>
+        <version>3.3.3</version>
+    </dependency>
+    <!-- BCrypt para hashing de contraseñas -->
+    <dependency>
+        <groupId>org.mindrot</groupId>
+        <artifactId>jbcrypt</artifactId>
+        <version>0.4</version>
+    </dependency>
+    <!-- Dotenv para leer variables de entorno seguras -->
+    <dependency>
+        <groupId>io.github.cdimascio</groupId>
+        <artifactId>dotenv-java</artifactId>
+        <version>3.0.0</version>
+    </dependency>
+    <!-- Gson: para convertir objetos Java a JSON y viceversa -->
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>2.10.1</version>
+    </dependency>
   </dependencies>
 
   <build>
@@ -95,6 +119,31 @@
         <plugin>
           <artifactId>maven-project-info-reports-plugin</artifactId>
           <version>3.0.0</version>
+        </plugin>
+        
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <version>3.6.0</version>
+            <configuration>
+                <archive>
+                    <manifest>
+                        <mainClass>com.sam.App</mainClass>
+                    </manifest>
+                </archive>
+                <descriptorRefs>
+                    <descriptorRef>jar-with-dependencies</descriptorRef>
+                </descriptorRefs>
+            </configuration>
+            <executions>
+                <execution>
+                    <id>make-assembly</id>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>single</goal>
+                    </goals>
+                </execution>
+            </executions>
         </plugin>
       </plugins>
     </pluginManagement>

@@ -1,0 +1,153 @@
+/* =========================================
+   ESTILOS DEL CONTENIDO PRINCIPAL
+   ========================================= */
+.main-content {
+    position: fixed; 
+    top: 0; 
+    left: clamp(240px, 20%, 300px); 
+    height: 100vh; 
+    width: calc(100% - clamp(240px, 20%, 300px)); 
+    background-color: #1A1206; 
+    padding: clamp(30px, 2.5vw, 50px); 
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto; 
+    font-family: 'Inter', sans-serif;
+}
+
+/* =========================================
+   BOTÓN SUPERIOR DERECHO (MI CUENTA)
+========================================= */
+.user-info-btn {
+    position: absolute; 
+    top: clamp(18px, 1.25vw, 30px); 
+    right: clamp(18px, 1.25vw, 30px); 
+    display: flex; 
+    align-items: center; 
+    gap: clamp(10px, 0.62vw, 14px); 
+    padding: clamp(5px, 0.37vw, 10px) clamp(14px, 1.0vw, 24px) clamp(5px, 0.37vw, 10px) clamp(5px, 0.37vw, 10px); 
+    border: clamp(1px, 0.06vw, 1px) solid #3b3222; 
+    border-radius: clamp(46px, 3.12vw, 74px); 
+    background-color: transparent; 
+    cursor: pointer;
+    z-index: 10;
+}
+.user-info-btn .circle-avatar { width: clamp(26px, 2.18vw, 36px); height: clamp(26px, 2.18vw, 36px); border-radius: 50%; background-color: #F2A900; }
+.user-info-btn p { color: #F5F5F5; font-size: clamp(11px, 0.74vw, 14px); margin: 0; }
+
+/* =========================================
+   CABECERA Y BREADCRUMB
+========================================= */
+.header-container {
+    display: flex; justify-content: space-between; align-items: flex-end; 
+    margin-bottom: clamp(24px, 2vw, 40px); margin-top: 10px;
+}
+.breadcrumb {
+    color: #8A7A5A; font-size: 13px; margin-bottom: 8px;
+}
+.breadcrumb .highlight { color: #8A7A5A; font-weight: 500; } /* Todo gris en el diseño */
+.page-title h2 { color: #F5F5F5; font-size: clamp(22px, 1.8vw, 30px); margin: 0 0 6px 0; font-weight: bold; }
+.page-title p { color: #8A7A5A; font-size: 14px; margin: 0; max-width: 600px; }
+.header-actions { display: flex; gap: 16px; }
+
+/* Botones Cabecera / Generales */
+.btn-primary { background-color: #F2A900; color: #1e160e; border: none; padding: 12px 24px; border-radius: 12px; cursor: pointer; font-size: 14px; font-weight: 600; font-family: 'Inter', sans-serif; transition: background-color 0.3s; }
+.btn-primary:hover { background-color: #d49300; }
+.btn-outline-dark { background-color: transparent; color: #F2A900; border: 1px solid #3b3222; padding: 10px 20px; border-radius: 12px; cursor: pointer; font-size: 13px; font-weight: 600; font-family: 'Inter', sans-serif; transition: all 0.3s; display: flex; align-items: center; }
+.btn-outline-dark:hover { background-color: #241A0B; border-color: #F2A900; }
+.btn-outline-cancel { background-color: transparent; color: #F5F5F5; border: 1px solid #3b3222; padding: 12px 24px; border-radius: 12px; cursor: pointer; font-size: 14px; font-weight: 500; font-family: 'Inter', sans-serif; transition: all 0.3s; }
+.btn-outline-cancel:hover { background-color: rgba(255,255,255,0.05); }
+
+/* =========================================
+   GRID PRINCIPAL
+========================================= */
+.maintenance-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 24px; align-items: flex-start; }
+.main-card { background-color: #1e160e; border: 1px solid #3b3222; border-radius: 16px; padding: clamp(24px, 2vw, 32px); display: flex; flex-direction: column; }
+.card-header h3 { color: #F5F5F5; font-size: 18px; margin: 0 0 24px 0; font-weight: bold; }
+.card-title-sm { color: #F5F5F5; font-size: 16px; font-weight: bold; margin: 0; }
+
+/* Utilidades de espaciado y flex */
+.mt-3 { margin-top: 16px; }
+.mt-4 { margin-top: 24px; }
+.mb-4 { margin-bottom: 24px; }
+.flex-1 { flex: 1; }
+.form-row { display: flex; gap: 24px; }
+.form-group { display: flex; flex-direction: column; }
+.form-label { color: #8A7A5A; text-transform: uppercase; font-size: 11px; font-weight: 600; margin-bottom: 12px; letter-spacing: 0.5px; }
+
+/* Inputs y Textareas */
+.input-field { background-color: transparent; border: 1px solid #3b3222; color: #F5F5F5; font-family: 'Inter', sans-serif; font-size: 14px; border-radius: 8px; padding: 14px 16px; width: 100%; box-sizing: border-box; outline: none; transition: border-color 0.3s; }
+.input-field:focus { border-color: #F2A900; }
+.textarea-field { resize: none; line-height: 1.5; padding-bottom: 24px; /* Espacio para el contador */ }
+
+.position-relative { position: relative; }
+.char-counter { position: absolute; bottom: 12px; right: 16px; color: #8A7A5A; font-size: 12px; }
+
+/* Select Personalizado */
+.custom-select-wrapper { background-color: transparent; border: 1px solid #3b3222; border-radius: 8px; padding: 0 16px; position: relative; }
+.custom-select { width: 100%; background: transparent; color: #F5F5F5; border: none; padding: 14px 0; font-family: 'Inter', sans-serif; font-size: 14px; outline: none; cursor: pointer; appearance: none; }
+.custom-select-wrapper::after { content: '▼'; font-size: 10px; color: #8A7A5A; position: absolute; right: 16px; top: 50%; transform: translateY(-50%); pointer-events: none; }
+
+/* Input Date (Ocultar icono nativo feo en webkit para mantener el tuyo o usar el por defecto limpio) */
+input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.6) sepia(1) saturate(3) hue-rotate(5deg); cursor: pointer; }
+
+/* =========================================
+   PILL BUTTONS (RADIO) - TIPO DE EVENTO
+========================================= */
+.pill-group { display: flex; gap: 12px; flex-wrap: wrap; }
+.pill-label { cursor: pointer; position: relative; }
+.pill-label input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
+.pill-label span { display: inline-block; padding: 8px 20px; border: 1px solid #3b3222; border-radius: 20px; color: #8A7A5A; font-size: 13px; font-weight: 500; transition: all 0.2s ease; }
+.pill-label:hover span { background-color: rgba(255,255,255,0.05); }
+
+/* Estado Activo del Pill */
+.pill-label input[type="radio"]:checked + span { background-color: #F2A900; border-color: #F2A900; color: #1e160e; font-weight: 600; }
+
+/* Alert box (Información Teal) */
+.alert-box-teal { background-color: #1a221f; /* Fondo muy oscuro con toque teal */ border: 1px solid #1c362c; border-radius: 8px; padding: 16px; display: flex; gap: 12px; align-items: center; }
+.alert-icon { color: #2dd4bf; flex-shrink: 0; }
+.alert-box-teal p { color: #2dd4bf; margin: 0; font-size: 13px; line-height: 1.4; }
+
+.form-actions { display: flex; gap: 16px; }
+
+/* =========================================
+   TARJETA DERECHA: DATOS DEL MÓDULO
+========================================= */
+.data-list { display: flex; flex-direction: column; }
+.data-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid #292015; }
+.data-row.border-none { border-bottom: none; }
+.data-label { color: #8A7A5A; font-size: 13px; }
+.data-value { font-size: 13px; }
+.text-white { color: #F5F5F5; }
+.text-teal { color: #2dd4bf; }
+.text-bold { font-weight: 600; }
+.status-pill { padding: 4px 12px; border-radius: 12px; font-size: 11px; font-weight: bold; letter-spacing: 0.5px; }
+.status-activo { background-color: rgba(45, 212, 191, 0.1); color: #2dd4bf; border: 1px solid rgba(45, 212, 191, 0.2); }
+
+/* =========================================
+   TARJETA DERECHA: HISTORIAL RECIENTE
+========================================= */
+.timeline { display: flex; flex-direction: column; gap: 24px; position: relative; margin-top: 10px; }
+/* Línea conectora del timeline */
+.timeline::before { content: ''; position: absolute; left: 5px; top: 8px; bottom: 8px; width: 1px; background-color: #3b3222; z-index: 1; }
+
+.timeline-item { display: flex; gap: 16px; position: relative; z-index: 2; }
+.timeline-dot { width: 11px; height: 11px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
+.dot-yellow { background-color: #F2A900; }
+.dot-teal { background-color: #2dd4bf; }
+
+.timeline-content { flex: 1; }
+.timeline-header { display: flex; justify-content: space-between; margin-bottom: 4px; }
+.timeline-title { color: #F5F5F5; font-size: 14px; font-weight: 600; }
+.timeline-date { color: #8A7A5A; font-size: 11px; }
+.timeline-text { color: #8A7A5A; font-size: 13px; margin: 0; line-height: 1.4; }
+
+.link-yellow { color: #F2A900; font-size: 13px; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 4px; }
+.link-yellow:hover { text-decoration: underline; }
+.block { display: inline-block; }
+
+/* Media Query para responsividad */
+@media (max-width: 1150px) {
+    .maintenance-grid { grid-template-columns: 1fr; }
+}

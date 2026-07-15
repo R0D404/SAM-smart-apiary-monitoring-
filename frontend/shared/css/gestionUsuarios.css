@@ -1,0 +1,336 @@
+/* =========================================
+   ESTILOS ESPECÍFICOS PARA GESTIÓN DE USUARIOS
+   ========================================= */
+
+/* Tabla */
+.table-section {
+    background-color: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 24px;
+    overflow-x: auto;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.data-table th {
+    color: var(--color-text-gray);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.data-table td {
+    padding: 16px 0;
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-text-white);
+    font-size: 14px;
+    vertical-align: middle;
+}
+
+.data-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* Modal superpuesto */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    display: none; /* Oculto por defecto */
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.modal-overlay.active {
+    display: flex;
+    opacity: 1;
+}
+
+.modal-content {
+    background-color: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 480px;
+    padding: 32px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    transform: translateY(20px);
+    transition: transform 0.3s ease;
+}
+
+.modal-overlay.active .modal-content {
+    transform: translateY(0);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+}
+
+.modal-title {
+    color: var(--color-text-white);
+    font-size: 20px;
+    margin: 0 0 4px 0;
+}
+
+.modal-subtitle {
+    color: var(--color-text-gray);
+    font-size: 13px;
+    margin: 0;
+}
+
+.btn-close-modal {
+    background: transparent;
+    border: none;
+    color: var(--color-text-gray);
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.btn-close-modal:hover {
+    color: var(--color-alert-red);
+}
+
+.modal-form .form-group {
+    margin-bottom: 20px;
+}
+
+.modal-form .form-label {
+    display: block;
+    color: var(--color-text-gray);
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+
+/* CUSTOM DROPDOWN UI */
+.custom-dropdown {
+    position: relative;
+    width: 100%;
+    user-select: none;
+}
+
+.dropdown-selected {
+    width: 100%;
+    background-color: var(--color-bg-dark);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    color: var(--color-text-white);
+    padding: 12px;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dropdown-selected::after {
+    content: "▼";
+    font-size: 10px;
+    color: var(--color-text-gray);
+}
+
+.custom-dropdown.active .dropdown-selected {
+    border-color: var(--color-primary);
+}
+
+.dropdown-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    margin-top: 4px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    list-style: none;
+    padding: 0;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 100;
+    display: none;
+}
+
+.custom-dropdown.active .dropdown-options {
+    display: block;
+}
+
+.dropdown-options li {
+    padding: 12px 16px;
+    font-size: 14px;
+    color: var(--color-text-white);
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.dropdown-options li:hover {
+    background-color: var(--color-primary);
+    color: var(--color-text-dark);
+}
+
+/* Checkbox cards (similar a la vista original pero estilizado) */
+.checkbox-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.checkbox-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background-color: var(--color-bg-dark);
+    border: 1px solid var(--color-border);
+    padding: 12px 16px;
+    border-radius: 8px;
+    color: var(--color-text-white);
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.checkbox-card:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.checkbox-card.active {
+    border-color: var(--color-primary);
+    background-color: rgba(242, 169, 0, 0.05);
+}
+
+.checkbox-card input[type="checkbox"] {
+    accent-color: var(--color-primary);
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 32px;
+}
+
+/* Modal Large (Crear Apicultor) */
+.modal-large {
+    width: 800px;
+    max-width: 90vw;
+}
+
+.split-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+}
+
+.form-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-col h4 {
+    margin: 0 0 4px 0;
+    color: var(--color-text-white);
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.section-desc {
+    margin: 0 0 20px 0;
+    color: var(--color-text-gray);
+    font-size: 13px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.mt-4 {
+    margin-top: 24px;
+}
+
+.flex-fill {
+    flex: 1;
+}
+
+/* Campos de entrada */
+.input-field {
+    width: 100%;
+    background-color: var(--color-bg-dark);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-white);
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 14px;
+    transition: all 0.2s;
+    box-sizing: border-box;
+}
+
+.input-field:focus {
+    border-color: var(--color-primary);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(242, 169, 0, 0.2);
+}
+
+.input-field::placeholder {
+    color: var(--color-text-gray);
+}
+
+.card-meta {
+    display: block;
+    margin-top: 4px;
+    color: var(--color-text-gray);
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.recommendation-card {
+    background-color: rgba(242, 169, 0, 0.05);
+    border: 1px solid rgba(242, 169, 0, 0.2);
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 24px;
+}
+
+.recommendation-card h5 {
+    margin: 0 0 8px 0;
+    color: var(--color-primary);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.recommendation-card p {
+    margin: 0;
+    color: var(--color-text-gray);
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.full-width-actions {
+    border-top: 1px solid var(--color-border);
+    padding-top: 20px;
+}
