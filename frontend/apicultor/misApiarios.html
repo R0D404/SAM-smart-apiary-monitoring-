@@ -61,15 +61,15 @@
         <div class="stats-row">
             <div class="stat-card">
                 <span class="stat-label">Colmenas a cargo</span>
-                <span class="stat-value" id="stat-colmenas-a-cargo">14</span>
+                <span class="stat-value" id="stat-colmenas-a-cargo">--</span>
             </div>
             <div class="stat-card">
                 <span class="stat-label">Alertas activas</span>
-                <span class="stat-value alerta" id="stat-alertas-activas">2</span>
+                <span class="stat-value alerta" id="stat-alertas-activas">--</span>
             </div>
             <div class="stat-card">
                 <span class="stat-label">Última visita</span>
-                <span class="stat-value destacado" id="stat-ultima-visita">hace 3 días</span>
+                <span class="stat-value destacado" id="stat-ultima-visita">--</span>
             </div>
         </div>
 
@@ -77,90 +77,7 @@
         <h2 class="section-title">Apiarios asignados</h2>
 
         <div class="apiarios-list" id="apiarios-list">
-
-            <!-- Tarjeta: Apiario Norte -->
-            <article class="apiario-card" data-apiario-id="1">
-                <div class="apiario-card-header">
-                    <span class="status-dot verde"></span>
-                    <div class="apiario-info">
-                        <h3>Apiario Norte</h3>
-                        <p>Tapachula · 12 colmenas</p>
-                    </div>
-                    <a href="colmenas.html?apiario=1" class="ver-colmenas">Ver colmenas ›</a>
-                </div>
-
-                <div class="apiario-card-body">
-                    <div class="salud-box">
-                        <span class="label">Salud</span>
-                        <strong class="estado saludable">Saludable</strong>
-                        <div class="conteo-colmenas">
-                            <span class="dot verde"></span><span>10</span>
-                            <span class="dot amarillo"></span><span>1</span>
-                            <span class="dot rojo"></span><span>1</span>
-                        </div>
-                    </div>
-
-                    <div class="chart-box">
-                        <div class="chart-canvas-wrap">
-                            <div class="chart-axis-y"><span>50</span><span>40</span><span>30</span></div>
-                            <!-- La gráfica de peso promedio se dibuja aquí vía JS (Canvas/Chart.js) -->
-                            <canvas class="mini-chart" id="chart-apiario-1" data-apiario-id="1"></canvas>
-                        </div>
-                        <div class="chart-axis-x">
-                            <span>23 may</span><span>30 may</span><span>06 jun</span>
-                        </div>
-                        <p class="chart-caption">Peso promedio · 30 días</p>
-                    </div>
-
-                    <div class="alerta-box">
-                        <span class="alerta-pill">1 alerta</span>
-                    </div>
-                </div>
-            </article>
-
-            <!-- Tarjeta: Apiario Sur -->
-            <article class="apiario-card" data-apiario-id="2">
-                <div class="apiario-card-header">
-                    <span class="status-dot amarillo"></span>
-                    <div class="apiario-info">
-                        <h3>Apiario Sur</h3>
-                        <p>Tuxtla · 2 colmenas</p>
-                    </div>
-                    <a href="colmenas.html?apiario=2" class="ver-colmenas">Ver colmenas ›</a>
-                </div>
-
-                <div class="apiario-card-body">
-                    <div class="salud-box">
-                        <span class="label">Salud</span>
-                        <strong class="estado atencion">Atención</strong>
-                        <div class="conteo-colmenas">
-                            <span class="dot verde"></span><span>1</span>
-                            <span class="dot amarillo"></span><span>1</span>
-                            <span class="dot rojo"></span><span>0</span>
-                        </div>
-                    </div>
-
-                    <div class="chart-box">
-                        <div class="chart-canvas-wrap">
-                            <div class="chart-axis-y"><span>50</span><span>40</span><span>30</span></div>
-                            <canvas class="mini-chart" id="chart-apiario-2" data-apiario-id="2"></canvas>
-                        </div>
-                        <div class="chart-axis-x">
-                            <span>23 may</span><span>30 may</span><span>06 jun</span>
-                        </div>
-                        <p class="chart-caption">Peso promedio · 30 días</p>
-                    </div>
-
-                    <div class="alerta-box">
-                        <span class="alerta-pill">1 alerta</span>
-                    </div>
-                </div>
-            </article>
-
-            <!-- Más tarjetas de <article class="apiario-card"> se agregarán aquí
-                 vía JS (misApiarios.js) cuando conectemos con
-                 GET /api/apiarios?apicultor_id={id} -->
-
+            <!-- Cargado dinámicamente vía JS -->
         </div>
 
     </section>
