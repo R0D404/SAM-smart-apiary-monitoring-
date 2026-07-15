@@ -110,10 +110,55 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target.files.length > 0) {
             // Simulamos el éxito (15 · Mi cuenta-2.png)
             mostrarToast('success', 'Foto de perfil actualizada', 'La fotografía de perfil ha sido actualizada exitosamente');
-            
-            // Nota: Podrías forzar el error (15 · Mi cuenta-3.png) si el archivo pesa mucho
-            // mostrarToast('error', 'Error al cambiar la foto de perfil', 'no se pudo actualizar la fotografía de perfil');
         }
     });
+
+    // ==========================================
+    // 4. CARGAR PERFIL DINÁMICO DESDE EL SERVIDOR
+    // ==========================================
+    const inputTelefono = document.getElementById('input-telefono');
+    const summaryAvatar = document.getElementById('summary-avatar');
+    const summaryName = document.getElementById('summary-name');
+    const summaryEmail = document.getElementById('summary-email');
+    const summaryTel = document.getElementById('summary-tel');
+
+    fetch('/api/dashboard')
+        .then(res => {
+            if (!res.ok) throw new Error("No hay sesión activa");
+            return res.json();
+        })
+        .then(data => {
+            if (data.usuario) {
+                const u = data.usuario;
+                if (inputNombre) inputNombre.value = u.nombre || '';
+                if (inputCorreo) inputCorreo.value = u.email || 'rodrigo@sam.com';
+                if (inputTelefono) inputTelefono.value = u.telefono || '+52 961 123 4567';
+
+                if (summaryName) summaryName.textContent = u.nombre || '---';
+                if (summaryEmail) summaryEmail.textContent = u.email || '---';
+                if (summaryTel) summaryTel.textContent = u.telefono || '---';
+
+                if (summaryAvatar && u.nombre) {
+                    const iniciales = u.nombre
+                        .split(" ")
+                        .filter(p => p.length > 0)
+                        .map(p => p[0].toUpperCase())
+                        .slice(0, 2)
+                        .join("");
+                    summaryAvatar.textContent = iniciales;
+                }
+            }
+        })
+        .catch(err => {
+            console.warn("No se pudo cargar el perfil del usuario (servidor apagado):", err);
+            // Si está apagado, dejar inputs vacíos/placeholders
+            if (inputNombre) inputNombre.value = '';
+            if (inputCorreo) inputCorreo.value = '';
+            if (inputTelefono) inputTelefono.value = '';
+            if (summaryName) summaryName.textContent = '---';
+            if (summaryEmail) summaryEmail.textContent = '---';
+            if (summaryTel) summaryTel.textContent = '---';
+            if (summaryAvatar) summaryAvatar.textContent = '--';
+        });
 
 });

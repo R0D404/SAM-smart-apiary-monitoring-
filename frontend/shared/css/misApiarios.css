@@ -213,10 +213,17 @@ body {
     background-color: transparent;
     cursor: pointer;
 }
-.main-content .user-info img {
+.main-content .user-info .cuenta-avatar {
     width: clamp(31px, 2.18vw, 53px);
     height: clamp(31px, 2.18vw, 53px);
     border-radius: 50%;
+    background-color: #f2a900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: clamp(12px, 0.8vw, 18px);
+    color: #1e1e1e;
 }
 .main-content .user-info p {
     color: var(--texto-blanco);
