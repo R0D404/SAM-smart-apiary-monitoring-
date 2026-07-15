@@ -243,6 +243,10 @@ function fetchDashboardData() {
         .then(data => updateDashboard(data))
         .catch(error => {
             console.error('Error:', error);
+            const titleEl = document.getElementById("page-title");
+            const subtitleEl = document.getElementById("page-subtitle");
+            if (titleEl) titleEl.textContent = "---";
+            if (subtitleEl) subtitleEl.textContent = "---";
             renderStats(apiarioStats);
             renderColmenas(colmenasData);
             renderUserProfile(userData);
