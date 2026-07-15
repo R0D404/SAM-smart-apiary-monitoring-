@@ -16,7 +16,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const valPeso = document.getElementById("val-peso");
     const valTempInt = document.getElementById("val-temp-int");
     const valHumInt = document.getElementById("val-hum-int");
-    
+    const valTempExt = document.getElementById("val-temp-ext");
+    const valHumExt = document.getElementById("val-hum-ext");
+
     // Lists
     const alertList = document.getElementById("colmena-alerts");
     const historyList = document.getElementById("colmena-history");
@@ -77,13 +79,17 @@ document.addEventListener("DOMContentLoaded", () => {
         // Metricas (Latest reading)
         if (data.lecturas && data.lecturas.length > 0) {
             const last = data.lecturas[0];
-            valPeso.textContent = `${last.peso} kg`;
-            valTempInt.textContent = `${last.temp_interna} °C`;
-            valHumInt.textContent = `${last.hum_interna} %`;
+            valPeso.textContent = last.peso ? `${last.peso} kg` : '-- kg';
+            valTempInt.textContent = last.temp_interna ? `${last.temp_interna} °C` : '-- °C';
+            valHumInt.textContent = last.hum_interna ? `${last.hum_interna} %` : '-- %';
+            if (valTempExt) valTempExt.textContent = last.temp_externa ? `${last.temp_externa} °C` : '-- °C';
+            if (valHumExt) valHumExt.textContent = last.hum_externa ? `${last.hum_externa} %` : '-- %';
         } else {
             valPeso.textContent = '-- kg';
             valTempInt.textContent = '-- °C';
             valHumInt.textContent = '-- %';
+            if (valTempExt) valTempExt.textContent = '-- °C';
+            if (valHumExt) valHumExt.textContent = '-- %';
         }
 
         // Render Alertas
@@ -137,6 +143,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function renderChart(lecturas) {
         const ctx = document.getElementById('colmenaPesoChart').getContext('2d');
+        
+        if (typeof Chart === 'undefined') {
+            console.warn("Chart.js no está cargado. Saltando renderizado de gráfica.");
+            return;
+        }
         
         // Reverse so the oldest is on the left
         const datos = [...lecturas].reverse();
