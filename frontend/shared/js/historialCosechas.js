@@ -13,7 +13,12 @@ document.addEventListener('DOMContentLoaded', () => {
             elPromedio.innerText = `${data.promedioColmena ? data.promedioColmena.toFixed(1) : 0} kg`;
             elPorcentaje.innerText = `${data.porcentajeValidado ? data.porcentajeValidado.toFixed(0) : 0} %`;
         })
-        .catch(err => console.error("Error cargando resumen", err));
+        .catch(err => {
+            console.error("Error cargando resumen", err);
+            elTotal.innerText = `-- kg`;
+            elPromedio.innerText = `-- kg`;
+            elPorcentaje.innerText = `-- %`;
+        });
 
     // Cargar Gráfica
     fetch('/api/cosechas/grafica')
