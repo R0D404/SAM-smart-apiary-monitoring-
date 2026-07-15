@@ -257,6 +257,12 @@ function renderChartProduccionColmena(data) {
         chartProduccionColmena.destroy();
     }
 
+    // Dynamic width for many colmenas
+    const wrapper = document.getElementById("barChartWrapperGlobal");
+    if (wrapper && data.labels.length > 15) {
+        wrapper.style.width = Math.max(1000, data.labels.length * 40) + 'px';
+    }
+
     chartProduccionColmena = new Chart(ctx, {
         type: "bar",
         data: {
