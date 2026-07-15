@@ -1,0 +1,621 @@
+/* =========================================
+   ESTILOS DE LA BARRA LATERAL (SIDEBAR)
+   ========================================= */
+   body {
+    background-color: #1A1206;
+    color: #F5F5F5;
+    min-height: 100vh;
+}
+.sidebar {
+    position: fixed; /* Fija la barra lateral a la pantalla para que no se mueva al hacer scroll */
+    top: 0; /* La pega a la parte más alta de la pantalla */
+    left: 0; /* La pega a la orilla izquierda de la pantalla */
+    width: clamp(240px, 20%, 300px); /* Usa el 20%, pero NUNCA bajará de clamp(216px, 15.0vw, 360px) en pantallas chicas ni pasará de clamp(270px, 18.74vw, 450px) en monitores gigantes */
+    height: 100vh; /* Hace que la altura sea del 100% de la ventana visible del navegador (100 Viewport Height) */
+    background-color: #241A0B; /* Aplica el color de fondo café oscuro */
+    display: flex; /* Activa Flexbox para alinear elementos verticalmente con facilidad */
+    flex-direction: column; /* Apila los elementos hijos (logo, menú, perfil) de arriba hacia abajo */
+    align-items: center; /* Centra horizontalmente todo el contenido interno de la barra lateral */
+    padding-top: clamp(18px, 1.25vw, 30px); /* Agrega un espacio interno superior de clamp(18px, 1.25vw, 30px) para que el contenido no pegue con el techo */
+}
+
+/* =========================================
+   ESTILOS DEL LOGOTIPO Y SU TEXTO
+   ========================================= */
+.sidebar .logo {
+    display: flex; /* Flexbox para poner el hexágono y los textos uno al lado del otro */
+    flex-direction: row; /* Orienta los elementos en fila (horizontal) */
+    align-items: center; /* Centra los elementos de la fila verticalmente */
+    margin-bottom: clamp(18px, 1.25vw, 30px); /* Separación inferior de clamp(18px, 1.25vw, 30px) respecto al menú que le sigue */
+    gap: clamp(7px, 0.5vw, 12px); /* Espacio horizontal pequeño entre el hexágono y los textos para que no se vean muy separados */
+}
+.sidebar .logo hexagon {
+    width: clamp(58px, 4.0vw, 96px); /* Ancho del hexágono amarillo */
+    min-width: clamp(58px, 4.0vw, 96px); /* Asegura que el hexágono jamás se encoja */
+    height: clamp(56px, 3.94vw, 95px); /* Alto del hexágono amarillo */
+    background-color: #F2A900; /* Color amarillo de fondo para el hexágono */
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); /* Recorta el div cuadrado para formar la figura de un hexágono perfecto */
+    display: flex; /* Flexbox para centrar la imagen del logo dentro del hexágono */
+    justify-content: center; /* Centra la imagen horizontalmente */
+    align-items: center; /* Centra la imagen verticalmente */
+    margin-bottom: clamp(10px, 0.62vw, 14px); /* Margen inferior extra para el hexágono */
+}
+.sidebar .logo img {
+    width: clamp(49px, 3.43vw, 83px); /* Define el ancho del icono de la abejita */
+    height: auto;
+    object-fit: contain; /* Define el alto del icono de la abejita */
+}
+.sidebar .logo-text h1 {
+    font-family: 'Inter', sans-serif; /* Aplica la fuente Inter al título principal */
+    color: #F2A900; /* Color amarillo característico de SAM */
+    font-size: clamp(18px, 1.25vw, 30px); /* Tamaño de letra del título principal */
+    font-weight: bold; /* Pone el texto en negrita */
+    margin: 0; /* Quita el margen que pone el navegador por defecto para pegar este texto al subtítulo */
+    line-height: 1; /* Hace que el área invisible del texto sea del mismo alto que la letra, evitando espacios extra */
+}
+.sidebar .logo-text {
+    display: flex; /* Activa Flexbox para los textos */
+    flex-direction: column; /* Apila el h1 y la p verticalmente (uno arriba del otro) */
+    align-items: flex-start; /* Alinea los textos a la izquierda */
+    transform: translateY(-clamp(4px, 0.25vw, 6px)); /* Desplaza este contenedor 4 píxeles hacia arriba para centrarlo visualmente con el hexágono */
+}
+.sidebar .logo-text p {
+    font-family: 'Inter', sans-serif; /* Aplica la fuente Inter al subtítulo */
+    color: #9c9993; /* Un gris sutil para que el subtítulo no quite protagonismo al nombre principal */
+    font-size: clamp(12px, 0.88vw, 22px); /* Tamaño de letra del subtítulo */
+    margin: 0; /* Quita el margen inferior/superior por defecto */
+    margin-top: clamp(2px, 0.12vw, 2px); /* Añade apenas 2 píxeles de espacio para que no esté montado sobre el h1 */
+    white-space: nowrap; /* Prohíbe terminantemente que el texto salte a una segunda línea */
+}
+
+/* =========================================
+   ESTILOS DE CONTENEDOR DE USUARIO ANTIGUO (Opcional si ya no se usa)
+   ========================================= */
+.sidebar .user-info {
+    display: flex; /* Flexbox para apilar foto y texto */
+    flex-direction: column; /* Orientación vertical (columna) */
+    align-items: center; /* Centrado horizontal */
+    margin-bottom: clamp(18px, 1.25vw, 30px); /* Margen inferior de separación */
+}
+.sidebar .user-info img {
+    width: clamp(49px, 3.43vw, 83px); /* Ancho de la foto de perfil antigua */
+    height: clamp(32px, 2.26vw, 54px); /* Alto de la foto de perfil antigua */
+    border-radius: 50%; /* Hace la foto circular */
+    margin-bottom: clamp(10px, 0.62vw, 14px); /* Separación con el texto inferior */
+}
+.sidebar .user-info p {
+    color: #F5F5F5; /* Color blanco claro del texto */
+    font-size: clamp(12px, 0.88vw, 22px); /* Tamaño del texto */
+    margin: 0; /* Sin márgenes por defecto */
+}
+
+/* =========================================
+   ESTILOS DEL MENÚ DE NAVEGACIÓN
+   ========================================= */
+.sidebar .menu {
+    width: 100%; /* Asegura que el contenedor del menú ocupe todo el ancho de la barra lateral */
+}
+.sidebar .menu ul {
+    list-style: none; /* Quita las viñetas (puntitos) típicos de las listas HTML */
+    padding: 0; /* Quita el sangrado interno izquierdo que las listas traen por defecto */
+    margin: 0; /* Quita márgenes externos de la lista */
+}
+.sidebar .menu ul li {
+    width: 100%; /* Cada opción de la lista ocupa el ancho completo disponible */
+}
+.sidebar .menu ul li a {
+    font-family: 'Inter', sans-serif; /* Aplica la fuente Inter a los enlaces */
+    font-size: clamp(12px, 0.88vw, 22px); /* Tamaño de texto de las opciones del menú */
+    display: flex; /* Activa flexbox para alinear de forma horizontal los elementos hijos (icono y texto) */
+    align-items: center; /* Asegura que el icono y el texto estén perfectamente alineados en el medio verticalmente */
+    gap: clamp(13px, 0.94vw, 23px); /* Crea un espacio consistente de 15 píxeles entre el icono y la palabra */
+    width: auto; /* El enlace toma el ancho necesario */
+    padding: clamp(10px, 0.62vw, 14px) clamp(18px, 1.25vw, 30px); /* Espacio interno de clamp(10px, 0.62vw, 14px) arriba/abajo y clamp(18px, 1.25vw, 30px) a los lados para que el texto respire */
+    color: #F5F5F5; /* Color blanco de los textos del menú */
+    text-decoration: none; /* Quita el subrayado típico de los enlaces de internet */
+}
+
+/* Nuevos estilos para los iconos del menú */
+.sidebar .menu ul li a .menu-icon {
+    width: clamp(18px, 1.25vw, 30px); /* Fuerza a que todos los iconos tengan exactamente clamp(18px, 1.25vw, 30px) de ancho */
+    height: clamp(18px, 1.25vw, 30px); /* Fuerza a que todos los iconos tengan exactamente clamp(18px, 1.25vw, 30px) de alto */
+    filter: brightness(0) invert(1); /* brightness(0) lo hace negro puro e invert(1) lo invierte a blanco brillante; útil para cualquier SVG */
+}
+
+/* Estilos solo cuando pasas el mouse (:hover) */
+.sidebar .menu ul li a:hover {
+    background-color: #F2A900; /* Fondo amarillo característico al pasar el cursor */
+    color: #1A1206; /* Cambia la letra a un tono casi negro para que resalte sobre el fondo amarillo */
+    border: none; /* Asegura que no aparezcan bordes blancos o amarillos indeseados */
+    outline: none; /* Quita el resaltado por defecto del navegador */
+    width: auto; /* El bloque de fondo amarillo toma el ancho según su contenido/padding */
+    border-radius: clamp(10px, 0.62vw, 14px); /* Redondea un poco las esquinas del bloque amarillo */
+}
+
+
+
+/* Efecto para el icono al pasar el cursor */
+.sidebar .menu ul li a:hover .menu-icon {
+    filter: brightness(0); /* Le quita todo el brillo a la imagen, convirtiendo el icono blanco a color negro puro instantáneamente */
+}
+
+/* =========================================
+   ESTILOS DEL PERFIL DE USUARIO EN LA BARRA LATERAL
+   ========================================= */
+.sidebar .user-profile {
+    display: flex; /* Activa flexbox para poder manejar la foto y el bloque de texto como columnas a los lados */
+    flex-direction: row; /* Coloca la imagen a la izquierda y los textos a la derecha */
+    align-items: center; /* Centra verticalmente la imagen con los textos */
+    gap: clamp(13px, 0.94vw, 23px); /* Separación horizontal entre la foto de perfil y los textos */
+    padding: clamp(18px, 1.25vw, 30px); /* Da un margen interior cómodo para que no choque con los bordes de la barra */
+    margin-top: auto; /* Truco de flex: empuja todo este contenedor hacia abajo hasta tocar fondo en la barra lateral */
+    margin-bottom: clamp(18px, 1.25vw, 30px); /* Levanta el perfil clamp(18px, 1.25vw, 30px) para separarlo del borde inferior de la pantalla */
+    width: 100%; /* Hace que el contenedor abarque toda la barra lateral */
+    box-sizing: border-box; /* Obliga a que los clamp(18px, 1.25vw, 30px) de padding se incluyan dentro del width:100% y no lo desborden */
+}
+.sidebar .user-profile img {
+    width: clamp(41px, 2.81vw, 67px); /* Tamaño de la foto de perfil */
+    height: clamp(41px, 2.81vw, 67px); /* Altura de la foto de perfil */
+    border-radius: 50%; /* Recorta la imagen cuadrada a un círculo perfecto */
+}
+.sidebar .user-profile .profile-text {
+    display: flex; /* Flexbox interno para poder apilar el nombre y rol */
+    flex-direction: column; /* Apila el h2 sobre la p de forma vertical */
+}
+.sidebar .user-profile h2 {
+    font-family: 'Inter', sans-serif; /* Tipografía del nombre */
+    color: #F5F5F5; /* Color blanco/gris muy claro */
+    font-size: clamp(14px, 1.0vw, 24px); /* Tamaño principal del nombre */
+    font-weight: bold; /* Nombre en negrita para resaltar */
+    margin: 0; /* Quita el margen por defecto para pegarse al rol */
+    line-height: 1.2; /* Reduce ligeramente el interlineado para que el subtítulo suba un poco más */
+}
+.sidebar .user-profile p {
+    font-family: 'Inter', sans-serif; /* Tipografía del rol */
+    color: #9c9993; /* Color gris suave para que el rol (Administrador) pase a segundo plano */
+    font-size: clamp(12px, 0.82vw, 19px); /* Tamaño de letra más pequeño para jerarquía visual */
+    margin: 0; /* Elimina separación extra respecto al h2 */
+}
+
+/* =========================================
+   ESTILOS DEL CONTENIDO PRINCIPAL Y BOTÓN "MI CUENTA"
+   ========================================= */
+.main-content {
+    margin-left: clamp(240px, 20%, 300px);
+    min-height: 100vh;
+    background-color: #1A1206;
+    padding: 2% 3%;
+    overflow-y: auto;
+}
+.main-content .user-info {
+    position: fixed; /* Fija este botón flotante en la pantalla sin importar si scrolleas */
+    top: clamp(18px, 1.25vw, 30px); /* Lo separa clamp(18px, 1.25vw, 30px) del techo de la pantalla */
+    right: clamp(18px, 1.25vw, 30px); /* Lo separa clamp(18px, 1.25vw, 30px) del borde derecho para no chocar */
+    display: flex; /* Habilita layout flex para alinear la ruedita amarilla y el texto 'Mi cuenta' */
+    align-items: center; /* Asegura que estén centrados sobre la misma línea horizontal */
+    gap: clamp(10px, 0.62vw, 14px); /* Añade clamp(10px, 0.62vw, 14px) de distancia entre la imagen y el texto */
+    padding: clamp(5px, 0.37vw, 10px) clamp(14px, 1.0vw, 24px) clamp(5px, 0.37vw, 10px) clamp(5px, 0.37vw, 10px); /* Da un relleno asimétrico: más relleno a la derecha del texto, menos en la izquierda donde está el círculo */
+    border: clamp(1px, 0.06vw, 1px) solid #3b3222; /* Dibuja una línea de contorno sutil color café oscuro imitando tu diseño */
+    border-radius: clamp(46px, 3.12vw, 74px); /* Convierte los bordes rectos en bordes completamente redondeados en forma de pastilla */
+    background-color: transparent; /* Mantiene el fondo sin color sólido */
+    cursor: pointer; /* Cambia la flecha del mouse a una 'manita' para indicar que es un botón pulsable */
+}
+.main-content .user-info img {
+    width: clamp(31px, 2.18vw, 53px); /* Tamaño del icono circular amarillo */
+    height: clamp(31px, 2.18vw, 53px); /* Tamaño del icono circular amarillo */
+    border-radius: 50%; /* Asegura que la imagen sea totalmente redonda */
+}
+.main-content .user-info p {
+    color: #F5F5F5; /* Letra blanca */
+    font-family: 'Inter', sans-serif; /* Tipografía principal */
+    font-weight: medium; /* Grosor un poco menor a bold pero visible */
+    font-size: clamp(11px, 0.74vw, 18px); /* Tamaño de letra pequeño para el botón superior */
+    margin: 0; /* Quita el margen por defecto para no romper el centrado vertical */
+    white-space: nowrap; /* Propiedad crucial: prohíbe que el texto salte de línea si el espacio es reducido */
+}
+
+/* ── VARIABLES ──────────────────────────────────────────────────────
+   Colores principales de SAM
+────────────────────────────────────────────────────────────────────── */
+:root {
+    --fondo-oscuro:    #1A1206;
+    --fondo-card:      #2A1F0E;
+    --amarillo:        #F2A900;
+    --texto-blanco:    #F5F5F5;
+    --texto-gris:      #9C9993;
+    --borde-sutil:     #3B3222;
+    --verde:           #3FB8A0;
+    --input-fondo:     #1E1508;
+    --input-borde:     #4A3820;
+}
+
+/* ── RESET ──────────────────────────────────────────────────────────*/
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+/* ── CONTENIDO PRINCIPAL ────────────────────────────────────────────*/
+.main-content {
+    margin-left: clamp(240px, 20%, 300px);
+    min-height: 100vh;
+    background-color: var(--fundo-ucuro);
+    padding: 2% 3%;
+    overflow-y: auto;
+}
+
+/* ── ENCABEZADO ─────────────────────────────────────────────────────*/
+.encabezado {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1%;
+}
+
+.encabezado-texto h1 {
+    font-size: clamp(18px, 1.6vw, 28px);
+    font-weight: 700;
+    color: var(--texto-blanco);
+}
+
+.encabezado-texto p {
+    color: var(--texto-gris);
+    font-size: clamp(11px, 0.85vw, 14px);
+    margin-top: 0.3%;
+}
+
+/* Botones del encabezado */
+.encabezado-acciones {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.btn-secundario {
+    background: transparent;
+    border: 1px solid var(--borde-sutil);
+    border-radius: 8px;
+    padding: 1.5% 3%;
+    color: var(--texto-blanco);
+    font-size: clamp(11px, 0.85vw, 14px);
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.btn-secundario:hover {
+    border-color: var(--amarillo);
+    color: var(--amarillo);
+}
+
+.btn-mi-cuenta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: 1px solid var(--borde-sutil);
+    border-radius: 50px;
+    padding: 1% 3%;
+    color: var(--texto-blanco);
+    cursor: pointer;
+    font-size: clamp(11px, 0.85vw, 14px);
+    white-space: nowrap;
+}
+
+.cuenta-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background-color: var(--amarillo);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 11px;
+    color: var(--fundo-ucuro);
+}
+
+/* ── BREADCRUMB ─────────────────────────────────────────────────────*/
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 2%;
+    font-size: clamp(11px, 0.85vw, 14px);
+    color: var(--texto-gris);
+}
+
+.breadcrumb-sep {
+    color: var(--texto-gris);
+}
+
+.breadcrumb-actual {
+    color: var(--texto-blanco);
+}
+
+/* ── CUERPO: DOS COLUMNAS ───────────────────────────────────────────*/
+.cuerpo {
+    display: flex;
+    gap: 2%;
+    align-items: flex-start;
+}
+
+/* ── CARDS ──────────────────────────────────────────────────────────*/
+.card {
+    background-color: var(--fondo-card);
+    border-radius: 12px;
+    padding: 3%;
+    border: 1px solid var(--borde-sutil);
+}
+
+.formulario {
+    width: 62%;
+}
+
+.resumen {
+    width: 36%;
+}
+
+.card-header {
+    margin-bottom: 5%;
+}
+
+.card-header h2 {
+    font-size: clamp(14px, 1.1vw, 20px);
+    font-weight: 700;
+    color: var(--texto-blanco);
+}
+
+.card-header p {
+    color: var(--texto-gris);
+    font-size: clamp(10px, 0.8vw, 13px);
+    margin-top: 0.5%;
+}
+
+/* ── CAMPOS DEL FORMULARIO ──────────────────────────────────────────*/
+.campo {
+    margin-bottom: 4%;
+}
+
+.campo label {
+    display: block;
+    font-size: clamp(9px, 0.7vw, 12px);
+    color: var(--texto-gris);
+    letter-spacing: 0.05em;
+    margin-bottom: 1.5%;
+    font-weight: 500;
+}
+
+/* Inputs, selects y textarea comparten el mismo estilo */
+.campo input,
+.campo select,
+.campo textarea {
+    width: 100%;
+    background-color: var(--input-fondo);
+    border: 1px solid var(--input-borde);
+    border-radius: 8px;
+    padding: 3% 4%;
+    color: var(--texto-blanco);
+    font-size: clamp(12px, 0.9vw, 15px);
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+/* Cuando el usuario hace clic en un campo, el borde se vuelve amarillo */
+.campo input:focus,
+.campo select:focus,
+.campo textarea:focus {
+    border-color: var(--amarillo);
+}
+
+/* El placeholder (texto de ayuda) en gris */
+.campo input::placeholder,
+.campo textarea::placeholder {
+    color: var(--texto-gris);
+}
+
+/* El select tiene una flechita por defecto del navegador, la dejamos */
+.campo select {
+    cursor: pointer;
+    appearance: auto;
+}
+
+/* Textarea no se puede redimensionar horizontalmente */
+.campo textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+/* ── SECCIÓN COSECHA ────────────────────────────────────────────────*/
+.seccion-cosecha {
+    margin-bottom: 4%;
+    padding: 3%;
+    border-radius: 8px;
+    border: 1px solid var(--input-borde);
+}
+
+.label-cosecha {
+    font-size: clamp(11px, 0.85vw, 14px);
+    color: var(--amarillo);
+    font-weight: 600;
+    margin-bottom: 3%;
+}
+
+/* Los dos campos de cosecha van lado a lado */
+.fila-cosecha {
+    display: flex;
+    gap: 4%;
+}
+
+.fila-cosecha .campo {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+/* ── CHECKBOX DE LA REINA ───────────────────────────────────────────*/
+.campo-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 4%;
+}
+
+.campo-checkbox input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--amarillo); /* Color del check cuando está marcado */
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.campo-checkbox label {
+    font-size: clamp(11px, 0.85vw, 14px);
+    color: var(--texto-blanco);
+    cursor: pointer;
+}
+
+/* ── NOTAS CON DOT VERDE ────────────────────────────────────────────*/
+.notas-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 1.5%;
+}
+
+.notas-header label {
+    font-size: clamp(11px, 0.85vw, 14px);
+    color: var(--verde);
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: 0;
+}
+
+.dot-verde {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--verde);
+    flex-shrink: 0;
+}
+
+/* El textarea de notas tiene borde verde */
+#notas {
+    border-color: var(--verde);
+}
+
+/* ── BOTÓN GUARDAR ──────────────────────────────────────────────────*/
+.btn-guardar {
+    width: 100%;
+    padding: 3%;
+    background-color: var(--amarillo);
+    color: var(--fundo-ucuro);
+    border: none;
+    border-radius: 8px;
+    font-size: clamp(13px, 1vw, 16px);
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 2%;
+    transition: opacity 0.2s;
+}
+
+.btn-guardar:hover {
+    opacity: 0.85;
+}
+
+/* ── ITEMS DEL RESUMEN ──────────────────────────────────────────────*/
+.resumen-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 3%;
+    border-radius: 8px;
+    border: 1px solid var(--borde-sutil);
+    margin-bottom: 3%;
+}
+
+/* El primer item (colmena seleccionada) tiene borde amarillo */
+.resumen-item-activo {
+    border-color: var(--amarillo);
+}
+
+.resumen-item input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--amarillo);
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.resumen-texto {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.resumen-texto strong {
+    font-size: clamp(12px, 0.9vw, 15px);
+    color: var(--texto-blanco);
+    font-weight: 600;
+}
+
+.resumen-texto span {
+    font-size: clamp(10px, 0.78vw, 13px);
+    color: var(--texto-gris);
+}
+
+/* ── TIP BOX ────────────────────────────────────────────────────────*/
+.tip-box {
+    background-color: var(--input-fondo);
+    border: 1px solid var(--input-borde);
+    border-radius: 8px;
+    padding: 3%;
+    margin-bottom: 3%;
+}
+
+.tip-titulo {
+    font-size: clamp(11px, 0.85vw, 14px);
+    font-weight: 700;
+    color: var(--texto-blanco);
+    margin-bottom: 2%;
+}
+
+.tip-texto {
+    font-size: clamp(10px, 0.78vw, 13px);
+    color: var(--texto-gris);
+    line-height: 1.5;
+}
+
+/* ── ESTADO FINAL ───────────────────────────────────────────────────*/
+.estado-final {
+    padding-top: 3%;
+    border-top: 1px solid var(--borde-sutil);
+}
+
+.estado-label {
+    font-size: clamp(9px, 0.7vw, 12px);
+    color: var(--texto-gris);
+    letter-spacing: 0.05em;
+    margin-bottom: 1%;
+}
+
+.estado-valor {
+    font-size: clamp(12px, 0.9vw, 15px);
+    color: var(--texto-blanco);
+    font-weight: 500;
+}
+
+/* ── USER AVATAR (sidebar) ──────────────────────────────────────────*/
+.user-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background-color: var(--verde);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 13px;
+    color: white;
+    flex-shrink: 0;
+}

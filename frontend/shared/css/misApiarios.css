@@ -1,0 +1,477 @@
+/* =========================================
+   VARIABLES GLOBALES
+   (esto eventualmente se mueve a base.css cuando
+   lo crees — lo dejo aquí para que la vista funcione sola)
+   ========================================= */
+:root {
+    --fondo-oscuro:    #1A1206;
+    --fondo-sidebar:   #241A0B;
+    --fondo-card:      #2A1F0E;
+    --amarillo:        #F2A900;
+    --texto-blanco:    #F5F5F5;
+    --texto-gris:      #9C9993;
+    --borde-sutil:     #3B3222;
+    --verde:           #3FB8A0;
+    --rojo:            #E26248;
+    --amarillo-alerta: #F2A900;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background-color: var(--fondo-oscuro);
+    font-family: 'Inter', sans-serif;
+}
+
+/* =========================================
+   ESTILOS DE LA BARRA LATERAL (SIDEBAR)
+   ========================================= */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: clamp(240px, 20%, 300px);
+    height: 100vh;
+    background-color: var(--fondo-sidebar);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: clamp(18px, 1.25vw, 30px);
+}
+
+/* =========================================
+   ESTILOS DEL LOGOTIPO Y SU TEXTO
+   ========================================= */
+.sidebar .logo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: clamp(18px, 1.25vw, 30px);
+    gap: clamp(7px, 0.5vw, 12px);
+}
+.sidebar .logo hexagon {
+    width: clamp(58px, 4.0vw, 96px);
+    min-width: clamp(58px, 4.0vw, 96px);
+    height: clamp(56px, 3.94vw, 95px);
+    background-color: var(--amarillo);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: clamp(10px, 0.62vw, 14px);
+}
+.sidebar .logo img {
+    width: clamp(49px, 3.43vw, 83px);
+    height: auto;
+    object-fit: contain;
+}
+.sidebar .logo-text h1 {
+    font-family: 'Poppins', sans-serif;
+    color: var(--amarillo);
+    font-size: clamp(18px, 1.25vw, 30px);
+    font-weight: bold;
+    margin: 0;
+    line-height: 1;
+}
+.sidebar .logo-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    transform: translateY(-clamp(4px, 0.25vw, 6px));
+}
+.sidebar .logo-text p {
+    font-family: 'Inter', sans-serif;
+    color: var(--texto-gris);
+    font-size: clamp(12px, 0.88vw, 22px);
+    margin: 0;
+    margin-top: clamp(2px, 0.12vw, 2px);
+    white-space: nowrap;
+}
+
+/* =========================================
+   ESTILOS DEL MENÚ DE NAVEGACIÓN
+   ========================================= */
+.sidebar .menu {
+    width: 100%;
+}
+.sidebar .menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.sidebar .menu ul li {
+    width: 100%;
+}
+.sidebar .menu ul li a {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(12px, 0.88vw, 22px);
+    display: flex;
+    align-items: center;
+    gap: clamp(13px, 0.94vw, 23px);
+    width: auto;
+    margin: 0 clamp(10px, 0.7vw, 16px);
+    padding: clamp(10px, 0.62vw, 14px) clamp(18px, 1.25vw, 30px);
+    color: var(--texto-blanco);
+    text-decoration: none;
+    border-radius: clamp(10px, 0.62vw, 14px);
+}
+.sidebar .menu ul li a .menu-icon {
+    width: clamp(18px, 1.25vw, 30px);
+    height: clamp(18px, 1.25vw, 30px);
+    filter: brightness(0) invert(1);
+}
+
+/* Estado activo (la vista en la que estás parado) */
+.sidebar .menu ul li a.activo {
+    background-color: var(--amarillo);
+    color: #1A1206;
+}
+.sidebar .menu ul li a.activo .menu-icon {
+    filter: brightness(0);
+}
+
+/* Estados solo cuando pasas el mouse (:hover) */
+.sidebar .menu ul li a:hover {
+    background-color: var(--amarillo);
+    color: #1A1206;
+    border: none;
+    outline: none;
+    width: auto;
+}
+.sidebar .menu ul li a:hover .menu-icon {
+    filter: brightness(0);
+}
+
+/* =========================================
+   ESTILOS DEL PERFIL DE USUARIO EN LA BARRA LATERAL
+   ========================================= */
+.sidebar .user-profile {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: clamp(10px, 0.7vw, 16px);
+    padding: clamp(18px, 1.25vw, 30px);
+    margin-top: auto;
+    margin-bottom: clamp(18px, 1.25vw, 30px);
+    width: 100%;
+    box-sizing: border-box;
+}
+.sidebar .user-profile .status-dot {
+    width: clamp(10px, 0.7vw, 14px);
+    height: clamp(10px, 0.7vw, 14px);
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+.sidebar .user-profile .profile-text {
+    display: flex;
+    flex-direction: column;
+}
+.sidebar .user-profile h2 {
+    font-family: 'Inter', sans-serif;
+    color: var(--texto-blanco);
+    font-size: clamp(14px, 1.0vw, 24px);
+    font-weight: bold;
+    margin: 0;
+    line-height: 1.2;
+}
+.sidebar .user-profile p {
+    font-family: 'Inter', sans-serif;
+    color: var(--texto-gris);
+    font-size: clamp(12px, 0.82vw, 19px);
+    margin: 0;
+}
+
+/* =========================================
+   CONTENEDOR PRINCIPAL
+   ========================================= */
+.main-content {
+    position: fixed;
+    top: 0;
+    left: clamp(240px, 20%, 300px);
+    height: 100vh;
+    width: calc(100% - clamp(240px, 20%, 300px));
+    background-color: var(--fondo-oscuro);
+    overflow-y: auto;
+    padding: clamp(24px, 2.6vw, 56px);
+    padding-top: clamp(70px, 6vw, 110px); /* deja espacio libre para el botón "Mi cuenta" flotante */
+}
+
+/* Botón "Mi cuenta" flotante */
+.main-content .user-info {
+    position: fixed;
+    top: clamp(18px, 1.25vw, 30px);
+    right: clamp(18px, 1.25vw, 30px);
+    display: flex;
+    align-items: center;
+    gap: clamp(10px, 0.62vw, 14px);
+    padding: clamp(5px, 0.37vw, 10px) clamp(14px, 1.0vw, 24px) clamp(5px, 0.37vw, 10px) clamp(5px, 0.37vw, 10px);
+    border: clamp(1px, 0.06vw, 1px) solid var(--borde-sutil);
+    border-radius: clamp(46px, 3.12vw, 74px);
+    background-color: transparent;
+    cursor: pointer;
+}
+.main-content .user-info img {
+    width: clamp(31px, 2.18vw, 53px);
+    height: clamp(31px, 2.18vw, 53px);
+    border-radius: 50%;
+}
+.main-content .user-info p {
+    color: var(--texto-blanco);
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: clamp(11px, 0.74vw, 18px);
+    margin: 0;
+    white-space: nowrap;
+}
+
+/* =========================================
+   ENCABEZADO DE LA VISTA (título + subtítulo)
+   ========================================= */
+.content-header {
+    margin-bottom: clamp(20px, 1.8vw, 36px);
+}
+.content-header h1 {
+    font-family: 'Poppins', sans-serif;
+    color: var(--texto-blanco);
+    font-size: clamp(22px, 1.7vw, 34px);
+    font-weight: 600;
+    margin: 0;
+}
+.content-header p {
+    font-family: 'Inter', sans-serif;
+    color: var(--texto-gris);
+    font-size: clamp(13px, 0.9vw, 18px);
+    margin: clamp(4px, 0.4vw, 8px) 0 0 0;
+}
+
+/* =========================================
+   FILA DE TARJETAS DE ESTADÍSTICAS
+   ========================================= */
+.stats-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(14px, 1.1vw, 22px);
+    margin-bottom: clamp(24px, 2vw, 40px);
+}
+.stat-card {
+    flex: 1 1 clamp(180px, 20%, 260px);
+    background-color: var(--fondo-card);
+    border: 1px solid var(--borde-sutil);
+    border-radius: clamp(12px, 0.9vw, 18px);
+    padding: clamp(16px, 1.3vw, 26px) clamp(18px, 1.5vw, 28px);
+}
+.stat-card .stat-label {
+    display: block;
+    font-family: 'Inter', sans-serif;
+    color: var(--texto-gris);
+    font-size: clamp(10px, 0.72vw, 14px);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: clamp(8px, 0.6vw, 12px);
+}
+.stat-card .stat-value {
+    font-family: 'Poppins', sans-serif;
+    color: var(--texto-blanco);
+    font-size: clamp(22px, 1.7vw, 32px);
+    font-weight: 600;
+}
+.stat-card .stat-value.alerta {
+    color: var(--rojo);
+}
+.stat-card .stat-value.destacado {
+    color: var(--amarillo);
+}
+
+/* =========================================
+   SECCIÓN "APIARIOS ASIGNADOS"
+   ========================================= */
+.section-title {
+    font-family: 'Poppins', sans-serif;
+    color: var(--texto-blanco);
+    font-size: clamp(16px, 1.2vw, 22px);
+    font-weight: 600;
+    margin: 0 0 clamp(14px, 1.1vw, 20px) 0;
+}
+
+.apiarios-list {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(14px, 1.1vw, 22px);
+    padding-bottom: clamp(24px, 2vw, 40px);
+}
+
+/* Tarjeta individual de apiario */
+.apiario-card {
+    background-color: var(--fondo-card);
+    border: 1px solid var(--borde-sutil);
+    border-radius: clamp(12px, 0.9vw, 18px);
+    padding: clamp(16px, 1.3vw, 26px) clamp(18px, 1.5vw, 28px);
+}
+
+/* Encabezado: punto de estado + nombre/ubicación + link "Ver colmenas" */
+.apiario-card-header {
+    display: flex;
+    align-items: center;
+    gap: clamp(10px, 0.8vw, 16px);
+    margin-bottom: clamp(14px, 1.1vw, 20px);
+}
+.apiario-card-header .status-dot {
+    width: clamp(10px, 0.7vw, 14px);
+    height: clamp(10px, 0.7vw, 14px);
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+.apiario-info h3 {
+    font-family: 'Inter', sans-serif;
+    color: var(--texto-blanco);
+    font-size: clamp(15px, 1.05vw, 20px);
+    font-weight: 600;
+    margin: 0;
+}
+.apiario-info p {
+    font-family: 'Inter', sans-serif;
+    color: var(--texto-gris);
+    font-size: clamp(11px, 0.78vw, 15px);
+    margin: clamp(2px, 0.2vw, 4px) 0 0 0;
+}
+.ver-colmenas {
+    margin-left: auto;
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(12px, 0.85vw, 16px);
+    font-weight: 500;
+    color: var(--amarillo);
+    text-decoration: none;
+    white-space: nowrap;
+}
+.ver-colmenas:hover {
+    text-decoration: underline;
+}
+
+/* Cuerpo de la tarjeta: salud | gráfica | alerta */
+.apiario-card-body {
+    display: flex;
+    align-items: stretch;
+    gap: clamp(16px, 1.4vw, 28px);
+    flex-wrap: wrap;
+}
+
+/* Bloque de salud */
+.salud-box {
+    flex: 0 0 clamp(140px, 14%, 190px);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(4px, 0.35vw, 6px);
+}
+.salud-box .label {
+    font-family: 'Inter', sans-serif;
+    color: var(--texto-gris);
+    font-size: clamp(9px, 0.65vw, 12px);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+.salud-box .estado {
+    font-family: 'Poppins', sans-serif;
+    font-size: clamp(16px, 1.15vw, 22px);
+    font-weight: 600;
+}
+.salud-box .estado.saludable {
+    color: var(--verde);
+}
+.salud-box .estado.atencion {
+    color: var(--amarillo);
+}
+.salud-box .estado.critico {
+    color: var(--rojo);
+}
+.conteo-colmenas {
+    display: flex;
+    align-items: center;
+    gap: clamp(4px, 0.3vw, 6px);
+    font-family: 'Inter', sans-serif;
+    color: var(--texto-blanco);
+    font-size: clamp(11px, 0.78vw, 15px);
+    margin-top: clamp(4px, 0.35vw, 6px);
+}
+.conteo-colmenas .dot {
+    width: clamp(7px, 0.5vw, 9px);
+    height: clamp(7px, 0.5vw, 9px);
+    border-radius: 50%;
+    margin-left: clamp(6px, 0.45vw, 8px);
+}
+.conteo-colmenas .dot:first-child {
+    margin-left: 0;
+}
+
+/* Colores compartidos por punto de estado / conteo */
+.verde   { background-color: var(--verde); }
+.amarillo{ background-color: var(--amarillo); }
+.rojo    { background-color: var(--rojo); }
+
+/* Bloque de la gráfica (el trazo lo dibuja JS más adelante) */
+.chart-box {
+    flex: 1 1 clamp(220px, 40%, 420px);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+.chart-canvas-wrap {
+    height: clamp(80px, 6.5vw, 120px); /* alto FIJO — evita que el canvas se estire por su relación de aspecto */
+    position: relative;
+    display: flex;
+}
+.chart-axis-y {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-family: 'Inter', sans-serif;
+    color: var(--texto-gris);
+    font-size: clamp(9px, 0.62vw, 12px);
+    padding-right: clamp(6px, 0.45vw, 10px);
+}
+.mini-chart {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+.chart-axis-x {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Inter', sans-serif;
+    color: var(--texto-gris);
+    font-size: clamp(9px, 0.62vw, 12px);
+    margin-top: clamp(4px, 0.3vw, 6px);
+}
+.chart-caption {
+    font-family: 'Inter', sans-serif;
+    color: var(--texto-gris);
+    font-size: clamp(9px, 0.62vw, 12px);
+    margin: clamp(2px, 0.2vw, 4px) 0 0 0;
+}
+
+/* Bloque de la alerta */
+.alerta-box {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+}
+.alerta-pill {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(11px, 0.78vw, 15px);
+    font-weight: 500;
+    color: var(--texto-blanco);
+    background-color: rgba(226, 98, 72, 0.18);
+    border: 1px solid var(--rojo);
+    border-radius: clamp(20px, 1.4vw, 30px);
+    padding: clamp(6px, 0.45vw, 10px) clamp(14px, 1.0vw, 22px);
+    white-space: nowrap;
+}
+.alerta-pill.sin-alertas {
+    background-color: transparent;
+    border-color: var(--borde-sutil);
+    color: var(--texto-gris);
+}

@@ -1,0 +1,203 @@
+/* =========================================
+   CABECERA Y TOASTS
+========================================= */
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; 
+    margin-bottom: 30px;
+    margin-top: 10px;
+    min-height: 50px;
+    width: 100%;
+    max-width: 1100px;
+}
+
+.page-title h2 { color: #F5F5F5; font-size: 24px; margin: 0 0 4px 0; font-weight: bold; }
+.page-title p { color: #8A7A5A; font-size: 13px; margin: 0; }
+
+.header-actions {
+    display: flex;
+    align-items: flex-start;
+}
+
+/* Diseños de Toast Notification */
+.toast {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    border-radius: 12px;
+    background-color: #1a130c;
+    min-width: 280px;
+    animation: slideIn 0.3s ease-out forwards;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.toast-success { border: 1px solid #2b593f; }
+.toast-error { border: 1px solid #5c2b29; }
+
+.toast-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.icon-success { background-color: rgba(45, 212, 191, 0.15); color: #2dd4bf; }
+.icon-error { background-color: rgba(239, 68, 68, 0.15); color: #ef4444; }
+
+.toast-content { display: flex; flex-direction: column; gap: 2px; }
+.toast-title { color: #F5F5F5; font-size: 13px; font-weight: 600; }
+.toast-message { color: #8A7A5A; font-size: 11px; }
+
+/* =========================================
+   GRID PRINCIPAL (2 COLUMNAS)
+========================================= */
+.account-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); 
+    gap: 32px;
+    align-items: start; /* Mantiene las tarjetas alineadas arriba */
+    justify-content: left;
+    width: 100%;
+    max-width: 1000px; /* Ancho optimizado */
+}
+
+/* Tarjeta Principal Izquierda (Formulario) */
+.main-card {
+    background-color: var(--color-bg-card, #1e160e);
+    border: 1px solid var(--color-border, #3b3222);
+    border-radius: 16px;
+    padding: 30px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-header { margin-bottom: 24px; }
+.card-header h3 { color: #F5F5F5; font-size: 16px; margin: 0 0 4px 0; font-weight: bold; }
+.card-header p { color: #8A7A5A; font-size: 12px; margin: 0; }
+
+/* Formularios */
+.form-group { margin-bottom: 20px; }
+.form-label { display: block; color: #8A7A5A; text-transform: uppercase; font-size: 10px; font-weight: 600; margin-bottom: 8px; letter-spacing: 0.5px; }
+
+.input-field {
+    background-color: #1a130c;
+    border: 1px solid #3b3222;
+    color: #F5F5F5;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    border-radius: 8px;
+    padding: 12px 14px;
+    width: 100%;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.input-field:focus { border-color: #F2A900; }
+
+.section-subtitle {
+    color: #F2A900;
+    font-size: 13px;
+    font-weight: 600;
+    margin: 24px 0 16px 0;
+}
+
+.password-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+/* Checkbox */
+.checkbox-group { margin-top: 10px; margin-bottom: 24px; }
+.custom-checkbox { display: flex; align-items: center; color: #F5F5F5; font-size: 12px; cursor: pointer; position: relative; user-select: none; }
+.custom-checkbox input { position: absolute; opacity: 0; cursor: pointer; height: 0; width: 0; }
+.checkmark { height: 16px; width: 16px; background-color: transparent; border: 1px solid #8A7A5A; border-radius: 4px; margin-right: 12px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+.custom-checkbox:hover input ~ .checkmark { border-color: #F2A900; }
+.custom-checkbox input:checked ~ .checkmark { background-color: #F2A900; border-color: #F2A900; }
+.checkmark:after { content: ""; position: absolute; display: none; }
+.custom-checkbox input:checked ~ .checkmark:after { display: block; }
+.custom-checkbox .checkmark:after { left: 5px; top: 2px; width: 3px; height: 8px; border: solid var(--color-bg-dark, #1A1206); border-width: 0 2px 2px 0; transform: rotate(45deg); }
+
+/* Botones */
+.btn-primary { background-color: #F2A900; color: #1e160e; border: none; padding: 12px 24px; border-radius: 12px; cursor: pointer; font-size: 13px; font-weight: 600; font-family: 'Inter', sans-serif; transition: background-color 0.3s; }
+.btn-primary:hover { background-color: #d49300; }
+.w-100 { width: 100%; }
+.mt-2 { margin-top: 8px; }
+
+/* =========================================
+   COLUMNA DERECHA (RESUMEN)
+========================================= */
+.profile-summary-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.section-header { margin-bottom: 16px; }
+.section-header h3 { color: #F5F5F5; font-size: 15px; margin: 0 0 4px 0; font-weight: bold; }
+.section-header p { color: #8A7A5A; font-size: 12px; margin: 0; }
+.mb-4 { margin-bottom: 24px; }
+
+.bordered-box {
+    background-color: transparent;
+    border: 1px solid #3b3222;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+}
+
+/* Avatar de iniciales */
+.avatar-lg {
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #1e160e;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+.bg-teal { background-color: #2dd4bf; }
+
+.box-text { display: flex; flex-direction: column; gap: 2px; }
+.box-title { color: #F5F5F5; font-weight: 600; }
+.box-subtitle { color: #8A7A5A; }
+
+/* Grid de Información Read-only */
+.info-grid {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 12px 20px;
+    width: 100%;
+}
+.info-row { display: contents; }
+.info-label { color: #F5F5F5; font-size: 12px; text-align: right; }
+.info-value { color: #8A7A5A; font-size: 12px; text-align: left; }
+
+/* Tarjeta Info Rol (Teal) */
+.alert-box-teal {
+    background-color: transparent;
+    border: 1px solid #2dd4bf;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+.info-dot { width: 8px; height: 8px; border-radius: 50%; background-color: #2dd4bf; margin-top: 4px; flex-shrink: 0; }
+.info-content h4 { color: #2dd4bf; font-size: 12px; font-weight: 600; margin: 0 0 4px 0; }
+.info-content p { color: #8A7A5A; font-size: 11px; line-height: 1.4; margin: 0; }
+
+/* Responsividad */
+@media (max-width: 1100px) {
+    .account-grid { grid-template-columns: 1fr; }
+}
