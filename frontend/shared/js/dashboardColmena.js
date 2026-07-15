@@ -211,4 +211,11 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
+
+    const btnMiCuenta = document.getElementById("btn-mi-cuenta");
+    if (btnMiCuenta) {
+        btnMiCuenta.addEventListener("click", () => {
+            window.location.href = "miCuenta.html";
+        });
+    }
 });

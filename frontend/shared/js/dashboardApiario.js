@@ -263,6 +263,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
     fetchDashboardData();
 
+    // Event listeners para botones del header
+    const btnVerAlertas = document.getElementById("btn-ver-alertas");
+    if (btnVerAlertas) {
+        btnVerAlertas.addEventListener("click", () => {
+            window.location.href = "alertas.html";
+        });
+    }
+
+    const btnMiCuenta = document.getElementById("btn-mi-cuenta");
+    if (btnMiCuenta) {
+        btnMiCuenta.addEventListener("click", () => {
+            window.location.href = "miCuenta.html";
+        });
+    }
+
     // Resize listener para gráficas
     window.addEventListener('resize', () => {
         if (colmenasData && colmenasData.length > 0) {
