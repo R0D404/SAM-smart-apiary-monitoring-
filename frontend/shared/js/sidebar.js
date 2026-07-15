@@ -2,12 +2,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const userAvatarEl = document.getElementById("sidebar-user-avatar");
     const userNameEl = document.getElementById("sidebar-user-name");
     const userPhotoEl = document.getElementById("sidebar-user-photo");
+    const headerAvatarEl = document.getElementById("header-user-avatar");
 
     function renderUserProfile(user) {
         if (!user || !user.nombre) {
             if (userAvatarEl) userAvatarEl.textContent = "--";
             if (userNameEl)   userNameEl.textContent   = "---";
             if (userPhotoEl)  userPhotoEl.classList.remove("loaded");
+            if (headerAvatarEl) headerAvatarEl.textContent = "--";
             return;
         }
 
@@ -20,6 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (userAvatarEl) userAvatarEl.textContent = iniciales;
         if (userNameEl)   userNameEl.textContent   = user.nombre;
+        if (headerAvatarEl) headerAvatarEl.textContent = iniciales;
 
         if (userPhotoEl && user.fotoUrl) {
             userPhotoEl.onload = () => userPhotoEl.classList.add("loaded");
