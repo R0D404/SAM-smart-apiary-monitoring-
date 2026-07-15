@@ -70,30 +70,21 @@ async function cargarDatosColmena() {
         }
 
     } catch (error) {
-        console.error("Error al cargar datos (servidor desconectado), cargando colmena de respaldo:", error);
+        console.error("Error al cargar datos (servidor desconectado):", error);
         
-        datosDeLaColmena = {
-            colmena: `Colmena ${COLMENA_ID}`,
-            ecotipo: "Apis mellifera",
-            zona: "Soconusco, Chiapas",
-            microclima: "Cálido húmedo",
-            lecturas: "Temperatura: 34.5°C | Humedad: 62% | Peso: 24.8 kg",
-            alertas: "Sin alertas activas",
-            visitas: "Última visita: 12/07/2026 - Inspección general OK",
-            cosechas: "Última cosecha: 08/06/2026 - 12 kg (Excelente calidad)"
-        };
+        datosDeLaColmena = null;
 
-        nombreColmena.textContent = datosDeLaColmena.colmena;
-        ctxEcotipo.textContent    = datosDeLaColmena.ecotipo;
-        ctxZona.textContent       = datosDeLaColmena.zona;
-        ctxMicroclima.textContent = datosDeLaColmena.microclima;
-        ctxLecturas.textContent   = datosDeLaColmena.lecturas;
-        ctxAlertas.textContent    = datosDeLaColmena.alertas;
-        ctxVisitas.textContent    = datosDeLaColmena.visitas;
-        ctxCosechas.textContent   = datosDeLaColmena.cosechas;
+        nombreColmena.textContent = "Colmena ---";
+        ctxEcotipo.textContent    = "—";
+        ctxZona.textContent       = "—";
+        ctxMicroclima.textContent = "—";
+        ctxLecturas.textContent   = "—";
+        ctxAlertas.textContent    = "—";
+        ctxVisitas.textContent    = "—";
+        ctxCosechas.textContent   = "—";
         
         if (estadoValor) {
-            estadoValor.textContent = "Conexión Offline (Modo de demostración)";
+            estadoValor.textContent = "Error al conectar con el servidor";
         }
     }
 }
@@ -106,7 +97,7 @@ let groqAbortController = null;
 async function generarDiagnostico() {
 
     if (!datosDeLaColmena) {
-        alert("Espera a que carguen los datos de la colmena");
+        alert("No se pueden generar diagnósticos sin conexión al servidor.");
         return;
     }
 
