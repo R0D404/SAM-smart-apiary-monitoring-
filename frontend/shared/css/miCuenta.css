@@ -166,7 +166,7 @@
     font-weight: bold;
     flex-shrink: 0;
 }
-.bg-teal { background-color: #2dd4bf; }
+.bg-teal { background-color: #f2a900; }
 
 .box-text { display: flex; flex-direction: column; gap: 2px; }
 .box-title { color: #F5F5F5; font-weight: 600; }
@@ -183,18 +183,18 @@
 .info-label { color: #F5F5F5; font-size: 12px; text-align: right; }
 .info-value { color: #8A7A5A; font-size: 12px; text-align: left; }
 
-/* Tarjeta Info Rol (Teal) */
+/* Tarjeta Info Rol (Teal cambiado a Amarillo SAM) */
 .alert-box-teal {
     background-color: transparent;
-    border: 1px solid #2dd4bf;
+    border: 1px solid #f2a900;
     border-radius: 12px;
     padding: 16px;
     display: flex;
     align-items: flex-start;
     gap: 12px;
 }
-.info-dot { width: 8px; height: 8px; border-radius: 50%; background-color: #2dd4bf; margin-top: 4px; flex-shrink: 0; }
-.info-content h4 { color: #2dd4bf; font-size: 12px; font-weight: 600; margin: 0 0 4px 0; }
+.info-dot { width: 8px; height: 8px; border-radius: 50%; background-color: #f2a900; margin-top: 4px; flex-shrink: 0; }
+.info-content h4 { color: #f2a900; font-size: 12px; font-weight: 600; margin: 0 0 4px 0; }
 .info-content p { color: #8A7A5A; font-size: 11px; line-height: 1.4; margin: 0; }
 
 /* Responsividad */
