@@ -70,9 +70,31 @@ async function cargarDatosColmena() {
         }
 
     } catch (error) {
-        // Si algo falla (servidor apagado, error de red) mostramos el error
-        console.error("Error al cargar datos:", error);
-        estadoValor.textContent = "Error al conectar con el servidor";
+        console.error("Error al cargar datos (servidor desconectado), cargando colmena de respaldo:", error);
+        
+        datosDeLaColmena = {
+            colmena: `Colmena ${COLMENA_ID}`,
+            ecotipo: "Apis mellifera",
+            zona: "Soconusco, Chiapas",
+            microclima: "Cálido húmedo",
+            lecturas: "Temperatura: 34.5°C | Humedad: 62% | Peso: 24.8 kg",
+            alertas: "Sin alertas activas",
+            visitas: "Última visita: 12/07/2026 - Inspección general OK",
+            cosechas: "Última cosecha: 08/06/2026 - 12 kg (Excelente calidad)"
+        };
+
+        nombreColmena.textContent = datosDeLaColmena.colmena;
+        ctxEcotipo.textContent    = datosDeLaColmena.ecotipo;
+        ctxZona.textContent       = datosDeLaColmena.zona;
+        ctxMicroclima.textContent = datosDeLaColmena.microclima;
+        ctxLecturas.textContent   = datosDeLaColmena.lecturas;
+        ctxAlertas.textContent    = datosDeLaColmena.alertas;
+        ctxVisitas.textContent    = datosDeLaColmena.visitas;
+        ctxCosechas.textContent   = datosDeLaColmena.cosechas;
+        
+        if (estadoValor) {
+            estadoValor.textContent = "Conexión Offline (Modo de demostración)";
+        }
     }
 }
 
