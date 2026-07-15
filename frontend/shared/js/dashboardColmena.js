@@ -214,19 +214,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const btnIa = document.getElementById("btn-ia");
     if (btnIa) {
-        btnIa.addEventListener("click", () => {
-            if (colmenaId) {
-                window.location.href = `diagnosticoIA.html?id=${colmenaId}`;
-            } else {
+        if (colmenaId) {
+            btnIa.href = `diagnosticoIA.html?id=${colmenaId}`;
+        } else {
+            btnIa.addEventListener("click", (e) => {
+                e.preventDefault();
                 alert("Por favor, selecciona una colmena válida primero.");
-            }
-        });
+            });
+        }
     }
 
-    const btnMiCuenta = document.getElementById("btn-mi-cuenta");
-    if (btnMiCuenta) {
-        btnMiCuenta.addEventListener("click", () => {
-            window.location.href = "miCuenta.html";
-        });
-    }
+
 });
