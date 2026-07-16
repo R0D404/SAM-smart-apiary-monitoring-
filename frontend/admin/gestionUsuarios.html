@@ -6,6 +6,7 @@
     <title>Usuarios y Asignaciones - SAM</title>
     <link rel="stylesheet" href="../shared/css/dashboardGlobal.css">
     <link rel="stylesheet" href="../shared/css/gestionUsuarios.css">
+    <link rel="stylesheet" href="../shared/css/notifications.css">
 </head>
 <body>
     <div class="app-shell">
@@ -27,7 +28,7 @@
                     <li><a href="gestionColmenas.html"><img src="../assets/icons/colmenas.svg" alt="" class="menu-icon"> Colmenas</a></li>
                     <li><a href="alertas.html"><img src="../assets/icons/alertas.svg" alt="" class="menu-icon"> Alertas</a></li>
                     <li><a href="historialVisita.html"><img src="../assets/icons/visitas.svg" alt="" class="menu-icon"> Visitas / Cosechas</a></li>
-                    <li><a href="#"><img src="../assets/icons/historial.svg" alt="" class="menu-icon"> Historial</a></li>
+                    <li><a href="historial.html"><img src="../assets/icons/historial.svg" alt="" class="menu-icon"> Historial</a></li>
                     <li><a aria-current="page" class="active" href="gestionUsuarios.html"><img src="../assets/icons/usuarios.svg" alt="" class="menu-icon"> Usuarios</a></li>
                 </ul>
             </nav>
@@ -151,24 +152,24 @@
                         
                         <div class="form-group">
                             <label class="form-label">NOMBRE COMPLETO</label>
-                            <input type="text" class="input-field" placeholder="Ej. Rodrigo González" required>
+                            <input type="text" id="crear-nombre" class="input-field" placeholder="Ej. Rodrigo González" required>
                         </div>
 
                         <div class="form-group">
                             <label class="form-label">CORREO ELECTRÓNICO</label>
-                            <input type="email" class="input-field" placeholder="ejemplo@correo.com" required>
+                            <input type="email" id="crear-email" class="input-field" placeholder="ejemplo@correo.com" required>
                         </div>
 
                         <div class="form-group">
                             <label class="form-label">TELÉFONO (OPCIONAL)</label>
-                            <input type="tel" class="input-field" placeholder="+52 962 000 0000">
+                            <input type="tel" id="crear-telefono" class="input-field" placeholder="+52 962 000 0000">
                         </div>
 
                         <h4 class="mt-4">Credenciales de acceso</h4>
                         
                         <div class="form-group">
                             <label class="form-label">CONTRASEÑA TEMPORAL</label>
-                            <input type="password" class="input-field" placeholder="••••••••" required>
+                            <input type="password" id="crear-password" class="input-field" placeholder="••••••••" required>
                         </div>
                     </div>
 
@@ -209,6 +210,8 @@
     </div>
 
     <!-- Script -->
+    <script src="../shared/js/notifications.js"></script>
     <script src="../shared/js/gestionUsuarios.js"></script>
+    <script src="../shared/js/sidebar.js" defer></script>
 </body>
 </html>

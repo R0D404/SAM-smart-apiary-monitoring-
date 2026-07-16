@@ -22,21 +22,18 @@
         </div>
         <div class="menu">
             <ul>
-                <li><a href=""><img src="../assets/icons/dashboard.svg" alt="" class="menu-icon"> Dashboard</a></li>
-                <li><a href=""><img src="../assets/icons/apiarios.svg" alt="" class="menu-icon"> Apiarios</a></li>
-                <li><a href=""><img src="../assets/icons/colmenas.svg" alt="" class="menu-icon"> Colmenas</a></li>
-                <li><a href=""><img src="../assets/icons/alertas.svg" alt="" class="menu-icon"> Alertas</a></li>
-                <!-- Clase active en Visitas / Cosechas -->
-                <li><a href="" class="active"><img src="../assets/icons/visitas.svg" alt="" class="menu-icon"> Visitas / Cosechas</a></li>
-                <li><a href=""><img src="../assets/icons/historial.svg" alt="" class="menu-icon"> Historial</a></li>
+                <li><a href="dashboardApiario.html"><img src="../assets/icons/dashboard.svg" alt="" class="menu-icon"> Dashboard</a></li>
+                <li><a href="misApiarios.html"><img src="../assets/icons/apiarios.svg" alt="" class="menu-icon"> Mis apiarios</a></li>
+                <li><a href="colmenas.html"><img src="../assets/icons/colmenas.svg" alt="" class="menu-icon"> Colmenas</a></li>
+                <li><a href="alertas.html"><img src="../assets/icons/alertas.svg" alt="" class="menu-icon"> Alertas</a></li>
+                <li><a href="registrarVisita.html"><img src="../assets/icons/visitas.svg" alt="" class="menu-icon"> Registrar visita</a></li>
+                <li><a href="historial.html" class="active"><img src="../assets/icons/historial.svg" alt="" class="menu-icon"> Historial</a></li>
             </ul>
         </div>
         <div class="user-profile">
-            <!-- Avatar Teal -->
-            <div style="width: 41px; height: 41px; border-radius: 50%; background-color: #4ade80;"></div>
+            <div style="width: 41px; height: 41px; border-radius: 50%; background-color: #f97316; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;" id="sidebar-user-avatar">--</div>
             <div class="profile-text">
-                <h2>Emmanuel U.</h2>
-                <!-- El rol ahora es Apicultor según el diseño -->
+                <h2 id="sidebar-user-name">---</h2>
                 <p>Apicultor</p>
             </div>
         </div>
@@ -44,10 +41,10 @@
     
     <section class="main-content">
         <!-- Botón flotante superior derecho de Mi Cuenta -->
-        <div class="user-info-btn">
+        <a href="miCuenta.html" class="user-info-btn" style="text-decoration: none;">
             <div class="circle-avatar"></div>
             <p>Mi cuenta</p>
-        </div>
+        </a>
 
         <!-- Cabecera principal -->
         <header class="header-container">
@@ -58,7 +55,7 @@
             
             <div class="header-actions">
                 <button class="btn-primary">Registrar visita</button>
-                <button class="btn-outline-dark">
+                <button class="btn-outline-dark" onclick="window.location.href='historialCosechas.html'">
                     Ver cosechas 
                     <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 6px; vertical-align: middle;"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                 </button>
@@ -101,6 +98,7 @@
         </div>
     </section>
 
+    <script src="../shared/js/sidebar.js" defer></script>
     <script src="../shared/js/historialVisitaA.js"></script>
 </body>
 </html>1

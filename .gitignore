@@ -145,3 +145,8 @@ dist
 *.tar.gz
 *.rar
 hs_err_pid*
+
+
+# Vercel Frontend
+
+sam-frontend-vercel/

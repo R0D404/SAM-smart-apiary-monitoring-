@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial - SAM</title>
+    <link rel="stylesheet" href="../shared/css/plantilla.css">
+    <link rel="stylesheet" href="../shared/css/historial.css">
+    <link rel="stylesheet" href="../shared/css/chartModals.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-shell">
+        <!-- ========== SIDEBAR ========== -->
+        <aside class="sidebar" aria-label="Navegación principal">
+            <div class="logo">
+                <div class="hexagon">
+                    <img src="../assets/img/logo/logoSam.png" alt="Logotipo de SAM">
+                </div>
+                <div class="logo-text">
+                    <h1>SAM</h1>
+                    <p>Smart Apiary</p>
+                </div>
+            </div>
+            <nav class="menu" aria-label="Secciones del sistema">
+                <ul>
+                    <li><a href="dashboardGlobal.html"><img src="../assets/icons/dashboard.svg" alt="" class="menu-icon"> Dashboard</a></li>
+                    <li><a href="gestionApiarios.html"><img src="../assets/icons/apiarios.svg" alt="" class="menu-icon"> Apiarios</a></li>
+                    <li><a href="gestionColmenas.html"><img src="../assets/icons/colmenas.svg" alt="" class="menu-icon"> Colmenas</a></li>
+                    <li><a href="alertas.html"><img src="../assets/icons/alertas.svg" alt="" class="menu-icon"> Alertas</a></li>
+                    <li><a href="historialVisita.html"><img src="../assets/icons/visitas.svg" alt="" class="menu-icon"> Visitas / Cosechas</a></li>
+                    <li class="active"><a href="historial.html"><img src="../assets/icons/historial.svg" alt="" class="menu-icon"> Historial</a></li>
+                    <li><a href="gestionUsuarios.html"><img src="../assets/icons/usuarios.svg" alt="" class="menu-icon"> Usuarios</a></li>
+                </ul>
+            </nav>
+            <div class="user-profile">
+                <div class="user-avatar-indicator">
+                    <img src="../assets/img/users/userAdmin.png" alt="Foto de perfil" class="avatar-photo" id="sidebar-user-photo">
+                    <div class="avatar-initials" id="sidebar-user-avatar">--</div>
+                    <span class="status-dot online"></span>
+                </div>
+                <div class="profile-text">
+                    <h2 id="sidebar-user-name">---</h2>
+                    <p>Administrador</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ========== CONTENIDO PRINCIPAL ========== -->
+        <main class="main-content">
+            <header class="main-header">
+                <div class="header-left">
+                    <h1 class="page-title">Historial y productividad</h1>
+                    <p class="page-subtitle">Cosechas, visitas y rendimiento de cada colmena</p>
+                </div>
+                <div class="header-right">
+                    <button class="user-account" type="button" aria-label="Abrir mi cuenta">
+                        <span class="user-account-dot"></span>
+                        <span>Mi Cuenta</span>
+                    </button>
+                </div>
+            </header>
+
+            <div class="dashboard-grid">
+                <!-- KPIs -->
+                <div class="kpi-cards">
+                    <div class="kpi-card">
+                        <h3>TOTAL TEMPORADA</h3>
+                        <p class="kpi-value" id="kpi-total">-- kg</p>
+                    </div>
+                    <div class="kpi-card">
+                        <h3>PROMEDIO / COLMENA</h3>
+                        <p class="kpi-value" id="kpi-promedio">-- kg</p>
+                    </div>
+                    <div class="kpi-card">
+                        <h3>MEJOR COLMENA</h3>
+                        <p class="kpi-value" id="kpi-mejor">--</p>
+                    </div>
+                    <div class="kpi-card">
+                        <h3>VISITAS REGISTRADAS</h3>
+                        <p class="kpi-value" id="kpi-visitas">--</p>
+                    </div>
+                </div>
+
+                <!-- Chart Buttons -->
+                <div class="chart-buttons-row">
+                    <button class="chart-btn" onclick="openModal('modal-acumulada')">
+                        <img src="../assets/icons/historial.svg" alt="" class="btn-icon">
+                        <span>Ver Producción Acumulada</span>
+                    </button>
+                    <button class="chart-btn" onclick="openModal('modal-colmenas')">
+                        <img src="../assets/icons/colmenas.svg" alt="" class="btn-icon">
+                        <span>Ver Producción por Colmena</span>
+                    </button>
+                </div>
+
+                <!-- Table -->
+                <div class="table-container">
+                    <h3>Historial de cosechas</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>FECHA</th>
+                                <th>COLMENA</th>
+                                <th>KG</th>
+                                <th>CALIDAD</th>
+                                <th>VALIDADA CON PESO</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historial-tbody">
+                            <!-- Rows will be injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div id="modal-acumulada" class="modal-overlay">
+        <div class="modal-content">
+            <header class="modal-header">
+                <h2>Producción acumulada</h2>
+                <button class="close-btn" onclick="closeModal('modal-acumulada')">&times;</button>
+            </header>
+            <div class="modal-body">
+                <div class="chart-wrapper-modal">
+                    <canvas id="lineChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-colmenas" class="modal-overlay">
+        <div class="modal-content">
+            <header class="modal-header">
+                <h2>Producción por colmena (kg)</h2>
+                <button class="close-btn" onclick="closeModal('modal-colmenas')">&times;</button>
+            </header>
+            <div class="modal-body scrollable-x">
+                <div class="chart-wrapper-modal" id="barChartWrapper">
+                    <canvas id="barChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../shared/js/sesion.js"></script>
+    <script src="../shared/js/chartModals.js"></script>
+    <script src="../shared/js/historial.js"></script>
+    <script src="../shared/js/sidebar.js" defer></script>
+</body>
+</html>

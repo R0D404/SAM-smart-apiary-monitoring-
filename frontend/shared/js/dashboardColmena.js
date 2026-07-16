@@ -3,12 +3,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const urlParams = new URLSearchParams(window.location.search);
     const colmenaId = urlParams.get('id');
 
-    if (!colmenaId) {
-        alert("No se especificó la colmena.");
-        window.location.href = "gestionColmenas.html";
-        return;
-    }
-
     // 2. DOM Elements
     const elCodigo = document.getElementById("colmena-codigo");
     const elSubtitle = document.getElementById("page-subtitle");
@@ -32,6 +26,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 3. Fetch Data from Backend
     function fetchDashboardData() {
+        if (!colmenaId) {
+            console.warn("No se especificó la colmena. Cargando panel vacío.");
+            renderizarDashboard({
+                codigo: "C-Sin ID",
+                apiario: "No especificado",
+                ecotipo: "N/A",
+                iaDiagnostico: { estado: "Normal", mensaje: "Sin diagnóstico disponible" },
+                lecturas: [],
+                alertas: [],
+                historial: []
+            });
+            return;
+        }
+
         fetch(`/api/dashboard/colmena?id=${colmenaId}`)
             .then(res => {
                 if(!res.ok) throw new Error("Error al cargar la colmena");
@@ -41,8 +49,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 renderizarDashboard(data);
             })
             .catch(err => {
-                console.error(err);
-                alert("Hubo un error cargando el dashboard de la colmena.");
+                console.error("Error al cargar el dashboard de la colmena:", err);
+                renderizarDashboard({
+                    codigo: colmenaId,
+                    apiario: "--",
+                    ecotipo: "--",
+                    iaDiagnostico: { estado: "--", mensaje: "Servidor local desconectado" },
+                    lecturas: [],
+                    alertas: [],
+                    historial: []
+                });
             });
     }
 
@@ -184,4 +200,22 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("btn-mantenimiento").addEventListener("click", () => {
         alert("Funcionalidad de mantenimiento en construcción.");
     });
+
+    const btnIa = document.getElementById("btn-ia");
+    if (btnIa) {
+        btnIa.addEventListener("click", () => {
+            if (colmenaId) {
+                window.location.href = `diagnosticoIA.html?id=${colmenaId}`;
+            } else {
+                alert("Por favor, selecciona una colmena válida primero.");
+            }
+        });
+    }
+
+    const btnMiCuenta = document.getElementById("btn-mi-cuenta");
+    if (btnMiCuenta) {
+        btnMiCuenta.addEventListener("click", () => {
+            window.location.href = "miCuenta.html";
+        });
+    }
 });

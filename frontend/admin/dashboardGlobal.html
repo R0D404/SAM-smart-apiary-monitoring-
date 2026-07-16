@@ -6,6 +6,7 @@
     <title>Dashboard Global - SAM</title>
     <meta name="description" content="Panel de control global del sistema SAM - Smart Apiary Monitoring">
     <link rel="stylesheet" href="../shared/css/dashboardGlobal.css">
+    <link rel="stylesheet" href="../shared/css/chartModals.css">
     <!-- Chart.js para gráficas dinámicas -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" defer></script>
 </head>
@@ -42,7 +43,7 @@
                     <li><a href="gestionColmenas.html"><img src="../assets/icons/colmenas.svg" alt="" class="menu-icon"> Colmenas</a></li>
                     <li><a href="alertas.html"><img src="../assets/icons/alertas.svg" alt="" class="menu-icon"> Alertas</a></li>
                     <li><a href="historialVisita.html"><img src="../assets/icons/visitas.svg" alt="" class="menu-icon"> Visitas / Cosechas</a></li>
-                    <li><a href="#"><img src="../assets/icons/historial.svg" alt="" class="menu-icon"> Historial</a></li>
+                    <li><a href="historial.html"><img src="../assets/icons/historial.svg" alt="" class="menu-icon"> Historial</a></li>
                     <li><a href="gestionUsuarios.html"><img src="../assets/icons/usuarios.svg" alt="" class="menu-icon"> Usuarios</a></li>
                 </ul>
             </nav>
@@ -68,7 +69,7 @@
                     <p id="page-subtitle">Visión general del negocio apícola</p>
                 </div>
                 <div class="header-right">
-                    <button class="btn-historial" type="button" id="btn-ver-historial">
+                    <button class="btn-historial" type="button" id="btn-ver-historial" onclick="window.location.href='historial.html'">
                         Ver historial
                     </button>
                     <button class="user-account" type="button" aria-label="Abrir mi cuenta" id="btn-mi-cuenta">
@@ -107,26 +108,16 @@
                 </article>
             </section>
 
-            <!-- Gráficas -->
-            <section class="charts-section" aria-label="Gráficas de producción">
-                <article class="chart-card chart-card-line" id="chart-produccion-mensual-card">
-                    <div class="chart-header">
-                        <h2>Producción mensual (kg)</h2>
-                        <p>Últimos 8 meses</p>
-                    </div>
-                    <div class="chart-body">
-                        <canvas id="chart-produccion-mensual"></canvas>
-                    </div>
-                </article>
-                <article class="chart-card chart-card-bar" id="chart-produccion-colmena-card">
-                    <div class="chart-header">
-                        <h2>Producción por colmena</h2>
-                        <p>Temporada actual (kg)</p>
-                    </div>
-                    <div class="chart-body">
-                        <canvas id="chart-produccion-colmena"></canvas>
-                    </div>
-                </article>
+            <!-- Chart Buttons -->
+            <section class="chart-buttons-row" aria-label="Gráficas de producción">
+                <button class="chart-btn" onclick="openModal('modal-prod-mensual')">
+                    <img src="../assets/icons/historial.svg" alt="" class="btn-icon">
+                    <span>Producción mensual</span>
+                </button>
+                <button class="chart-btn" onclick="openModal('modal-prod-colmena')">
+                    <img src="../assets/icons/colmenas.svg" alt="" class="btn-icon">
+                    <span>Producción por colmena</span>
+                </button>
             </section>
 
             <!-- Sección de Apiarios con scroll horizontal -->
@@ -171,6 +162,43 @@
         </nav>
     </div>
 
+    <!-- Modals -->
+    <div id="modal-prod-mensual" class="modal-overlay">
+        <div class="modal-content">
+            <header class="modal-header">
+                <div>
+                    <h2>Producción mensual (kg)</h2>
+                    <p class="modal-subtitle">Últimos 8 meses</p>
+                </div>
+                <button class="close-btn" onclick="closeModal('modal-prod-mensual')">&times;</button>
+            </header>
+            <div class="modal-body">
+                <div class="chart-wrapper-modal">
+                    <canvas id="chart-produccion-mensual"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-prod-colmena" class="modal-overlay">
+        <div class="modal-content">
+            <header class="modal-header">
+                <div>
+                    <h2>Producción por colmena</h2>
+                    <p class="modal-subtitle">Temporada actual (kg)</p>
+                </div>
+                <button class="close-btn" onclick="closeModal('modal-prod-colmena')">&times;</button>
+            </header>
+            <div class="modal-body scrollable-x">
+                <div class="chart-wrapper-modal" id="barChartWrapperGlobal">
+                    <canvas id="chart-produccion-colmena"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../shared/js/chartModals.js" defer></script>
     <script src="../shared/js/dashboardGlobal.js" defer></script>
+    <script src="../shared/js/sidebar.js" defer></script>
 </body>
 </html>

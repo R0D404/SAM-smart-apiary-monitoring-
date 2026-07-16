@@ -3,23 +3,46 @@ package com.sam;
 import io.javalin.Javalin;
 import com.sam.controladores.AuthControlador;
 import com.sam.controladores.DashboardControlador;
+import com.sam.controladores.HistorialControlador;
 import static io.javalin.apibuilder.ApiBuilder.*;
 
 public class App 
 {
     public static void main( String[] args )
     {
+        // Cargar .env para obtener STATIC_DIR si existe
+        io.github.cdimascio.dotenv.Dotenv dotenv = null;
+        try {
+            dotenv = io.github.cdimascio.dotenv.Dotenv.load();
+        } catch(Exception e) {
+            System.out.println("No se encontro archivo .env, usando defaults.");
+        }
+        
+        final String staticDir = (dotenv != null && dotenv.get("STATIC_DIR") != null) 
+                                  ? dotenv.get("STATIC_DIR") 
+                                  : System.getProperty("user.dir");
+
         var app = Javalin.create(config -> {
             config.staticFiles.add(staticFiles -> {
-                staticFiles.directory = "/home/emma/SAM";
+                staticFiles.directory = staticDir;
                 staticFiles.location = io.javalin.http.staticfiles.Location.EXTERNAL;
             });
         }).start(7070);
 
-        // Filtro de seguridad: Proteger todas las rutas de administrador
+        // Filtro de seguridad: Proteger rutas según el rol de usuario
         app.before(ctx -> {
             String path = ctx.path();
-            if (path.startsWith("/frontend/admin") || path.startsWith("/api/dashboard")) {
+            if (path.startsWith("/frontend/admin")) {
+                String rol = ctx.sessionAttribute("rolUsuario");
+                if (ctx.sessionAttribute("usuarioLogueado") == null || !"admin".equals(rol)) {
+                    ctx.redirect("/index.html");
+                }
+            } else if (path.startsWith("/frontend/apicultor")) {
+                String rol = ctx.sessionAttribute("rolUsuario");
+                if (ctx.sessionAttribute("usuarioLogueado") == null || (!"apicultor".equals(rol) && !"admin".equals(rol))) {
+                    ctx.redirect("/index.html");
+                }
+            } else if (path.startsWith("/api/dashboard")) {
                 if (ctx.sessionAttribute("usuarioLogueado") == null) {
                     ctx.redirect("/index.html");
                 }
@@ -31,12 +54,19 @@ public class App
             path("/api/auth", () -> {
                 // Delegamos la lógica al AuthControlador
                 post("/login", AuthControlador::manejarLogin); 
+                post("/logout", AuthControlador::manejarLogout); 
+                get("/mi-cuenta", AuthControlador::obtenerMiCuenta);
+                put("/mi-cuenta", AuthControlador::actualizarMiCuenta);
             });  
             
             path("/api/dashboard", () -> {
                 get(DashboardControlador::obtenerDashboard);
                 get("/apiario/{id}", com.sam.controladores.DashboardApiarioControlador::obtenerDashboardApiario);
                 get("/colmena", com.sam.controladores.DashboardColmenaControlador::obtenerDashboardColmena);
+            });
+            
+            path("/api/historial", () -> {
+                get(HistorialControlador::obtenerHistorial);
             });
             
             path("/api/gestion", () -> {
@@ -72,6 +102,14 @@ public class App
                 get("/resumen", com.sam.controladores.CosechasControlador::obtenerResumen);
                 get("/grafica", com.sam.controladores.CosechasControlador::graficaProduccion);
                 get(com.sam.controladores.CosechasControlador::listarCosechas);
+            });
+
+            path("/api/diagnostico", () -> {
+                get("/{id}", com.sam.controladores.DiagnosticoController::getDatosColmena);
+            });
+
+            path("/api/groq", () -> {
+                post("/diagnostico", com.sam.controladores.GroqController::generarDiagnostico);
             });
         });
     }

@@ -16,8 +16,14 @@ document.getElementById('form-login').addEventListener('submit',async (evento)=>
         });
         const datos = await respuesta.json();
         if(respuesta.ok){
-            // Redirigir al dashboard enviando una señal en la URL para mostrar el toast de éxito
-            window.location.href = "/frontend/admin/dashboardGlobal.html?login=success";
+            // Redirigir al dashboard según el rol
+            if (datos.rol === 'admin') {
+                window.location.href = "/frontend/admin/dashboardGlobal.html?login=success";
+            } else if (datos.rol === 'apicultor') {
+                window.location.href = "/frontend/apicultor/dashboardGlobal.html?login=success";
+            } else {
+                window.location.href = "/frontend/admin/dashboardGlobal.html?login=success";
+            }
         }else{
             mostrarToastError();
         }

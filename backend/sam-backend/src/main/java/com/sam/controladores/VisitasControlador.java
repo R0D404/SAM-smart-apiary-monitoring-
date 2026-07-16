@@ -12,7 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class VisitasControlador {
-    private static final Dotenv dotenv = Dotenv.configure().directory("/home/emma/SAM/backend/sam-backend").load();
+    private static final Dotenv dotenv = Dotenv.load();
     private static final String DB_URL = dotenv.get("DB_URL");
     private static final String DB_USER = dotenv.get("DB_USER");
     private static final String DB_PASSWORD = dotenv.get("DB_PASSWORD");
@@ -60,31 +60,107 @@ public class VisitasControlador {
     }
 
     public static void crearVisita(Context ctx) {
+        String email = ctx.sessionAttribute("usuarioLogueado");
+        if (email == null) {
+            ctx.status(401).json("{\"mensaje\": \"No autorizado\"}");
+            return;
+        }
+
         try {
             com.fasterxml.jackson.databind.JsonNode body = mapper.readTree(ctx.body());
             try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-                String sql = "INSERT INTO SESION_VISITA (apiario_id, usuario_id, tipo, fecha, hora_inicio) VALUES (?, ?, ?, ?, ?)";
-                try (PreparedStatement stmt = conn.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS)) {
-                    stmt.setInt(1, body.get("apiario_id").asInt());
-                    stmt.setInt(2, body.get("usuario_id").asInt());
-                    stmt.setString(3, body.has("tipo") ? body.get("tipo").asText() : "rutina");
-                    stmt.setString(4, body.has("fecha") ? body.get("fecha").asText() : "2026-01-01");
-                    stmt.setString(5, body.has("hora_inicio") ? body.get("hora_inicio").asText() : "12:00:00");
-                    stmt.executeUpdate();
-
-                    try (ResultSet keys = stmt.getGeneratedKeys()) {
-                        if (keys.next()) {
-                            ObjectNode res = mapper.createObjectNode();
-                            res.put("mensaje", "Visita creada");
-                            res.put("id", keys.getInt(1));
-                            ctx.status(201).json(res);
+                // 1. Obtener ID del usuario a partir del email de la sesión
+                int usuarioId = 1;
+                String sqlUser = "SELECT id FROM USUARIO WHERE email = ?";
+                try (PreparedStatement stmtUser = conn.prepareStatement(sqlUser)) {
+                    stmtUser.setString(1, email);
+                    try (ResultSet rs = stmtUser.executeQuery()) {
+                        if (rs.next()) {
+                            usuarioId = rs.getInt("id");
                         }
                     }
+                }
+
+                // 2. Obtener apiario_id de la colmena seleccionada
+                int colmenaId = body.get("colmena_id").asInt();
+                int apiarioId = 1;
+                String sqlColmena = "SELECT apiario_id FROM COLMENA WHERE id = ?";
+                try (PreparedStatement stmtColmena = conn.prepareStatement(sqlColmena)) {
+                    stmtColmena.setInt(1, colmenaId);
+                    try (ResultSet rs = stmtColmena.executeQuery()) {
+                        if (rs.next()) {
+                            apiarioId = rs.getInt("apiario_id");
+                        }
+                    }
+                }
+
+                // 3. Extraer campos adicionales
+                double kgCosechados = body.has("kg_cosechados") ? body.get("kg_cosechados").asDouble() : 0.0;
+                String tipoSesion = kgCosechados > 0 ? "cosecha" : "visita";
+                String fecha = body.has("fecha") ? body.get("fecha").asText() : new java.sql.Date(System.currentTimeMillis()).toString();
+                String estadoColonia = body.has("estado_colonia") ? body.get("estado_colonia").asText() : "Saludable";
+                boolean reinaVista = body.has("reina_vista") ? body.get("reina_vista").asBoolean() : false;
+                String notas = body.has("notes") ? body.get("notes").asText() : (body.has("notas") ? body.get("notas").asText() : "");
+                String calidadMiel = body.has("calidad_miel") ? body.get("calidad_miel").asText() : "";
+
+                // 4. Iniciar transacción e insertar registros en cascada
+                conn.setAutoCommit(false);
+                try {
+                    // a) Insertar en SESION_VISITA
+                    String sqlSesion = "INSERT INTO SESION_VISITA (apiario_id, usuario_id, tipo, fecha, hora_inicio) VALUES (?, ?, ?, ?, '12:00:00')";
+                    int sesionId = 0;
+                    try (PreparedStatement stmtSesion = conn.prepareStatement(sqlSesion, java.sql.Statement.RETURN_GENERATED_KEYS)) {
+                        stmtSesion.setInt(1, apiarioId);
+                        stmtSesion.setInt(2, usuarioId);
+                        stmtSesion.setString(3, tipoSesion);
+                        stmtSesion.setString(4, fecha);
+                        stmtSesion.executeUpdate();
+                        try (ResultSet keys = stmtSesion.getGeneratedKeys()) {
+                            if (keys.next()) {
+                                sesionId = keys.getInt(1);
+                            }
+                        }
+                    }
+
+                    // b) Insertar en VISITA
+                    String sqlVisita = "INSERT INTO VISITA (colmena_id, sesion_id, hora_inicio, hora_fin, estado_colonia, reina_vista, notas) VALUES (?, ?, '12:00:00', '12:30:00', ?, ?, ?)";
+                    try (PreparedStatement stmtVisita = conn.prepareStatement(sqlVisita)) {
+                        stmtVisita.setInt(1, colmenaId);
+                        stmtVisita.setInt(2, sesionId);
+                        stmtVisita.setString(3, estadoColonia);
+                        stmtVisita.setBoolean(4, reinaVista);
+                        stmtVisita.setString(5, notas);
+                        stmtVisita.executeUpdate();
+                    }
+
+                    // c) Insertar en COSECHA si los kilos son mayores a 0
+                    if (kgCosechados > 0) {
+                        String sqlCosecha = "INSERT INTO COSECHA (colmena_id, sesion_id, kg_miel, calidad, validado_con_peso) VALUES (?, ?, ?, ?, 0)";
+                        try (PreparedStatement stmtCosecha = conn.prepareStatement(sqlCosecha)) {
+                            stmtCosecha.setInt(1, colmenaId);
+                            stmtCosecha.setInt(2, sesionId);
+                            stmtCosecha.setDouble(3, kgCosechados);
+                            stmtCosecha.setString(4, calidadMiel);
+                            stmtCosecha.executeUpdate();
+                        }
+                    }
+
+                    conn.commit();
+
+                    ObjectNode res = mapper.createObjectNode();
+                    res.put("mensaje", "Visita y registros guardados con éxito");
+                    res.put("id", sesionId);
+                    ctx.status(201).json(res);
+                } catch (Exception ex) {
+                    conn.rollback();
+                    throw ex;
+                } finally {
+                    conn.setAutoCommit(true);
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
-            ctx.status(500).json("{\"mensaje\": \"Error interno\"}");
+            ctx.status(500).json("{\"mensaje\": \"Error interno al guardar la visita\"}");
         }
     }
 

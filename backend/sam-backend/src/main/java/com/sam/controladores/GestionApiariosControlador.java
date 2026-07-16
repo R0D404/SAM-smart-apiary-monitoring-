@@ -14,7 +14,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 public class GestionApiariosControlador {
-    private static final Dotenv dotenv = Dotenv.configure().directory("/home/emma/SAM/backend/sam-backend").load();
+    private static final Dotenv dotenv = Dotenv.load();
     private static final String DB_URL = dotenv.get("DB_URL");
     private static final String DB_USER = dotenv.get("DB_USER");
     private static final String DB_PASSWORD = dotenv.get("DB_PASSWORD");
@@ -31,8 +31,9 @@ public class GestionApiariosControlador {
             String sql = "SELECT a.id, a.nombre, a.estado, a.municipio, a.localidad, a.microclima_id, " +
                          "COUNT(c.id) as colmenas, cm.nombre as microclima " +
                          "FROM APIARIO a " +
-                         "LEFT JOIN COLMENA c ON a.id = c.apiario_id " +
+                         "LEFT JOIN COLMENA c ON a.id = c.apiario_id AND c.estado <> 'de_baja' " +
                          "LEFT JOIN CATALAGO_MICROCLIMA cm ON a.microclima_id = cm.id " +
+                         "WHERE a.estado IS NULL OR a.estado <> 'de_baja' " +
                          "GROUP BY a.id, a.nombre, a.estado, a.municipio, a.localidad, a.microclima_id, cm.nombre";
                          
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -176,18 +177,37 @@ public class GestionApiariosControlador {
         }
         int id = Integer.parseInt(ctx.pathParam("id"));
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM APIARIO WHERE id = ?")) {
-                stmt.setInt(1, id);
-                int rows = stmt.executeUpdate();
-                if (rows > 0) {
-                    ctx.status(200).json("{\"mensaje\": \"Apiario dado de baja con éxito\"}");
-                } else {
-                    ctx.status(404).json("{\"mensaje\": \"Apiario no encontrado\"}");
+            conn.setAutoCommit(false);
+            try {
+                // 1. Dar de baja lógica a todas las colmenas del apiario
+                String sqlColmenas = "UPDATE COLMENA SET estado = 'de_baja' WHERE apiario_id = ?";
+                try (PreparedStatement stmtCol = conn.prepareStatement(sqlColmenas)) {
+                    stmtCol.setInt(1, id);
+                    stmtCol.executeUpdate();
                 }
+
+                // 2. Dar de baja lógica al apiario
+                String sqlApiario = "UPDATE APIARIO SET estado = 'de_baja' WHERE id = ?";
+                try (PreparedStatement stmtApi = conn.prepareStatement(sqlApiario)) {
+                    stmtApi.setInt(1, id);
+                    int rows = stmtApi.executeUpdate();
+                    if (rows > 0) {
+                        conn.commit();
+                        ctx.status(200).json("{\"mensaje\": \"Apiario dado de baja con éxito\"}");
+                    } else {
+                        conn.rollback();
+                        ctx.status(404).json("{\"mensaje\": \"Apiario no encontrado\"}");
+                    }
+                }
+            } catch (Exception ex) {
+                conn.rollback();
+                throw ex;
+            } finally {
+                conn.setAutoCommit(true);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            ctx.status(500).json("{\"mensaje\": \"Error al eliminar apiario\"}");
+            ctx.status(500).json("{\"mensaje\": \"Error al dar de baja el apiario\"}");
         }
     }
 }

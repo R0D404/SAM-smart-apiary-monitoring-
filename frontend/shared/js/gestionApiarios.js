@@ -146,15 +146,18 @@ document.addEventListener("DOMContentLoaded", () => {
         })
         .then(res => {
             if(res.ok) return res.json();
-            throw new Error(currentEditId ? "Error al actualizar apiario" : "Error al crear apiario");
+            throw new Error(currentEditId ? "No se pudo actualizar el apiario." : "No se pudo crear el apiario. Verifica los campos.");
         })
         .then(() => {
             modal.classList.add("hidden");
             formNuevo.reset();
             currentEditId = null;
             cargarApiarios();
+            showSuccessToast("¡Éxito!", currentEditId ? "Apiario actualizado correctamente." : "Apiario creado correctamente.");
         })
-        .catch(err => alert(err.message));
+        .catch(err => {
+            showErrorToast("Error de Formulario", err.message);
+        });
     });
 
     // Initialize
@@ -176,9 +179,11 @@ window.darDeBaja = function(event, id, nombre) {
                 // reload table
                 location.reload();
             } else {
-                throw new Error("Error al eliminar");
+                throw new Error("No se pudo dar de baja el apiario. Por favor reintente.");
             }
         })
-        .catch(err => alert(err.message));
+        .catch(err => {
+            showErrorToast("Error al dar de baja", err.message);
+        });
     }
 };

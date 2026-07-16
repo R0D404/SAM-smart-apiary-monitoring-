@@ -91,13 +91,16 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(res => {
             if(res.ok) return res.json();
-            throw new Error(currentEditId ? "Error actualizando" : "Error creando");
+            throw new Error(currentEditId ? "No se pudo actualizar la colmena." : "No se pudo crear la colmena. Verifica que el código no esté duplicado.");
         })
         .then(() => {
             closeModal();
             cargarColmenas();
+            showSuccessToast("¡Éxito!", currentEditId ? "Colmena actualizada correctamente." : "Colmena creada correctamente.");
         })
-        .catch(err => alert(err.message));
+        .catch(err => {
+            showErrorToast("Error de Formulario", err.message);
+        });
     });
 
     const tbody = document.getElementById('tabla-colmenas-body');

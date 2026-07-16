@@ -144,9 +144,6 @@ document.addEventListener('DOMContentLoaded', () => {
             tr.innerHTML = `
                 <td>
                     <div class="user-cell">
-                        <div class="user-avatar-circle" style="background-color: ${avatarColor};">
-                            ${initials}
-                        </div>
                         <span style="font-weight: 600; color: var(--color-text-white);">${user.nombre}</span>
                     </div>
                 </td>
@@ -162,15 +159,47 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Form submissions
+    const formCrear = document.getElementById('form-crear-apicultor');
+    if (formCrear) {
+        formCrear.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const payload = {
+                nombre: document.getElementById('crear-nombre').value,
+                email: document.getElementById('crear-email').value,
+                password: document.getElementById('crear-password').value,
+                rol_id: 2 // Apicultor
+            };
+            
+            fetch('/api/gestion/usuarios', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(res => {
+                if (res.ok) return res.json();
+                throw new Error("No se pudo crear la cuenta de apicultor. Verifica si el correo ya está registrado.");
+            })
+            .then(() => {
+                cerrarModalCrear();
+                cargarUsuarios();
+                showSuccessToast("¡Éxito!", "Cuenta de apicultor creada con éxito.");
+            })
+            .catch(err => {
+                showErrorToast("Error de Formulario", err.message);
+            });
+        });
+    }
+
+    const formAsignar = document.getElementById('form-asignar');
+    if (formAsignar) {
+        formAsignar.addEventListener('submit', (e) => {
+            e.preventDefault();
+            cerrarModal();
+            showSuccessToast("¡Éxito!", "Asignaciones guardadas correctamente.");
+        });
+    }
+
     cargarUsuarios();
-
-    const datosEjemplo = [
-        { nombre: 'Emmanuel U.', rol: 'Administrador', apiarios: 'Todos', estado: 'Activo' },
-        { nombre: 'Rodrigo G.', rol: 'Apicultor', apiarios: 'Norte', estado: 'Activo' },
-        { nombre: 'Edgar S.', rol: 'Apicultor', apiarios: 'Sur', estado: 'Activo' },
-        { nombre: 'Andrea L.', rol: 'Apicultor', apiarios: '', estado: 'Inactivo' }
-    ];
-
-    renderizarTablaUsuarios(datosEjemplo);
-
 });

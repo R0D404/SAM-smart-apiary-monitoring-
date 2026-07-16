@@ -62,7 +62,6 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-right: 0;
     padding-top: clamp(18px, 1.25vw, 30px);
     z-index: 100;
 }

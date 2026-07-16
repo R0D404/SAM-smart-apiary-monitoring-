@@ -6,6 +6,26 @@
     <title>Historial de Visitas - SAM</title>
     <link rel="stylesheet" href="../shared/css/dashboardGlobal.css">
     <link rel="stylesheet" href="../shared/css/historialVisita.css">
+    <style>
+        .btn-ver-visitas {
+            background-color: transparent;
+            border: 1px solid var(--color-border);
+            color: var(--color-primary);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .btn-ver-visitas:hover {
+            background-color: rgba(255, 187, 0, 0.1);
+            border-color: var(--color-primary);
+        }
+    </style>
 </head>
 <body>
     <div class="app-shell">
@@ -27,7 +47,7 @@
                     <li><a href="gestionColmenas.html"><img src="../assets/icons/colmenas.svg" alt="" class="menu-icon"> Colmenas</a></li>
                     <li><a href="alertas.html"><img src="../assets/icons/alertas.svg" alt="" class="menu-icon"> Alertas</a></li>
                     <li><a aria-current="page" class="active" href="historialVisita.html"><img src="../assets/icons/visitas.svg" alt="" class="menu-icon"> Visitas / Cosechas</a></li>
-                    <li><a href="#"><img src="../assets/icons/historial.svg" alt="" class="menu-icon"> Historial</a></li>
+                    <li><a href="historial.html"><img src="../assets/icons/historial.svg" alt="" class="menu-icon"> Historial</a></li>
                     <li><a href="gestionUsuarios.html"><img src="../assets/icons/usuarios.svg" alt="" class="menu-icon"> Usuarios</a></li>
                 </ul>
             </nav>
@@ -52,7 +72,10 @@
                     <p class="subtitle" style="color: var(--color-text-gray); font-size: 14px; margin-top: 4px;">Apiario Norte · registros realizados por el apicultor</p>
                 </div>
 
-                <div class="header-right">
+                <div class="header-right" style="display: flex; gap: 16px; align-items: center;">
+                    <a href="historialCosechas.html" class="btn-ver-visitas">
+                        Ver cosechas &rarr;
+                    </a>
                     <!-- Notificación de éxito -->
                     <div class="toast-inline">
                         <div class="toast-icon">
@@ -101,5 +124,6 @@
 
     <!-- Script -->
     <script src="../shared/js/historialVisita.js"></script>
+    <script src="../shared/js/sidebar.js" defer></script>
 </body>
 </html>

@@ -13,7 +13,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
 public class DashboardApiarioControlador {
-    private static final Dotenv dotenv = Dotenv.configure().directory("/home/emma/SAM/backend/sam-backend").load();
+    private static final Dotenv dotenv = Dotenv.load();
     private static final String DB_URL = dotenv.get("DB_URL");
     private static final String DB_USER = dotenv.get("DB_USER");
     private static final String DB_PASSWORD = dotenv.get("DB_PASSWORD");
@@ -38,6 +38,19 @@ public class DashboardApiarioControlador {
         ObjectNode response = mapper.createObjectNode();
 
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            // Obtener nombre del usuario
+            String nombreUsuario = "Apicultor";
+            try (PreparedStatement stmt = conn.prepareStatement("SELECT nombre FROM USUARIO WHERE email = ?")) {
+                stmt.setString(1, usuarioActual);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    if (rs.next()) {
+                        nombreUsuario = rs.getString("nombre");
+                    }
+                }
+            }
+            ObjectNode usuarioNode = mapper.createObjectNode();
+            usuarioNode.put("nombre", nombreUsuario);
+            response.set("usuario", usuarioNode);
             // 1. Apiario Info
             ObjectNode apiarioNode = mapper.createObjectNode();
             try (PreparedStatement stmt = conn.prepareStatement("SELECT nombre, localidad, municipio FROM APIARIO WHERE id = ?")) {
@@ -65,7 +78,7 @@ public class DashboardApiarioControlador {
                 "(SELECT ROUND(valor, 1) FROM LECTURA_SENSOR l JOIN MODULO_MONITOREO m ON l.modulo_id = m.id WHERE m.colmena_id = c.id AND l.tipo_sensor = 'peso' ORDER BY l.timestamp_dispositivo DESC LIMIT 1) as peso, " +
                 "(SELECT ROUND(valor, 1) FROM LECTURA_SENSOR l JOIN MODULO_MONITOREO m ON l.modulo_id = m.id WHERE m.colmena_id = c.id AND l.tipo_sensor = 'temp' ORDER BY l.timestamp_dispositivo DESC LIMIT 1) as temp, " +
                 "(SELECT ROUND(valor, 1) FROM LECTURA_SENSOR l JOIN MODULO_MONITOREO m ON l.modulo_id = m.id WHERE m.colmena_id = c.id AND l.tipo_sensor = 'humedad' ORDER BY l.timestamp_dispositivo DESC LIMIT 1) as humedad " +
-                "FROM COLMENA c WHERE c.apiario_id = ?")) {
+                "FROM COLMENA c WHERE c.apiario_id = ? AND c.estado <> 'de_baja'")) {
                 stmt.setInt(1, apiarioId);
                 try (ResultSet rs = stmt.executeQuery()) {
                     while (rs.next()) {

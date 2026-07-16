@@ -12,7 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class AlertasControlador {
-    private static final Dotenv dotenv = Dotenv.configure().directory("/home/emma/SAM/backend/sam-backend").load();
+    private static final Dotenv dotenv = Dotenv.load();
     private static final String DB_URL = dotenv.get("DB_URL");
     private static final String DB_USER = dotenv.get("DB_USER");
     private static final String DB_PASSWORD = dotenv.get("DB_PASSWORD");
@@ -26,7 +26,7 @@ public class AlertasControlador {
 
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             ArrayNode alertas = mapper.createArrayNode();
-            String sql = "SELECT c.codigo as colmena, a.mensaje, a.nivel, a.atendida " +
+            String sql = "SELECT a.id, c.codigo as colmena, a.mensaje, a.nivel, a.atendida " +
                          "FROM ALERTA a " +
                          "JOIN COLMENA c ON a.colmena_id = c.id " +
                          "ORDER BY a.id DESC";
@@ -35,6 +35,7 @@ public class AlertasControlador {
                 try (ResultSet rs = stmt.executeQuery()) {
                     while (rs.next()) {
                         ObjectNode node = mapper.createObjectNode();
+                        node.put("id", rs.getInt("id"));
                         node.put("colmena", rs.getString("colmena"));
                         node.put("mensaje", rs.getString("mensaje"));
                         
