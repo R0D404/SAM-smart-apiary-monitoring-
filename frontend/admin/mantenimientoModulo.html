@@ -12,7 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <section class="sidebar">
+    <aside class="sidebar" aria-label="Navegación principal">
         <div class="logo">
             <div class="hexagon">
                 <img src="../assets/img/logo/logoSam.png" alt="">
@@ -22,7 +22,7 @@
                 <p>Smart Apiary Monitoring</p>
             </div>
         </div>
-        <div class="menu">
+        <nav class="menu" aria-label="Secciones del sistema">
             <ul>
                 <li><a href="dashboardGlobal.html"><img src="../assets/icons/dashboard.svg" alt="" class="menu-icon"> Dashboard</a></li>
                 <li><a href="gestionApiarios.html"><img src="../assets/icons/apiarios.svg" alt="" class="menu-icon"> Apiarios</a></li>
@@ -33,15 +33,17 @@
                 <li><a href="historial.html"><img src="../assets/icons/historial.svg" alt="" class="menu-icon"> Historial</a></li>
                 <li><a href="gestionUsuarios.html"><img src="../assets/icons/usuarios.svg" alt="" class="menu-icon"> Usuarios</a></li>
             </ul>
-        </div>
+        </nav>
         <div class="user-profile">
-            <div style="width: 41px; height: 41px; border-radius: 50%; background-color: #4ade80;"></div>
+            <div class="user-avatar-indicator">
+                <div class="avatar-initials" id="sidebar-user-avatar">--</div>
+            </div>
             <div class="profile-text">
-                <h2>Emmanuel U.</h2>
+                <h2 id="sidebar-user-name">---</h2>
                 <p>Administrador</p>
             </div>
         </div>
-    </section>
+    </aside>
     
     <section class="main-content">
         <!-- Botón flotante superior derecho de Mi Cuenta -->
@@ -60,7 +62,7 @@
                 <p>Registra limpiezas, recalibraciones, reemplazos, revisiones o fallos del módulo de monitoreo.</p>
             </div>
             <div class="header-actions">
-                <button class="btn-outline-dark">
+                <button class="btn-outline-dark" onclick="window.location.href='gestionColmenas.html'">
                     <svg viewBox="0 0 24 24" width="16" height="16" stroke="#F2A900" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: middle;"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
                     Colmenas
                 </button>

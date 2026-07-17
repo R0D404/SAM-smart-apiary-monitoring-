@@ -43,7 +43,48 @@ document.addEventListener("DOMContentLoaded", () => {
                     tbody.appendChild(tr);
                 });
             })
-            .catch(err => console.error("Error al cargar apiarios:", err));
+            .catch(err => {
+                console.error("Error al cargar apiarios:", err);
+                const mockApiarios = [
+                    {
+                        id: 1,
+                        nombre: "Apiario Vercel Demo",
+                        estado: "Yucatán",
+                        municipio: "Mérida",
+                        localidad: "Comisaría",
+                        colmenas: 3,
+                        microclima: "Selva Baja",
+                        microclima_id: 1
+                    }
+                ];
+                
+                tbody.innerHTML = "";
+                mockApiarios.forEach(api => {
+                    const tr = document.createElement("tr");
+                    tr.className = "clickable-row";
+                    tr.onclick = (e) => {
+                        if (e.target.closest('button')) return;
+                        window.location.href = `dashboardApiario.html?id=${api.id}`;
+                    };
+
+                    tr.innerHTML = `
+                        <td><span style="font-weight: 600; color: var(--color-primary);">${api.nombre}</span></td>
+                        <td>
+                            <div style="display: flex; align-items: center; font-weight: 500; color: var(--color-text-white);">
+                                <span class="dot-status" style="width: 8px; height: 8px; border-radius: 50%; background-color: var(--color-alert-green); display: inline-block; margin-right: 8px;"></span>
+                                ${api.localidad}, ${api.municipio}, <span style="color: var(--color-text-gray); margin-left: 4px;">${api.estado}</span>
+                            </div>
+                        </td>
+                        <td><span style="color: var(--color-text-white); font-weight: 600;">${api.colmenas}</span> <span style="color: var(--color-text-gray); font-size: 13px;">colmenas</span></td>
+                        <td><span style="color: var(--color-text-gray); text-transform: capitalize;">${api.microclima}</span></td>
+                        <td>
+                            <button class="btn-primary" onclick="editarApiario(event, ${api.id}, '${api.nombre}', '${api.estado}', '${api.municipio}', '${api.localidad}', ${api.microclima_id || 1})" style="margin-right: 8px;">Editar</button>
+                            <button class="btn-baja" onclick="darDeBaja(event, ${api.id}, '${api.nombre}')">Dar de baja</button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            });
     }
 
     // Load microclimates for the select (CUSTOM DROPDOWN)
