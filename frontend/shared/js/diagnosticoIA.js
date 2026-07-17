@@ -1,6 +1,7 @@
 // ── CONFIGURACIÓN ────────────────────────────────────────────────────────────
 // Aquí pones tu API Key de Gemini — nunca la compartas públicamente
-const GEMINI_API_KEY = "AQ.Ab8RN6KRP0r_hTANlkxfbj0qFj6C_KZh5EbzttbnSbt9XcUFKA";
+// En producción, esto debería venir del backend o de un entorno seguro (.env)
+const GEMINI_API_KEY = "";
 
 // URL de tu API Java — el {id} se reemplaza dinámicamente
 const API_SAM = "/api/diagnostico";
