@@ -619,3 +619,31 @@
     color: white;
     flex-shrink: 0;
 }
+
+@media (max-width: 768px) {
+    .sidebar {
+        display: none !important;
+    }
+    .main-content {
+        margin-left: 0 !important;
+        width: 100% !important;
+        padding: 16px !important;
+    }
+    .header-container {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+    }
+    .btn-mi-cuenta {
+        width: 100%;
+        justify-content: center;
+        padding: 8px 16px;
+    }
+    .cuerpo {
+        flex-direction: column;
+        gap: 16px;
+    }
+    .formulario, .resumen {
+        width: 100% !important;
+    }
+}

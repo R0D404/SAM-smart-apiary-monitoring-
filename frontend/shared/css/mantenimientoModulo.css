@@ -151,3 +151,22 @@ input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.6) sepi
 @media (max-width: 1150px) {
     .maintenance-grid { grid-template-columns: 1fr; }
 }
+
+@media (max-width: 768px) {
+    .sidebar {
+        display: none !important;
+    }
+    .main-content {
+        position: relative !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: 100vh;
+        padding: 16px !important;
+    }
+    .header-container {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+    }
+}

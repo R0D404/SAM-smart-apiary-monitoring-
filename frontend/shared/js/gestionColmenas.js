@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentEditId = null;
     };
 
-    window.editarColmena = function(event, id, codigo, ecotipo, estado) {
+    window.editarColmena = function(event, id, codigo, ecotipo, apiarioId, estado) {
         event.preventDefault();
         event.stopPropagation();
         
@@ -33,6 +33,8 @@ document.addEventListener('DOMContentLoaded', () => {
         
         document.getElementById("codigo-Col").value = codigo;
         document.getElementById("ecotipo").value = ecotipo || "Apis mellifera";
+        document.getElementById("apiarioSelect").value = apiarioId || "";
+        document.getElementById("estados").value = estado || "activa";
         
         modal.classList.add("activo");
     };
@@ -78,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
             apiario_id: document.getElementById("apiarioSelect").value,
             codigo: document.getElementById("codigo-Col").value,
             ecotipo: document.getElementById("ecotipo").value,
-            estado: "activa"
+            estado: document.getElementById("estados").value
         };
 
         const url = currentEditId ? `/api/gestion/colmenas/${currentEditId}` : "/api/gestion/colmenas";
@@ -143,7 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     ${col.estadoTexto}
                 </td>
                 <td>
-                    <button class="btn-primary" onclick="editarColmena(event, ${col.db_id}, '${col.id}', '${col.ecotipo}', '${col.estado}')" style="margin-right: 8px;">Editar</button>
+                    <button class="btn-primary" onclick="editarColmena(event, ${col.db_id}, '${col.id}', '${col.ecotipo}', ${col.apiario_id}, '${col.estadoRaw}')" style="margin-right: 8px;">Editar</button>
                     <button class="btn-baja" data-id="${col.db_id}">Dar de baja</button>
                 </td>
             `;

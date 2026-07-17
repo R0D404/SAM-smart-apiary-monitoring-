@@ -85,13 +85,13 @@
 
         <!-- ========== MODAL NUEVA COLMENA ========== -->
         <div class="modal-overlay" id="modal-nueva-colmena">
-            <div class="modal-container">
+            <div class="modal-card">
                 <div class="modal-header">
                     <h2>Nueva Colmena</h2>
-                    <button class="btn-close-modal" id="btn-cerrar-formulario">&times;</button>
+                    <p>Registra una colmena, con o sin sensor</p>
+                    <button class="btn-close" id="btn-cerrar-formulario">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <p class="modal-desc">Registra una colmena, con o sin sensor</p>
                     <form id="form-gestionColmena">
                         <div class="form-group">
                             <label for="codigo-Col">CÓDIGO DE COLMENA</label>
@@ -103,8 +103,8 @@
                             <select name="apiario" id="apiarioSelect" required></select>
                         </div>
                         
-                        <div class="form-group inline-group">
-                            <label>¿TIENE SISTEMA DE MONITOREO?</label>
+                        <div class="form-group inline-group" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <label style="margin-bottom: 0;">¿TIENE SISTEMA DE MONITOREO?</label>
                             <label class="switch">
                                 <input type="checkbox" id="tiene-monitoreo">
                                 <span class="slider round"></span>
@@ -122,14 +122,14 @@
                         </div>
                         
                         <div class="form-group">
-                            <label for="estado">ESTADO</label>
-                            <select name="estado" id="estados"></select>
+                            <label for="estados">ESTADO</label>
+                            <select name="estado" id="estados" required>
+                                <option value="activa">Activa</option>
+                                <option value="inactiva">Inactiva</option>
+                            </select>
                         </div>
 
-                        <div class="modal-actions">
-                            <button type="button" class="btn-secondary" id="btn-cancelar-formulario">Cancelar</button>
-                            <button type="submit" class="btn-primary">Guardar</button>
-                        </div>
+                        <button type="submit" class="btn-submit">Guardar colmena</button>
                     </form>
                 </div>
             </div>

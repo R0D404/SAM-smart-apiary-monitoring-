@@ -26,7 +26,7 @@ public class GestionColmenasControlador {
 
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             ArrayNode colmenas = mapper.createArrayNode();
-            String sql = "SELECT c.id as db_id, c.codigo, a.nombre as apiario, c.ecotipo, c.estado, m.identificador as monitoreo " +
+            String sql = "SELECT c.id as db_id, c.codigo, c.apiario_id, a.nombre as apiario, c.ecotipo, c.estado, m.identificador as monitoreo " +
                          "FROM COLMENA c " +
                          "JOIN APIARIO a ON c.apiario_id = a.id " +
                          "LEFT JOIN MODULO_MONITOREO m ON m.colmena_id = c.id " +
@@ -38,6 +38,7 @@ public class GestionColmenasControlador {
                         ObjectNode node = mapper.createObjectNode();
                         node.put("db_id", rs.getInt("db_id"));
                         node.put("id", rs.getString("codigo"));
+                        node.put("apiario_id", rs.getInt("apiario_id"));
                         node.put("apiario", rs.getString("apiario"));
                         
                         String monitoreo = rs.getString("monitoreo");
@@ -46,6 +47,7 @@ public class GestionColmenasControlador {
                         node.put("ecotipo", rs.getString("ecotipo"));
                         
                         String estado = rs.getString("estado");
+                        node.put("estadoRaw", estado != null ? estado.toLowerCase() : "activa");
                         if ("activa".equalsIgnoreCase(estado)) {
                             node.put("estado", "verde");
                             node.put("estadoTexto", "Saludable");

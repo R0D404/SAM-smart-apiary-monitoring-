@@ -136,3 +136,28 @@
     color: var(--color-text-gray);
     font-size: 13px;
 }
+
+@media (max-width: 768px) {
+    .sidebar {
+        display: none !important;
+    }
+    .main-content {
+        margin-left: 0 !important;
+        width: 100% !important;
+        padding: 16px !important;
+    }
+    .header-container {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+    }
+    .filters-container {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .filter-btn {
+        width: calc(50% - 4px);
+        text-align: center;
+        padding: 8px 12px;
+    }
+}
