@@ -37,17 +37,6 @@ body {
 /* ── SIDEBAR ────────────────────────────────────────────────────────
    La barra lateral fija a la izquierda
 ────────────────────────────────────────────────────────────────────── */
-.sidebar {
-    position: fixed;        /* Se queda fija aunque hagas scroll */
-    top: 0;
-    left: 0;
-    width: clamp(240px, 20%, 300px); /* Ancho estandarizado del sidebar */
-    height: 100vh;          /* Altura completa de la ventana */
-    background-color: var(--fondo-sidebar);
-    display: flex;
-    flex-direction: column; /* Apila logo, menú y perfil verticalmente */
-    padding-top: 2%;
-}
 
 /* ── LOGO ───────────────────────────────────────────────────────────*/
 .logo {
@@ -129,16 +118,7 @@ body {
 }
 
 /* Elemento activo del menú (la página donde estamos) */
-.sidebar .menu ul li a.active {
-    background-color: var(--amarillo);
-    color: var(--fondo-oscuro);
-    border-radius: clamp(10px, 0.62vw, 14px);
-    font-weight: 600;
-}
 
-.sidebar .menu ul li a.active .menu-icon {
-    filter: brightness(0);
-}
 
 /* ── PERFIL DE USUARIO (abajo del sidebar) ──────────────────────────*/
 .user-profile {
