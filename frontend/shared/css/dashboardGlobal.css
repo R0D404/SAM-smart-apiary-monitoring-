@@ -101,6 +101,8 @@ body {
    CONTENIDO PRINCIPAL
    ========================================= */
 .main-content {
+    margin-left: clamp(240px, 20%, 300px);
+    width: calc(100% - clamp(240px, 20%, 300px));
     flex: 1;
     min-width: 0; /* Prevents flex children from overflowing their container */
     min-height: 100vh;
@@ -525,6 +527,8 @@ body {
 
     /* Contenido principal ocupa toda la pantalla */
     .main-content {
+        margin-left: 0;
+        width: 100%;
         padding: 16px;
         padding-bottom: 90px; /* Espacio para la barra de navegación inferior */
         gap: 16px;
