@@ -79,7 +79,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 let storedColmenaData = localStorage.getItem('colmenaData');
                 if (storedColmenaData) {
                     try {
-                        defaultColmenaData = JSON.parse(storedColmenaData);
+                        const parsed = JSON.parse(storedColmenaData);
+                        if (parsed && parsed.lecturas && parsed.lecturas.length > 0) defaultColmenaData = parsed;
                     } catch(e) {
                         console.error('Error parsing colmenaData', e);
                     }
@@ -184,6 +185,8 @@ document.addEventListener("DOMContentLoaded", () => {
             pesoChart.destroy();
         }
 
+        const chartColor = window.location.pathname.includes('/apicultor/') ? "#3FB8A0" : "#F2A900";
+
         pesoChart = new Chart(ctx, {
             type: 'line',
             data: {
@@ -191,12 +194,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 datasets: [{
                     label: 'Peso (kg)',
                     data: pesos,
-                    borderColor: '#F2A900', // var(--color-primary)
-                    backgroundColor: 'rgba(242, 169, 0, 0.1)',
+                    borderColor: chartColor,
+                    backgroundColor: chartColor === "#3FB8A0" ? 'rgba(63, 184, 160, 0.1)' : 'rgba(242, 169, 0, 0.1)',
                     borderWidth: 2,
                     fill: true,
                     tension: 0.4,
-                    pointBackgroundColor: '#F2A900',
+                    pointBackgroundColor: chartColor,
                     pointBorderColor: '#1E1E1E',
                     pointBorderWidth: 2,
                     pointRadius: 4,

@@ -52,8 +52,41 @@ document.addEventListener("DOMContentLoaded", () => {
             })
             .catch(err => {
                 console.error("Error al cargar el dashboard de la colmena:", err);
-                const colmenaTitle = document.getElementById("colmena-codigo");
-                if(colmenaTitle) colmenaTitle.textContent = "Error al cargar";
+                
+                // MOCK DATA PARA VERCEL
+                const randomPeso = parseFloat((Math.random() * 10 + 20).toFixed(1));
+                let defaultColmenaData = {
+                    codigo: "C-01",
+                    apiario: "Apiario Vercel",
+                    ecotipo: "Apis mellifera",
+                    iaDiagnostico: { estado: "Normal", mensaje: "Colmena estable, actividad de forrajeo adecuada." },
+                    lecturas: [
+                        { fecha: "10 Jul", peso: (randomPeso).toFixed(1), temp_interna: 34.5, hum_interna: 60, temp_externa: 28, hum_externa: 55 },
+                        { fecha: "11 Jul", peso: (randomPeso - 0.2).toFixed(1), temp_interna: 34.4, hum_interna: 59, temp_externa: 27, hum_externa: 50 },
+                        { fecha: "12 Jul", peso: (randomPeso - 0.5).toFixed(1), temp_interna: 34.2, hum_interna: 61, temp_externa: 26, hum_externa: 52 },
+                        { fecha: "13 Jul", peso: (randomPeso - 1.0).toFixed(1), temp_interna: 34.0, hum_interna: 62, temp_externa: 25, hum_externa: 55 },
+                        { fecha: "14 Jul", peso: (randomPeso - 1.2).toFixed(1), temp_interna: 33.8, hum_interna: 60, temp_externa: 24, hum_externa: 58 },
+                    ],
+                    alertas: [
+                        { nivel: "aviso", mensaje: "Leve descenso de humedad", fecha: "hace 2 días" }
+                    ],
+                    historial: [
+                        { tipo: "Revisión", fecha: "Hace 5 días", resumen: "Revisión general, todo en orden." },
+                        { tipo: "Cosecha", fecha: "Hace 1 mes", resumen: "Cosecha de 15 kg de miel." }
+                    ]
+                };
+
+                let storedColmenaData = localStorage.getItem('colmenaData');
+                if (storedColmenaData) {
+                    try {
+                        const parsed = JSON.parse(storedColmenaData);
+                        if (parsed && parsed.lecturas && parsed.lecturas.length > 0) defaultColmenaData = parsed;
+                    } catch(e) {
+                        console.error('Error parsing colmenaData', e);
+                    }
+                }
+
+                renderizarDashboard(defaultColmenaData);
             });
     }
 
@@ -152,6 +185,8 @@ document.addEventListener("DOMContentLoaded", () => {
             pesoChart.destroy();
         }
 
+        const chartColor = window.location.pathname.includes('/apicultor/') ? "#3FB8A0" : "#F2A900";
+
         pesoChart = new Chart(ctx, {
             type: 'line',
             data: {
@@ -159,12 +194,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 datasets: [{
                     label: 'Peso (kg)',
                     data: pesos,
-                    borderColor: '#F2A900', // var(--color-primary)
-                    backgroundColor: 'rgba(242, 169, 0, 0.1)',
+                    borderColor: chartColor,
+                    backgroundColor: chartColor === "#3FB8A0" ? 'rgba(63, 184, 160, 0.1)' : 'rgba(242, 169, 0, 0.1)',
                     borderWidth: 2,
                     fill: true,
                     tension: 0.4,
-                    pointBackgroundColor: '#F2A900',
+                    pointBackgroundColor: chartColor,
                     pointBorderColor: '#1E1E1E',
                     pointBorderWidth: 2,
                     pointRadius: 4,

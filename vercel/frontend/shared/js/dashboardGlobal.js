@@ -45,8 +45,8 @@ let apiariosData = [
 ];
 
 let userData = {
-    nombre: "Vercel User",
-    rol: "Admin"
+    nombre: window.location.pathname.includes('/apicultor/') ? "Apicultor Invitado" : "Administrador SAM",
+    rol: window.location.pathname.includes('/apicultor/') ? "Apicultor Invitado" : "Administrador"
 };
 
 /**
@@ -177,6 +177,8 @@ function renderChartProduccionMensual(data) {
         chartProduccionMensual.destroy();
     }
 
+    const chartColor = window.location.pathname.includes('/apicultor/') ? "#3FB8A0" : "#F2A900";
+
     chartProduccionMensual = new Chart(ctx, {
         type: "line",
         data: {
@@ -184,11 +186,11 @@ function renderChartProduccionMensual(data) {
             datasets: [{
                 label: "Producción (kg)",
                 data: data.data,
-                borderColor: "#F2A900",
-                backgroundColor: "rgba(242, 169, 0, 0.08)",
+                borderColor: chartColor,
+                backgroundColor: chartColor === "#3FB8A0" ? "rgba(63, 184, 160, 0.05)" : "rgba(242, 169, 0, 0.05)",
                 borderWidth: 2.5,
-                pointBackgroundColor: "#F2A900",
-                pointBorderColor: "#F2A900",
+                pointBackgroundColor: chartColor,
+                pointBorderColor: chartColor,
                 pointRadius: 4,
                 pointHoverRadius: 7,
                 tension: 0.3,
@@ -206,7 +208,7 @@ function renderChartProduccionMensual(data) {
                 legend: { display: false },
                 tooltip: {
                     backgroundColor: "#2A1E10",
-                    titleColor: "#F2A900",
+                    titleColor: chartColor,
                     bodyColor: "#F5F5F5",
                     borderColor: "#3b3222",
                     borderWidth: 1,
@@ -260,6 +262,8 @@ function renderChartProduccionColmena(data) {
         wrapper.style.width = Math.max(1000, data.labels.length * 40) + 'px';
     }
 
+    const chartColor = window.location.pathname.includes('/apicultor/') ? "#3FB8A0" : "#F2A900";
+
     chartProduccionColmena = new Chart(ctx, {
         type: "bar",
         data: {
@@ -267,8 +271,8 @@ function renderChartProduccionColmena(data) {
             datasets: [{
                 label: "Producción (kg)",
                 data: data.data,
-                backgroundColor: "#F2A900",
-                borderColor: "#F2A900",
+                backgroundColor: chartColor,
+                borderColor: chartColor,
                 borderWidth: 0,
                 borderRadius: 4,
                 barPercentage: 0.6,
@@ -282,7 +286,7 @@ function renderChartProduccionColmena(data) {
                 legend: { display: false },
                 tooltip: {
                     backgroundColor: "#2A1E10",
-                    titleColor: "#F2A900",
+                    titleColor: chartColor,
                     bodyColor: "#F5F5F5",
                     borderColor: "#3b3222",
                     borderWidth: 1,
@@ -385,10 +389,30 @@ function fetchDashboardData() {
             let storedColmena = localStorage.getItem('produccionColmenaData');
             let storedApiarios = localStorage.getItem('apiariosData');
 
-            if (storedStats) { try { dashboardStats = JSON.parse(storedStats); } catch(e){} }
-            if (storedMensual) { try { produccionMensualData = JSON.parse(storedMensual); } catch(e){} }
-            if (storedColmena) { try { produccionColmenaData = JSON.parse(storedColmena); } catch(e){} }
-            if (storedApiarios) { try { apiariosData = JSON.parse(storedApiarios); } catch(e){} }
+            if (storedStats) { 
+                try { 
+                    const parsed = JSON.parse(storedStats); 
+                    if (parsed && Object.keys(parsed).length > 0) dashboardStats = parsed; 
+                } catch(e){} 
+            }
+            if (storedMensual) { 
+                try { 
+                    const parsed = JSON.parse(storedMensual); 
+                    if (parsed && parsed.labels && parsed.labels.length > 0) produccionMensualData = parsed; 
+                } catch(e){} 
+            }
+            if (storedColmena) { 
+                try { 
+                    const parsed = JSON.parse(storedColmena); 
+                    if (parsed && parsed.labels && parsed.labels.length > 0) produccionColmenaData = parsed; 
+                } catch(e){} 
+            }
+            if (storedApiarios) { 
+                try { 
+                    const parsed = JSON.parse(storedApiarios); 
+                    if (parsed && Array.isArray(parsed) && parsed.length > 0) apiariosData = parsed; 
+                } catch(e){} 
+            }
             
             // Fallback a los mock stats si falla
             renderStats(dashboardStats);

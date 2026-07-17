@@ -150,6 +150,8 @@ function renderChartEvolucionPeso() {
         return isNaN(val) ? 0.0 : val;
     });
 
+    const chartColor = window.location.pathname.includes('/apicultor/') ? "#3FB8A0" : "#F2A900";
+
     chartEvolucionPesoInstance = new Chart(canvas, {
         type: 'bar',
         data: {
@@ -157,7 +159,7 @@ function renderChartEvolucionPeso() {
             datasets: [{
                 label: 'Peso (kg)',
                 data: dataValues,
-                backgroundColor: '#F2A900',
+                backgroundColor: chartColor,
                 borderRadius: 4,
                 barPercentage: 0.6
             }]
@@ -266,10 +268,16 @@ function fetchDashboardData() {
             ];
 
             if (storedStats) {
-                try { defaultStats = JSON.parse(storedStats); } catch(e) { console.error('Error parsing stats', e); }
+                try { 
+                    const parsed = JSON.parse(storedStats);
+                    if (parsed && Object.keys(parsed).length > 0) defaultStats = parsed;
+                } catch(e) { console.error('Error parsing stats', e); }
             }
             if (storedColmenas) {
-                try { defaultColmenas = JSON.parse(storedColmenas); } catch(e) { console.error('Error parsing colmenas', e); }
+                try { 
+                    const parsed = JSON.parse(storedColmenas);
+                    if (parsed && Array.isArray(parsed) && parsed.length > 0) defaultColmenas = parsed;
+                } catch(e) { console.error('Error parsing colmenas', e); }
             }
             
             // Hardcoded data for vercel presentation

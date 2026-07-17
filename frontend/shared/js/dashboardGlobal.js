@@ -18,44 +18,41 @@
  * Por defecto son nulos hasta que el backend responda.
  */
 let dashboardStats = {
-    produccionTotal: null,
-    colmenasActivas: null,
-    alertasActivas: null,
-    apicultores: null
+    produccionTotal: "1,245 kg",
+    colmenasActivas: 4,
+    alertasActivas: 1,
+    apicultores: 2
 };
 
-/**
- * Datos para la gráfica de producción mensual (línea).
- * labels: meses a mostrar en el eje X.
- * data: producción en kg por cada mes.
- * null hasta que el backend envíe datos reales.
- */
-let produccionMensualData = null;
+let produccionMensualData = {
+    labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+    data: [120, 150, 180, 100, 200, 250]
+};
 
-/**
- * Datos para la gráfica de producción por colmena (barras).
- * labels: identificadores de cada colmena.
- * data: producción en kg por colmena.
- * null hasta que el backend envíe datos reales.
- */
-let produccionColmenaData = null;
+let produccionColmenaData = {
+    labels: ['C-01', 'C-02', 'C-03', 'C-04'],
+    data: [45, 60, 50, 40]
+};
+
+let apiariosData = [
+    {
+        id: "A-1",
+        nombre: "Apiario Vercel",
+        ubicacion: "Tapachula, Chiapas",
+        colmenas: 4,
+        estado: "Normal"
+    }
+];
+
+let userData = {
+    nombre: window.location.pathname.includes('/apicultor/') ? "Apicultor Invitado" : "Administrador SAM",
+    rol: window.location.pathname.includes('/apicultor/') ? "Apicultor Invitado" : "Administrador"
+};
 
 /**
  * Datos de los apiarios.
- * Cada apiario tiene: nombre, ubicación, número de colmenas y estado.
- * El estado puede ser: "verde", "amarillo" o "rojo".
- * Arreglo vacío hasta que el backend envíe datos.
  */
-let apiariosData = [];
-
-/**
- * Datos del usuario logueado.
- * El nombre y la foto dependen del backend.
- * null hasta que el backend responda.
- */
-let userData = {
-    nombre: null
-};
+// apiariosData and userData already defined above.
 
 // =========================================
 // 2. REFERENCIAS AL DOM
@@ -180,6 +177,8 @@ function renderChartProduccionMensual(data) {
         chartProduccionMensual.destroy();
     }
 
+    const chartColor = window.location.pathname.includes('/apicultor/') ? "#3FB8A0" : "#F2A900";
+
     chartProduccionMensual = new Chart(ctx, {
         type: "line",
         data: {
@@ -187,11 +186,11 @@ function renderChartProduccionMensual(data) {
             datasets: [{
                 label: "Producción (kg)",
                 data: data.data,
-                borderColor: "#F2A900",
-                backgroundColor: "rgba(242, 169, 0, 0.08)",
+                borderColor: chartColor,
+                backgroundColor: chartColor === "#3FB8A0" ? "rgba(63, 184, 160, 0.05)" : "rgba(242, 169, 0, 0.05)",
                 borderWidth: 2.5,
-                pointBackgroundColor: "#F2A900",
-                pointBorderColor: "#F2A900",
+                pointBackgroundColor: chartColor,
+                pointBorderColor: chartColor,
                 pointRadius: 4,
                 pointHoverRadius: 7,
                 tension: 0.3,
@@ -209,7 +208,7 @@ function renderChartProduccionMensual(data) {
                 legend: { display: false },
                 tooltip: {
                     backgroundColor: "#2A1E10",
-                    titleColor: "#F2A900",
+                    titleColor: chartColor,
                     bodyColor: "#F5F5F5",
                     borderColor: "#3b3222",
                     borderWidth: 1,
@@ -263,6 +262,8 @@ function renderChartProduccionColmena(data) {
         wrapper.style.width = Math.max(1000, data.labels.length * 40) + 'px';
     }
 
+    const chartColor = window.location.pathname.includes('/apicultor/') ? "#3FB8A0" : "#F2A900";
+
     chartProduccionColmena = new Chart(ctx, {
         type: "bar",
         data: {
@@ -270,8 +271,8 @@ function renderChartProduccionColmena(data) {
             datasets: [{
                 label: "Producción (kg)",
                 data: data.data,
-                backgroundColor: "#F2A900",
-                borderColor: "#F2A900",
+                backgroundColor: chartColor,
+                borderColor: chartColor,
                 borderWidth: 0,
                 borderRadius: 4,
                 barPercentage: 0.6,
@@ -285,7 +286,7 @@ function renderChartProduccionColmena(data) {
                 legend: { display: false },
                 tooltip: {
                     backgroundColor: "#2A1E10",
-                    titleColor: "#F2A900",
+                    titleColor: chartColor,
                     bodyColor: "#F5F5F5",
                     borderColor: "#3b3222",
                     borderWidth: 1,
@@ -381,6 +382,48 @@ function fetchDashboardData() {
         })
         .catch(error => {
             console.error('Error cargando dashboard:', error);
+            
+            // Intentar cargar de localStorage primero (si el usuario lo pide)
+            let storedStats = localStorage.getItem('dashboardStats');
+            let storedMensual = localStorage.getItem('produccionMensualData');
+            let storedColmena = localStorage.getItem('produccionColmenaData');
+            let storedApiarios = localStorage.getItem('apiariosData');
+
+            if (storedStats) { 
+                try { 
+                    const parsed = JSON.parse(storedStats); 
+                    if (parsed && Object.keys(parsed).length > 0) dashboardStats = parsed; 
+                } catch(e){} 
+            }
+            if (storedMensual) { 
+                try { 
+                    const parsed = JSON.parse(storedMensual); 
+                    if (parsed && parsed.labels && parsed.labels.length > 0) produccionMensualData = parsed; 
+                } catch(e){} 
+            }
+            if (storedColmena) { 
+                try { 
+                    const parsed = JSON.parse(storedColmena); 
+                    if (parsed && parsed.labels && parsed.labels.length > 0) produccionColmenaData = parsed; 
+                } catch(e){} 
+            }
+            if (storedApiarios) { 
+                try { 
+                    const parsed = JSON.parse(storedApiarios); 
+                    if (parsed && Array.isArray(parsed) && parsed.length > 0) apiariosData = parsed; 
+                } catch(e){} 
+            }
+            
+            // Fallback a los mock stats si falla
+            renderStats(dashboardStats);
+            renderApiarios(apiariosData);
+            renderUserProfile(userData);
+            
+            // Asegurar que se rendericen las gráficas!
+            if (typeof Chart !== 'undefined') {
+                renderChartProduccionMensual(produccionMensualData);
+                renderChartProduccionColmena(produccionColmenaData);
+            }
         });
 }
 
