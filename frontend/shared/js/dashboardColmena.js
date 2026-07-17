@@ -185,21 +185,19 @@ document.addEventListener("DOMContentLoaded", () => {
             pesoChart.destroy();
         }
 
-        const chartColor = window.location.pathname.includes('/apicultor/') ? "#3FB8A0" : "#F2A900";
-
-        pesoChart = new Chart(ctx, {
+                pesoChart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: labels,
                 datasets: [{
                     label: 'Peso (kg)',
                     data: pesos,
-                    borderColor: chartColor,
-                    backgroundColor: chartColor === "#3FB8A0" ? 'rgba(63, 184, 160, 0.1)' : 'rgba(242, 169, 0, 0.1)',
+                    borderColor: "#F2A900",
+                    backgroundColor: 'rgba(242, 169, 0, 0.1)',
                     borderWidth: 2,
                     fill: true,
                     tension: 0.4,
-                    pointBackgroundColor: chartColor,
+                    pointBackgroundColor: "#F2A900",
                     pointBorderColor: '#1E1E1E',
                     pointBorderWidth: 2,
                     pointRadius: 4,

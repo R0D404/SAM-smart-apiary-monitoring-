@@ -177,20 +177,18 @@ function renderChartProduccionMensual(data) {
         chartProduccionMensual.destroy();
     }
 
-    const chartColor = window.location.pathname.includes('/apicultor/') ? "#3FB8A0" : "#F2A900";
-
-    chartProduccionMensual = new Chart(ctx, {
+        chartProduccionMensual = new Chart(ctx, {
         type: "line",
         data: {
             labels: data.labels,
             datasets: [{
                 label: "Producción (kg)",
                 data: data.data,
-                borderColor: chartColor,
-                backgroundColor: chartColor === "#3FB8A0" ? "rgba(63, 184, 160, 0.05)" : "rgba(242, 169, 0, 0.05)",
+                borderColor: "#F2A900",
+                backgroundColor: "rgba(242, 169, 0, 0.05)",
                 borderWidth: 2.5,
-                pointBackgroundColor: chartColor,
-                pointBorderColor: chartColor,
+                pointBackgroundColor: "#F2A900",
+                pointBorderColor: "#F2A900",
                 pointRadius: 4,
                 pointHoverRadius: 7,
                 tension: 0.3,
@@ -208,7 +206,7 @@ function renderChartProduccionMensual(data) {
                 legend: { display: false },
                 tooltip: {
                     backgroundColor: "#2A1E10",
-                    titleColor: chartColor,
+                    titleColor: "#F2A900",
                     bodyColor: "#F5F5F5",
                     borderColor: "#3b3222",
                     borderWidth: 1,
@@ -262,17 +260,15 @@ function renderChartProduccionColmena(data) {
         wrapper.style.width = Math.max(1000, data.labels.length * 40) + 'px';
     }
 
-    const chartColor = window.location.pathname.includes('/apicultor/') ? "#3FB8A0" : "#F2A900";
-
-    chartProduccionColmena = new Chart(ctx, {
+        chartProduccionColmena = new Chart(ctx, {
         type: "bar",
         data: {
             labels: data.labels,
             datasets: [{
                 label: "Producción (kg)",
                 data: data.data,
-                backgroundColor: chartColor,
-                borderColor: chartColor,
+                backgroundColor: "#F2A900",
+                borderColor: "#F2A900",
                 borderWidth: 0,
                 borderRadius: 4,
                 barPercentage: 0.6,
@@ -286,7 +282,7 @@ function renderChartProduccionColmena(data) {
                 legend: { display: false },
                 tooltip: {
                     backgroundColor: "#2A1E10",
-                    titleColor: chartColor,
+                    titleColor: "#F2A900",
                     bodyColor: "#F5F5F5",
                     borderColor: "#3b3222",
                     borderWidth: 1,

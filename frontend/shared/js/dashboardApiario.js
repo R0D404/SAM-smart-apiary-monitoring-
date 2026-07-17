@@ -150,16 +150,14 @@ function renderChartEvolucionPeso() {
         return isNaN(val) ? 0.0 : val;
     });
 
-    const chartColor = window.location.pathname.includes('/apicultor/') ? "#3FB8A0" : "#F2A900";
-
-    chartEvolucionPesoInstance = new Chart(canvas, {
+        chartEvolucionPesoInstance = new Chart(canvas, {
         type: 'bar',
         data: {
             labels: labels,
             datasets: [{
                 label: 'Peso (kg)',
                 data: dataValues,
-                backgroundColor: chartColor,
+                backgroundColor: "#F2A900",
                 borderRadius: 4,
                 barPercentage: 0.6
             }]
