@@ -51,11 +51,14 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
 
         toastContainer.innerHTML = toastHTML;
+        
+        // Scroll to top to ensure the user sees the notification
+        window.scrollTo({top: 0, behavior: 'smooth'});
 
         // Opcional: Ocultar el toast después de 4 segundos
         setTimeout(() => {
-            if(toastContainer.firstChild) {
-                toastContainer.firstChild.style.opacity = '0';
+            if(toastContainer.firstElementChild) {
+                toastContainer.firstElementChild.style.opacity = '0';
                 setTimeout(() => toastContainer.innerHTML = '', 300);
             }
         }, 4000);
@@ -147,12 +150,34 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(err => {
             console.warn("No se pudo cargar el perfil del usuario (servidor apagado):", err);
-            // Si está apagado, dejar inputs vacíos/placeholders
-            if (inputNombre) inputNombre.value = '';
-            if (inputCorreo) inputCorreo.value = '';
-            if (summaryName) summaryName.textContent = '---';
-            if (summaryEmail) summaryEmail.textContent = '---';
-            if (summaryAvatar) summaryAvatar.textContent = '--';
+            
+            // MOCK DATA PARA VERCEL
+            let mockUser = {
+                nombre: "Administrador SAM",
+                email: "admin@sam.com"
+            };
+            if (window.location.pathname.includes('/apicultor/')) {
+                mockUser = {
+                    nombre: "Apicultor Invitado",
+                    email: "apicultor@sam.com"
+                };
+            }
+
+            if (inputNombre) inputNombre.value = mockUser.nombre;
+            if (inputCorreo) inputCorreo.value = mockUser.email;
+            
+            if (summaryName) summaryName.textContent = mockUser.nombre;
+            if (summaryEmail) summaryEmail.textContent = mockUser.email;
+            
+            if (summaryAvatar) {
+                const iniciales = mockUser.nombre
+                    .split(" ")
+                    .filter(p => p.length > 0)
+                    .map(p => p[0].toUpperCase())
+                    .slice(0, 2)
+                    .join("");
+                summaryAvatar.textContent = iniciales;
+            }
         });
 
 });

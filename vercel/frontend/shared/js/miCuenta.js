@@ -51,11 +51,14 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
 
         toastContainer.innerHTML = toastHTML;
+        
+        // Scroll to top to ensure the user sees the notification
+        window.scrollTo({top: 0, behavior: 'smooth'});
 
         // Opcional: Ocultar el toast después de 4 segundos
         setTimeout(() => {
-            if(toastContainer.firstChild) {
-                toastContainer.firstChild.style.opacity = '0';
+            if(toastContainer.firstElementChild) {
+                toastContainer.firstElementChild.style.opacity = '0';
                 setTimeout(() => toastContainer.innerHTML = '', 300);
             }
         }, 4000);
