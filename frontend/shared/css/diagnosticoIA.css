@@ -258,6 +258,36 @@ body {
     gap: 8px;
 }
 
+/* ── ESTADO "ESPERANDO" ─────────────────────────────────────────────*/
+.waiting-box {
+    text-align: center;
+    padding: 10% 5%;
+    color: var(--texto-gris);
+}
+
+.waiting-box img {
+    opacity: 0.5;
+    margin-bottom: 3%;
+    width: clamp(30px, 3.5vw, 60px);
+}
+
+.waiting-box p {
+    font-size: clamp(12px, 0.9vw, 15px);
+}
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+@media (max-width: 768px) {
+    .cuerpo {
+        flex-direction: column;
+    }
+    .contexto, .diagnostico {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+}
+
 /* ── BOTÓN GENERAR DIAGNÓSTICO ──────────────────────────────────────*/
 .btn-diagnostico {
     width: 100%;

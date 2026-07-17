@@ -256,3 +256,42 @@
     color: var(--color-text-gray);
     font-size: 12px;
 }
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+@media (max-width: 1024px) {
+    .top-row {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .middle-row {
+        grid-template-columns: 1fr;
+    }
+    .state-card {
+        grid-column: span 3;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-grid {
+        padding-right: 0;
+    }
+    .top-row {
+        grid-template-columns: 1fr 1fr;
+    }
+    .state-card {
+        grid-column: span 2;
+    }
+    .middle-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .top-row {
+        grid-template-columns: 1fr;
+    }
+    .state-card {
+        grid-column: 1;
+    }
+}
