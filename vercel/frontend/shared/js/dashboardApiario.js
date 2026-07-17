@@ -248,27 +248,31 @@ function fetchDashboardData() {
             if (titleEl) titleEl.textContent = "Apiario Vercel";
             if (subtitleEl) subtitleEl.textContent = "Ubicación: Vercel";
             
-            // Hardcoded data for vercel presentation
-            renderStats({
+            // Intentar cargar de localStorage primero (si el usuario lo pide)
+            let storedStats = localStorage.getItem('apiarioStats');
+            let storedColmenas = localStorage.getItem('apiarioColmenasData');
+
+            let defaultStats = {
                 saludEstado: "Normal",
                 saludDesc: "Todas las colmenas estables",
-                pesoPromedio: (Math.random() * 10 + 20).toFixed(1) + " kg",
+                pesoPromedio: "21.5 kg",
                 alertasActivas: "0",
                 ultimaVisita: "Hace 2 días"
-            });
-            renderColmenas([
-                { id: "C-01", estado: "verde", estadoTexto: "Saludable" },
-                { id: "C-02", estado: "verde", estadoTexto: "Saludable" }
-            ]);
+            };
+            
+            let defaultColmenas = [
+                { id: "C-01", estado: "verde", estadoTexto: "Saludable", peso: "25.0" },
+                { id: "C-02", estado: "verde", estadoTexto: "Saludable", peso: "22.5" }
+            ];
+
+            if (storedStats) defaultStats = JSON.parse(storedStats);
+            if (storedColmenas) defaultColmenas = JSON.parse(storedColmenas);
+            
+            // Hardcoded data for vercel presentation
+            renderStats(defaultStats);
+            renderColmenas(defaultColmenas);
             
             // Render chart manually for hardcoded data
-            evolucionPesoData = {
-                labels: ['Ene', 'Feb', 'Mar'],
-                datasets: [
-                    { label: 'C-01', data: [20, 22, 24] },
-                    { label: 'C-02', data: [18, 19, 21] }
-                ]
-            };
             renderChartEvolucionPeso();
             renderUserProfile({nombre: "Vercel Admin"});
         });

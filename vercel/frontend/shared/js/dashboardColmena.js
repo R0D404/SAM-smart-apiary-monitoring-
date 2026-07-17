@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 
                 // MOCK DATA PARA VERCEL
                 const randomPeso = parseFloat((Math.random() * 10 + 20).toFixed(1));
-                renderizarDashboard({
+                let defaultColmenaData = {
                     codigo: "C-01",
                     apiario: "Apiario Vercel",
                     ecotipo: "Apis mellifera",
@@ -74,7 +74,14 @@ document.addEventListener("DOMContentLoaded", () => {
                         { tipo: "Revisión", fecha: "Hace 5 días", resumen: "Revisión general, todo en orden." },
                         { tipo: "Cosecha", fecha: "Hace 1 mes", resumen: "Cosecha de 15 kg de miel." }
                     ]
-                });
+                };
+
+                let storedColmenaData = localStorage.getItem('colmenaData');
+                if (storedColmenaData) {
+                    defaultColmenaData = JSON.parse(storedColmenaData);
+                }
+
+                renderizarDashboard(defaultColmenaData);
             });
     }
 

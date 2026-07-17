@@ -378,10 +378,26 @@ function fetchDashboardData() {
         })
         .catch(error => {
             console.error('Error cargando dashboard:', error);
+            
+            // Intentar cargar de localStorage primero (si el usuario lo pide)
+            let storedStats = localStorage.getItem('dashboardStats');
+            let storedMensual = localStorage.getItem('produccionMensualData');
+            let storedColmena = localStorage.getItem('produccionColmenaData');
+            let storedApiarios = localStorage.getItem('apiariosData');
+
+            if (storedStats) dashboardStats = JSON.parse(storedStats);
+            if (storedMensual) produccionMensualData = JSON.parse(storedMensual);
+            if (storedColmena) produccionColmenaData = JSON.parse(storedColmena);
+            if (storedApiarios) apiariosData = JSON.parse(storedApiarios);
+            
             // Fallback a los mock stats si falla
             renderStats(dashboardStats);
             renderApiarios(apiariosData);
             renderUserProfile(userData);
+            
+            // Asegurar que se rendericen las gráficas!
+            renderChartProduccionMensual(produccionMensualData);
+            renderChartProduccionColmena(produccionColmenaData);
         });
 }
 
