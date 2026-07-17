@@ -1,0 +1,237 @@
+/* =========================================
+   ESTILOS ESPECÍFICOS PARA DASHBOARD APIARIO
+   ========================================= */
+
+/* Header */
+.btn-alertas {
+    background-color: transparent;
+    color: var(--color-primary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill);
+    padding: 8px 24px;
+    font-family: var(--font-main);
+    font-size: clamp(12px, 0.82vw, 16px);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-alertas:hover {
+    background-color: rgba(242, 169, 0, 0.1);
+    border-color: var(--color-primary);
+}
+
+/* Tarjeta Salud del Apiario */
+.salud-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.salud-dots {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.salud-dots .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: var(--color-border-light);
+}
+
+.salud-dots .dot.yellow {
+    background-color: var(--color-primary);
+}
+
+.salud-dots .dot.green {
+    background-color: var(--color-alert-green);
+}
+
+.salud-dots .dot.red {
+    background-color: var(--color-alert-red);
+}
+
+.salud-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.salud-status {
+    color: var(--color-primary); /* Default to yellow/aviso color */
+    line-height: 1;
+}
+.salud-status.green { color: var(--color-alert-green); }
+.salud-status.red { color: var(--color-alert-red); }
+
+.salud-desc {
+    font-size: 11px;
+    color: var(--color-text-gray);
+    margin-top: 4px;
+}
+
+/* Gráficas Apiario */
+.charts-section-apiario {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(12px, 1.2vw, 24px);
+    width: 100%;
+    flex: 1;
+}
+
+/* Sección Colmenas */
+.colmenas-section {
+    background-color: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: clamp(16px, 1.5vw, 24px);
+    display: flex;
+    flex-direction: column;
+}
+
+.colmenas-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: clamp(16px, 1.5vw, 24px);
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.colmenas-title {
+    font-family: var(--font-main);
+    font-size: clamp(16px, 1.25vw, 22px);
+    font-weight: 600;
+    color: var(--color-text-white);
+    margin: 0;
+}
+
+.colmenas-link {
+    font-family: var(--font-main);
+    font-size: clamp(12px, 0.85vw, 14px);
+    color: var(--color-primary);
+    text-decoration: none;
+    transition: opacity 0.2s;
+}
+
+.colmenas-link:hover {
+    opacity: 0.8;
+}
+
+.colmenas-scroll-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(12px, 1vw, 20px);
+    width: 100%;
+}
+
+.colmena-card {
+    background-color: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-width: 120px;
+    flex: 1 1 auto;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.colmena-card:hover {
+    border-color: var(--color-primary);
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+.colmena-card::after {
+    content: "›";
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    font-size: 16px;
+    color: var(--color-text-gray);
+    font-weight: 300;
+}
+
+.colmena-status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-bottom: 24px;
+}
+
+.colmena-status-dot.verde { background-color: var(--color-alert-green); }
+.colmena-status-dot.amarillo { background-color: var(--color-primary); }
+.colmena-status-dot.rojo { background-color: var(--color-alert-red); }
+
+.colmena-id {
+    font-family: var(--font-main);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text-white);
+    margin: 0 0 4px 0;
+}
+
+.colmena-status-text {
+    font-family: var(--font-main);
+    font-size: 11px;
+    margin: 0;
+}
+.colmena-status-text.verde { color: var(--color-alert-green); }
+.colmena-status-text.amarillo { color: var(--color-primary); }
+.colmena-status-text.rojo { color: var(--color-alert-red); }
+
+.colmenas-empty {
+    font-family: var(--font-main);
+    font-size: clamp(13px, 0.85vw, 16px);
+    color: var(--color-text-gray);
+    padding: 20px 0;
+    text-align: center;
+    width: 100%;
+    font-style: italic;
+}
+
+/* =========================================
+   RESPONSIVE ESPECÍFICO APIARIO
+   ========================================= */
+@media (max-width: 768px) {
+    .btn-alertas {
+        padding: 8px 18px;
+        font-size: 13px;
+    }
+    
+    .colmenas-scroll-container {
+        flex-direction: column;
+    }
+    
+    .colmena-card {
+        flex-direction: row;
+        align-items: center;
+        padding: 16px;
+    }
+    
+    .colmena-status-dot {
+        margin-bottom: 0;
+        margin-right: 12px;
+    }
+    
+    .colmena-card::after {
+        top: 50%;
+        transform: translateY(-50%);
+        right: 16px;
+        font-size: 24px;
+    }
+    
+    .colmena-info-wrapper {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .colmena-id {
+        margin-bottom: 2px;
+    }
+}

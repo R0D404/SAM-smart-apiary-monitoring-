@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAM · Mis Apiarios</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../shared/css/misApiarios.css">
+    <link rel="stylesheet" href="../shared/css/sidebar.css">
+</head>
+<body>
+
+    <!-- ============ SIDEBAR ============ -->
+    <section class="sidebar">
+        <div class="logo">
+            <div class="hexagon">
+                <img src="../assets/img/logo/logoSam.png" alt="Logo SAM">
+            </div>
+            <div class="logo-text">
+                <h1>SAM</h1>
+                <p>Smart Apiary Monitoring</p>
+            </div>
+        </div>
+
+        <nav class="menu">
+            <ul>
+                <li><a href="dashboardApiario.html"><img src="../assets/icons/dashboard.svg" alt="" class="menu-icon"> Dashboard</a></li>
+                <li><a aria-current="page" class="active" href="misApiarios.html"><img src="../assets/icons/apiarios.svg" alt="" class="menu-icon"> Mis apiarios</a></li>
+                <li><a href="colmenas.html"><img src="../assets/icons/colmenas.svg" alt="" class="menu-icon"> Colmenas</a></li>
+                <li><a href="alertas.html"><img src="../assets/icons/alertas.svg" alt="" class="menu-icon"> Alertas</a></li>
+                <li><a href="registrarVisita.html"><img src="../assets/icons/visitas.svg" alt="" class="menu-icon"> Registrar</a></li>
+                <li><a href="historial.html"><img src="../assets/icons/historial.svg" alt="" class="menu-icon"> Historial</a></li>
+            </ul>
+        </nav>
+
+        <div class="user-profile">
+            <div class="user-avatar-indicator" style="background-color: #ffbb00; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: #1e1e1e; font-weight: bold; width: 41px; height: 41px;" id="sidebar-user-avatar">--</div>
+            <div class="profile-text">
+                <h2 id="sidebar-user-name">---</h2>
+                <p>Apicultor</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ CONTENIDO PRINCIPAL ============ -->
+    <section class="main-content">
+
+        <!-- Botón flotante "Mi cuenta" -->
+        <a href="miCuenta.html" class="user-info" style="text-decoration: none;">
+            <div class="cuenta-avatar" id="header-user-avatar">--</div>
+            <p>Mi cuenta</p>
+        </a>
+
+        <!-- Encabezado de la vista -->
+        <header class="content-header">
+            <h1>Mis apiarios</h1>
+            <p>Apiarios que tienes asignados · salud y alertas</p>
+        </header>
+
+        <!-- Tarjetas de estadísticas rápidas -->
+        <div class="stats-row">
+            <div class="stat-card">
+                <span class="stat-label">Colmenas a cargo</span>
+                <span class="stat-value" id="stat-colmenas-a-cargo">--</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Alertas activas</span>
+                <span class="stat-value alerta" id="stat-alertas-activas">--</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Última visita</span>
+                <span class="stat-value destacado" id="stat-ultima-visita">--</span>
+            </div>
+        </div>
+
+        <!-- Listado de apiarios asignados -->
+        <h2 class="section-title">Apiarios asignados</h2>
+
+        <div class="apiarios-list" id="apiarios-list">
+            <!-- Cargado dinámicamente vía JS -->
+        </div>
+
+    </section>
+
+    <script src="../shared/js/sidebar.js" defer></script>
+    <script src="../shared/js/misApiarios.js"></script>
+</body>
+</html>

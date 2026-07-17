@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Colmena - SAM</title>
+    <meta name="description" content="Panel de control de la colmena SAM - Smart Apiary Monitoring">
+    <link rel="stylesheet" href="../shared/css/dashboardGlobal.css">
+    <link rel="stylesheet" href="../shared/css/dashboardColmena.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" defer></script>
+    <link rel="stylesheet" href="../shared/css/sidebar.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-shell">
+        <!-- ========== SIDEBAR ========== -->
+        <aside class="sidebar" aria-label="Navegación principal">
+            <div class="logo">
+                <div class="hexagon">
+                    <img src="../assets/img/logo/logoSam.png" alt="Logotipo de SAM">
+                </div>
+                <div class="logo-text">
+                    <h1>SAM</h1>
+                    <p>Smart Apiary Monitoring</p>
+                </div>
+            </div>
+            <nav class="menu" aria-label="Secciones del sistema">
+                <ul>
+                    <li><a href="dashboardApiario.html"><img src="../assets/icons/dashboard.svg" alt="" class="menu-icon"> Dashboard</a></li>
+                    <li><a href="misApiarios.html"><img src="../assets/icons/apiarios.svg" alt="" class="menu-icon"> Mis apiarios</a></li>
+                    <li><a aria-current="page" class="active" href="colmenas.html"><img src="../assets/icons/colmenas.svg" alt="" class="menu-icon"> Colmenas</a></li>
+                    <li><a href="alertas.html"><img src="../assets/icons/alertas.svg" alt="" class="menu-icon"> Alertas</a></li>
+                    <li><a href="registrarVisita.html"><img src="../assets/icons/visitas.svg" alt="" class="menu-icon"> Registrar visita</a></li>
+                    <li><a href="historial.html"><img src="../assets/icons/historial.svg" alt="" class="menu-icon"> Historial</a></li>
+                </ul>
+            </nav>
+            <div class="user-profile">
+                <div class="user-avatar-indicator">
+                    <div class="avatar-initials" id="sidebar-user-avatar">--</div>
+                </div>
+                <div class="profile-text">
+                    <h2 id="sidebar-user-name">---</h2>
+                    <p>Apicultor</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ========== CONTENIDO PRINCIPAL ========== -->
+        <main class="main-content layout-colmena">
+            
+            <header class="main-header">
+                <div class="header-left">
+                    <h1 id="page-title">Colmena <span id="colmena-codigo">---</span></h1>
+                    <p id="page-subtitle">Apiario --- · Ecotipo: --- · <span class="monitoreo-status">Monitoreo activo</span></p>
+                </div>
+                <div class="header-right">
+                    <button class="btn-primary" type="button" id="btn-ia">
+                        Diagnóstico IA
+                    </button>
+                    <a href="miCuenta.html" class="user-account" id="btn-mi-cuenta" style="text-decoration: none;">
+                        <span class="user-account-dot" id="header-user-avatar" style="display: inline-flex; align-items: center; justify-content: center; font-weight: bold; color: #1e1e1e; font-size: 11px;">--</span>
+                        <span>Mi cuenta</span>
+                    </a>
+                </div>
+            </header>
+
+            <div class="dashboard-grid">
+                <!-- TOP ROW -->
+                <div class="top-row">
+                    <article class="state-card" id="card-estado-colmena">
+                        <span class="metric-label">ESTADO DE LA COLMENA</span>
+                        <div class="state-content">
+                            <div class="state-dots">
+                                <span class="dot"></span>
+                                <span class="dot yellow"></span>
+                                <span class="dot"></span>
+                            </div>
+                            <div class="state-text">
+                                <h2 id="ia-tag" class="text-aviso">--</h2>
+                                <p id="ia-msg">--</p>
+                            </div>
+                        </div>
+                        <div class="state-footer">
+                            <span class="ia-subtitle">Detectado hoy <span id="hora-deteccion">--:--</span> - sin sesión de visita</span>
+                        </div>
+                    </article>
+
+                    <article class="metric-card">
+                        <span class="metric-label">PESO</span>
+                        <div class="metric-body">
+                            <span class="metric-val" id="val-peso">--</span>
+                            <span class="metric-status status-normal"><span class="dot-indicator green"></span> normal</span>
+                        </div>
+                    </article>
+
+                    <article class="metric-card">
+                        <span class="metric-label">TEMP. INTERNA</span>
+                        <div class="metric-body">
+                            <span class="metric-val" id="val-temp-int">--</span>
+                            <span class="metric-status status-normal"><span class="dot-indicator green"></span> normal</span>
+                        </div>
+                    </article>
+
+                    <article class="metric-card">
+                        <span class="metric-label">HUM. INTERNA</span>
+                        <div class="metric-body">
+                            <span class="metric-val" id="val-hum-int">--</span>
+                            <span class="metric-status status-aviso"><span class="dot-indicator yellow"></span> aviso</span>
+                        </div>
+                    </article>
+
+                    <article class="metric-card">
+                        <span class="metric-label">TEMP. EXTERNA</span>
+                        <div class="metric-body">
+                            <span class="metric-val" id="val-temp-ext">--</span>
+                            <span class="metric-status status-ctx"><span class="dot-indicator gray"></span> ctx</span>
+                        </div>
+                    </article>
+
+                    <article class="metric-card">
+                        <span class="metric-label">HUM. EXTERNA</span>
+                        <div class="metric-body">
+                            <span class="metric-val" id="val-hum-ext">--</span>
+                            <span class="metric-status status-ctx"><span class="dot-indicator gray"></span> ctx</span>
+                        </div>
+                    </article>
+                </div>
+
+                <!-- MIDDLE ROW -->
+                <div class="middle-row">
+                    <section class="chart-section">
+                        <div class="chart-header">
+                            <h3>Peso — últimos 30 días</h3>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="colmenaPesoChart"></canvas>
+                        </div>
+                    </section>
+
+                    <section class="alerts-section">
+                        <div class="section-title">
+                            <h3>Alertas recientes</h3>
+                        </div>
+                        <ul class="alert-list" id="colmena-alerts">
+                            <!-- JS fill -->
+                        </ul>
+                    </section>
+                </div>
+
+                <!-- BOTTOM ROW -->
+                <div class="bottom-row">
+                    <section class="history-section">
+                        <div class="section-title">
+                            <h3>Últimas visitas y cosechas</h3>
+                        </div>
+                        <ul class="activity-grid" id="colmena-history">
+                            <!-- JS fill -->
+                        </ul>
+                    </section>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script src="../shared/js/sidebar.js" defer></script>
+    <script src="../shared/js/dashboardColmena.js"></script>
+</body>
+</html>

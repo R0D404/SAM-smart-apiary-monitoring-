@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Apiarios - SAM</title>
+    <link rel="stylesheet" href="../shared/css/dashboardGlobal.css">
+    <link rel="stylesheet" href="../shared/css/gestionApiarios.css">
+    <link rel="stylesheet" href="../shared/css/notifications.css">
+    <link rel="stylesheet" href="../shared/css/sidebar.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-shell">
+        <!-- ========== SIDEBAR ========== -->
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="hexagon">
+                    <img src="../assets/img/logo/logoSam.png" alt="Logotipo de SAM">
+                </div>
+                <div class="logo-text">
+                    <h1>SAM</h1>
+                    <p>Smart Apiary Monitoring</p>
+                </div>
+            </div>
+            <nav class="menu">
+                <ul>
+                    <li><a href="dashboardGlobal.html"><img src="../assets/icons/dashboard.svg" alt="" class="menu-icon"> Dashboard</a></li>
+                    <li><a aria-current="page" class="active" href="gestionApiarios.html"><img src="../assets/icons/apiarios.svg" alt="" class="menu-icon"> Apiarios</a></li>
+                    <li><a href="gestionColmenas.html"><img src="../assets/icons/colmenas.svg" alt="" class="menu-icon"> Colmenas</a></li>
+                    <li><a href="alertas.html"><img src="../assets/icons/alertas.svg" alt="" class="menu-icon"> Alertas</a></li>
+                    <li><a href="historialVisita.html"><img src="../assets/icons/visitas.svg" alt="" class="menu-icon"> Visitas / Cosechas</a></li>
+                    <li><a href="historial.html"><img src="../assets/icons/historial.svg" alt="" class="menu-icon"> Historial</a></li>
+                    <li><a href="gestionUsuarios.html"><img src="../assets/icons/usuarios.svg" alt="" class="menu-icon"> Usuarios</a></li>
+                </ul>
+            </nav>
+            <div class="user-profile">
+                <div class="user-avatar-indicator">
+                    <div class="avatar-initials" id="sidebar-user-avatar">--</div>
+                </div>
+                <div class="profile-text">
+                    <h2 id="sidebar-user-name">---</h2>
+                    <p>Administrador</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ========== MAIN CONTENT ========== -->
+        <main class="main-content">
+            <header class="main-header">
+                <div class="header-left">
+                    <h1>Gestión de Apiarios</h1>
+                </div>
+                <div class="header-right">
+                    <button class="btn-primary" type="button" id="btn-nuevo-apiario">
+                        + Nuevo apiario
+                    </button>
+                    <button class="user-account" type="button">
+                        <span class="user-account-dot"></span>
+                        <span>Mi Cuenta</span>
+                    </button>
+                </div>
+            </header>
+
+            <section class="table-section">
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>NOMBRE</th>
+                                <th>ESTADO / UBICACIÓN</th>
+                                <th>COLMENAS</th>
+                                <th>MICROCLIMA</th>
+                                <th>ACCIONES</th>
+                            </tr>
+                        </thead>
+                        <tbody id="apiarios-tbody">
+                            <!-- Llenado dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+        
+        <!-- ========== BARRA DE NAVEGACIÓN MÓVIL ========== -->
+        <nav class="mobile-nav" aria-label="Navegación móvil">
+            <a href="dashboardGlobal.html" class="mobile-nav-item">
+                <img src="../assets/icons/dashboard.svg" alt="" class="mobile-nav-icon">
+                <span>Dashboard</span>
+            </a>
+            <a href="gestionApiarios.html" class="mobile-nav-item ">
+                <img src="../assets/icons/apiarios.svg" alt="" class="mobile-nav-icon">
+                <span>Apiarios</span>
+            </a>
+            <!-- otros enlaces -->
+        </nav>
+    </div>
+
+    <!-- MODAL NUEVO APIARIO -->
+    <div class="modal-overlay hidden" id="modal-nuevo">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h2>Nuevo apiario</h2>
+                <p>Registra una nueva ubicación para tus colmenas</p>
+                <button class="btn-close" id="btn-cerrar-modal">&times;</button>
+            </div>
+            <form id="form-nuevo-apiario">
+                <div class="form-group">
+                    <label>NOMBRE DEL APIARIO</label>
+                    <input type="text" id="api-nombre" placeholder="Ej. Apiario Sur" required>
+                </div>
+                <div class="form-group">
+                    <label>ESTADO</label>
+                    <input type="text" id="api-estado" placeholder="Ej. Chiapas" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>MUNICIPIO</label>
+                        <input type="text" id="api-municipio" placeholder="Ej. Tapachula" required>
+                    </div>
+                    <div class="form-group">
+                        <label>LOCALIDAD</label>
+                        <input type="text" id="api-localidad" placeholder="Ej. Ejido Raymundo" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>MICROCLIMA</label>
+                    <div class="custom-dropdown" id="dropdown-microclima">
+                        <div class="dropdown-selected">Selecciona un microclima...</div>
+                        <ul class="dropdown-options" id="api-microclima-list">
+                            <li data-value="">Cargando...</li>
+                        </ul>
+                    </div>
+                    <!-- Hidden input to store the value for the form -->
+                    <input type="hidden" id="api-microclima" required>
+                </div>
+                <button type="submit" class="btn-submit">Guardar apiario</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="../shared/js/notifications.js" defer></script>
+    <script src="../shared/js/gestionApiarios.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Apiario - SAM</title>
+    <meta name="description" content="Panel de control del apiario SAM - Smart Apiary Monitoring">
+    <!-- Reusing global CSS for shell, adding apiario specific CSS -->
+    <link rel="stylesheet" href="../shared/css/dashboardGlobal.css">
+    <link rel="stylesheet" href="../shared/css/dashboardApiario.css">
+    <!-- Chart.js para gráficas dinámicas -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" defer></script>
+    <link rel="stylesheet" href="../shared/css/sidebar.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-shell">
+        <!-- ========== SIDEBAR ========== -->
+        <aside class="sidebar" aria-label="Navegación principal">
+            <div class="logo">
+                <div class="hexagon">
+                    <img src="../assets/img/logo/logoSam.png" alt="Logotipo de SAM">
+                </div>
+                <div class="logo-text">
+                    <h1>SAM</h1>
+                    <p>Smart Apiary Monitoring</p>
+                </div>
+            </div>
+            <nav class="menu" aria-label="Secciones del sistema">
+                <ul>
+                    <li><a aria-current="page" class="active" href="dashboardApiario.html"><img src="../assets/icons/dashboard.svg" alt="" class="menu-icon"> Dashboard</a></li>
+                    <li><a href="misApiarios.html"><img src="../assets/icons/apiarios.svg" alt="" class="menu-icon"> Mis apiarios</a></li>
+                    <li><a href="colmenas.html"><img src="../assets/icons/colmenas.svg" alt="" class="menu-icon"> Colmenas</a></li>
+                    <li><a href="alertas.html"><img src="../assets/icons/alertas.svg" alt="" class="menu-icon"> Alertas</a></li>
+                    <li><a href="registrarVisita.html"><img src="../assets/icons/visitas.svg" alt="" class="menu-icon"> Registrar visita</a></li>
+                    <li><a href="historial.html"><img src="../assets/icons/historial.svg" alt="" class="menu-icon"> Historial</a></li>
+                </ul>
+            </nav>
+            <div class="user-profile">
+                <div class="user-avatar-indicator">
+                    <div class="avatar-initials" id="sidebar-user-avatar">--</div>
+                </div>
+                <div class="profile-text">
+                    <h2 id="sidebar-user-name">---</h2>
+                    <p>Apicultor</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ========== CONTENIDO PRINCIPAL ========== -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="main-header">
+                <div class="header-left">
+                    <h1 id="page-title">---</h1>
+                    <p id="page-subtitle">---</p>
+                </div>
+                <div class="header-right">
+                    <button class="btn-alertas" type="button" id="btn-ver-alertas">
+                        Ver alertas
+                    </button>
+                    <a href="miCuenta.html" class="user-account" id="btn-mi-cuenta" style="text-decoration: none;">
+                        <span class="user-account-dot" id="header-user-avatar" style="display: inline-flex; align-items: center; justify-content: center; font-weight: bold; color: #1e1e1e; font-size: 11px;">--</span>
+                        <span>Mi cuenta</span>
+                    </a>
+                </div>
+            </header>
+
+            <!-- Tarjetas de estadísticas -->
+            <section class="stats-cards" aria-label="Estadísticas del apiario">
+                <article class="stat-card" id="card-salud">
+                    <div class="stat-card-content">
+                        <span class="stat-label">SALUD DEL APIARIO</span>
+                        <div class="salud-info">
+                            <div class="salud-dots">
+                                <span class="dot yellow"></span>
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                            </div>
+                            <div class="salud-text">
+                                <span class="stat-value salud-status" id="stat-salud-estado">--</span>
+                                <span class="salud-desc" id="stat-salud-desc">--</span>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                <article class="stat-card" id="card-peso">
+                    <div class="stat-card-content">
+                        <span class="stat-label">PESO PROMEDIO</span>
+                        <span class="stat-value" id="stat-peso-promedio">--</span>
+                    </div>
+                </article>
+                <article class="stat-card" id="card-alertas-activas">
+                    <div class="stat-card-content">
+                        <span class="stat-label">ALERTAS ACTIVAS</span>
+                        <span class="stat-value" id="stat-alertas-activas">--</span>
+                    </div>
+                </article>
+                <article class="stat-card" id="card-ultima-visita">
+                    <div class="stat-card-content">
+                        <span class="stat-label">ÚLTIMA VISITA</span>
+                        <span class="stat-value" id="stat-ultima-visita">--</span>
+                    </div>
+                </article>
+            </section>
+
+            <!-- Gráficas -->
+            <section class="charts-section-apiario" aria-label="Gráficas de peso">
+                <article class="chart-card chart-card-line" id="chart-evolucion-peso-card">
+                    <div class="chart-header">
+                        <h2>Evolución del peso — colmenas del apiario</h2>
+                        <p>Últimos 30 días (kg)</p>
+                    </div>
+                    <div class="chart-body">
+                        <canvas id="chart-evolucion-peso"></canvas>
+                    </div>
+                </article>
+            </section>
+
+            <!-- Sección de Colmenas -->
+            <section class="colmenas-section" aria-label="Lista de colmenas">
+                <div class="colmenas-header">
+                    <h2 class="colmenas-title">Colmenas</h2>
+                    <a href="#" class="colmenas-link">Toca una colmena para ver su detalle ›</a>
+                </div>
+                <div class="colmenas-scroll-container" id="colmenas-container">
+                    <p class="colmenas-empty" id="colmenas-empty-msg">Sin colmenas registradas. Los datos se cargarán desde el servidor.</p>
+                </div>
+            </section>
+        </main>
+
+        <!-- ========== BARRA DE NAVEGACIÓN MÓVIL ========== -->
+        <nav class="mobile-nav" aria-label="Navegación móvil">
+            <a href="dashboardGlobal.html" class="mobile-nav-item">
+                <img src="../assets/icons/dashboard.svg" alt="" class="mobile-nav-icon">
+                <span>Dashboard</span>
+            </a>
+            <a href="gestionApiarios.html" class="mobile-nav-item ">
+                <img src="../assets/icons/apiarios.svg" alt="" class="mobile-nav-icon">
+                <span>Apiarios</span>
+            </a>
+            <a href="#" class="mobile-nav-item">
+                <img src="../assets/icons/colmenas.svg" alt="" class="mobile-nav-icon">
+                <span>Colmenas</span>
+            </a>
+            <a href="#" class="mobile-nav-item">
+                <img src="../assets/icons/alertas.svg" alt="" class="mobile-nav-icon">
+                <span>Alertas</span>
+            </a>
+            <a href="#" class="mobile-nav-item">
+                <img src="../assets/icons/visitas.svg" alt="" class="mobile-nav-icon">
+                <span>Visitas</span>
+            </a>
+            <a href="#" class="mobile-nav-item">
+                <img src="../assets/icons/historial.svg" alt="" class="mobile-nav-icon">
+                <span>Historial</span>
+            </a>
+            <a href="#" class="mobile-nav-item">
+                <img src="../assets/icons/usuarios.svg" alt="" class="mobile-nav-icon">
+                <span>Usuarios</span>
+            </a>
+        </nav>
+    </div>
+
+    <script src="../shared/js/sidebar.js" defer></script>
+    <script src="../shared/js/dashboardApiario.js" defer></script>
+</body>
+</html>

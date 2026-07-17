@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAM · Diagnóstico IA</title>
+    <!-- Fuente Inter de Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Nuestro CSS -->
+    <link rel="stylesheet" href="../shared/css/diagnosticoIA.css">
+    <link rel="stylesheet" href="../shared/css/notifications.css">
+    <link rel="stylesheet" href="../shared/css/sidebar.css">
+</head>
+<body>
+
+    <!-- ── SIDEBAR ───────────────────────────────────────────── -->
+    <section class="sidebar">
+
+        <!-- Logo -->
+        <div class="logo">
+            <div class="hexagon">
+                <img src="../assets/img/logo/logoSam.png" alt="Logo SAM">
+            </div>
+            <div class="logo-text">
+                <h1>SAM</h1>
+                <p>Smart Apiary Monitoring</p>
+            </div>
+        </div>
+
+        <!-- Menú de navegación -->
+        <nav class="menu">
+            <ul>
+                <li><a href="dashboardApiario.html"><img src="../assets/icons/dashboard.svg" alt="" class="menu-icon"> Dashboard</a></li>
+                <li><a href="misApiarios.html"><img src="../assets/icons/apiarios.svg" alt="" class="menu-icon"> Mis apiarios</a></li>
+                <li><a aria-current="page" class="active" href="colmenas.html"><img src="../assets/icons/colmenas.svg" alt="" class="menu-icon"> Colmenas</a></li>
+                <li><a href="alertas.html"><img src="../assets/icons/alertas.svg" alt="" class="menu-icon"> Alertas</a></li>
+                <li><a href="registrarVisita.html"><img src="../assets/icons/visitas.svg" alt="" class="menu-icon"> Registrar visita</a></li>
+                <li><a href="historial.html"><img src="../assets/icons/historial.svg" alt="" class="menu-icon"> Historial</a></li>
+            </ul>
+        </nav>
+
+        <!-- Perfil del usuario abajo del sidebar -->
+        <div class="user-profile">
+            <div class="user-avatar-indicator" style="background-color: #ffbb00; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: #1e1e1e; font-weight: bold; width: 41px; height: 41px;" id="sidebar-user-avatar">--</div>
+            <div class="profile-text">
+                <h2 id="sidebar-user-name">---</h2>
+                <p>Apicultor</p>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- ── CONTENIDO PRINCIPAL ───────────────────────────────── -->
+    <main class="main-content">
+
+        <!-- Encabezado con título y botón Mi Cuenta -->
+        <div class="encabezado">
+            <div class="encabezado-texto">
+                <!-- El id de la colmena se llena dinámicamente con JS -->
+                <h1>Diagnóstico con IA — <span id="nombre-colmena">Colmena</span></h1>
+                <p>La IA integra todo el contexto de la colmena</p>
+            </div>
+            <a href="miCuenta.html" class="btn-mi-cuenta" style="text-decoration: none;">
+                <div class="cuenta-avatar" id="header-user-avatar" style="background-color: #f2a900;">--</div>
+                <span>Mi cuenta</span>
+            </a>
+        </div>
+
+        <!-- Cuerpo principal: dos columnas -->
+        <div class="cuerpo">
+
+            <!-- ── COLUMNA IZQUIERDA: Contexto enviado a la IA ── -->
+            <section class="card contexto">
+                <div class="card-header">
+                    <h2>Contexto enviado a la IA</h2>
+                    <p>Toda la información disponible de la colmena</p>
+                </div>
+
+                <ul class="lista-contexto">
+                    <li>
+                        <span class="dot dot-verde"></span>
+                        <div>
+                            <strong>Lecturas actuales</strong>
+                            <!-- id para que JS meta los datos aquí -->
+                            <p id="ctx-lecturas">Cargando...</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="dot dot-verde"></span>
+                        <div>
+                            <strong>Ecotipo</strong>
+                            <p id="ctx-ecotipo">Cargando...</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="dot dot-verde"></span>
+                        <div>
+                            <strong>Zona</strong>
+                            <p id="ctx-zona">Cargando...</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="dot dot-verde"></span>
+                        <div>
+                            <strong>Microclima</strong>
+                            <p id="ctx-microclima">Cargando...</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="dot dot-amarillo"></span>
+                        <div>
+                            <strong>Alertas activas</strong>
+                            <p id="ctx-alertas">Cargando...</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="dot dot-verde"></span>
+                        <div>
+                            <strong>Visitas recientes</strong>
+                            <p id="ctx-visitas">Sin visitas registradas</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="dot dot-verde"></span>
+                        <div>
+                            <strong>Cosechas recientes</strong>
+                            <p id="ctx-cosechas">Sin cosechas registradas</p>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- ── COLUMNA DERECHA: Diagnóstico de la IA ── -->
+            <section class="card diagnostico">
+
+                <!-- Indicador de qué IA se está usando -->
+                <div class="badge-gemini">
+                    <span class="dot dot-verde"></span>
+                    Groc
+                </div>
+
+                <h2>Diagnóstico de la colonia</h2>
+
+                <!-- Estado general -->
+                <div class="estado-box" id="estado-box">
+                    <p class="estado-label">ESTADO</p>
+                    <!-- JS mete el texto del diagnóstico aquí -->
+                    <p class="estado-valor" id="estado-valor">Esperando diagnóstico...</p>
+                </div>
+
+                <!-- Causa probable -->
+                <div class="seccion-diagnostico">
+                    <p class="seccion-label">CAUSA PROBABLE</p>
+                    <p id="causa-probable">—</p>
+                </div>
+
+                <!-- Acciones recomendadas -->
+                <div class="seccion-diagnostico">
+                    <p class="seccion-label">ACCIÓN RECOMENDADA</p>
+                    <!-- JS genera los puntos aquí -->
+                    <ul id="acciones-lista">
+                        <li>—</li>
+                    </ul>
+                </div>
+
+                <!-- Botón para generar nuevo diagnóstico -->
+                <button class="btn-diagnostico" id="btn-diagnostico">
+                    Generar nuevo diagnóstico
+                </button>
+
+                <p class="nota-disclaimer">
+                    El diagnóstico es orientativo y complementa el criterio del apicultor.
+                </p>
+
+            </section>
+
+        </div>
+
+    </main>
+
+    <!-- Cargamos el JS al final para que el HTML ya exista cuando JS lo lea -->
+    <script src="../shared/js/sidebar.js" defer></script>
+    <script src="../shared/js/notifications.js"></script>
+    <script src="../shared/js/diagnosticoIA.js"></script>
+
+</body>
+</html>

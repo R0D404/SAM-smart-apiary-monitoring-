@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial de Cosechas - SAM</title>
+    <link rel="stylesheet" href="../shared/css/dashboardGlobal.css">
+    <link rel="stylesheet" href="../shared/css/historialVisita.css">
+    <style>
+        .cosechas-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 24px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .btn-ver-visitas {
+            background-color: transparent;
+            border: 1px solid var(--color-border);
+            color: var(--color-primary);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-ver-visitas:hover {
+            background-color: rgba(255, 187, 0, 0.1);
+            border-color: var(--color-primary);
+        }
+
+        .btn-mi-cuenta {
+            background-color: rgba(255, 187, 0, 0.1);
+            border: 1px solid var(--color-border);
+            color: var(--color-text-white);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-mi-cuenta .dot {
+            width: 16px;
+            height: 16px;
+            background-color: var(--color-primary);
+            border-radius: 50%;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background-color: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .stat-card h3 {
+            color: var(--color-text-gray);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .stat-card .value {
+            color: var(--color-text-white);
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .stat-card .value.green {
+            color: var(--color-alert-green);
+        }
+
+        .chart-card {
+            background-color: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .chart-card h3 {
+            color: var(--color-text-white);
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .chart-container {
+            height: 150px;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            padding-left: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .chart-y-axis {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            color: var(--color-text-gray);
+            font-size: 10px;
+        }
+
+        .bar-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 8%;
+            height: 100%;
+            justify-content: flex-end;
+            position: relative;
+        }
+
+        .bar {
+            width: 100%;
+            background-color: var(--color-primary);
+            border-radius: 4px 4px 0 0;
+            transition: height 1s ease-out;
+        }
+
+        .bar-label {
+            position: absolute;
+            bottom: -25px;
+            color: var(--color-text-gray);
+            font-size: 11px;
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
+        .status-dot.green { background-color: var(--color-alert-green); }
+        .status-dot.gray { background-color: var(--color-text-gray); }
+    </style>
+    <link rel="stylesheet" href="../shared/css/sidebar.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-shell">
+        <!-- ========== SIDEBAR ========== -->
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="hexagon">
+                    <img src="../assets/img/logo/logoSam.png" alt="Logotipo de SAM">
+                </div>
+                <div class="logo-text">
+                    <h1>SAM</h1>
+                    <p>Smart Apiary Monitoring</p>
+                </div>
+            </div>
+            <nav class="menu">
+                <ul>
+                    <li><a href="dashboardGlobal.html"><img src="../assets/icons/dashboard.svg" alt="" class="menu-icon"> Dashboard</a></li>
+                    <li><a href="gestionApiarios.html"><img src="../assets/icons/apiarios.svg" alt="" class="menu-icon"> Apiarios</a></li>
+                    <li><a href="gestionColmenas.html"><img src="../assets/icons/colmenas.svg" alt="" class="menu-icon"> Colmenas</a></li>
+                    <li><a href="alertas.html"><img src="../assets/icons/alertas.svg" alt="" class="menu-icon"> Alertas</a></li>
+                    <li><a aria-current="page" class="active" href="historialVisita.html"><img src="../assets/icons/visitas.svg" alt="" class="menu-icon"> Visitas / Cosechas</a></li>
+                    <li><a href="historial.html"><img src="../assets/icons/historial.svg" alt="" class="menu-icon"> Historial</a></li>
+                    <li><a href="gestionUsuarios.html"><img src="../assets/icons/usuarios.svg" alt="" class="menu-icon"> Usuarios</a></li>
+                </ul>
+            </nav>
+            <div class="user-profile">
+                <div class="user-avatar-indicator">
+                    <div class="avatar-initials" id="sidebar-user-avatar">--</div>
+                </div>
+                <div class="profile-text">
+                    <h2 id="sidebar-user-name">---</h2>
+                    <p>Administrador</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ========== MAIN CONTENT ========== -->
+        <main class="main-content">
+            <header class="cosechas-header">
+                <div class="header-left">
+                    <h1>Historial de cosechas</h1>
+                    <p class="subtitle" style="color: var(--color-text-gray); font-size: 14px; margin-top: 4px;">Producción registrada por los apicultores - validada con sensores</p>
+                </div>
+
+                <div class="header-right header-actions">
+                    <a href="historialVisita.html" class="btn-ver-visitas">
+                        &larr; Ver visitas
+                    </a>
+                    <button class="btn-mi-cuenta">
+                        <div class="dot"></div> Mi cuenta
+                    </button>
+                </div>
+            </header>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>TOTAL TEMPORADA</h3>
+                    <div class="value" id="total-cosecha">312 kg</div>
+                </div>
+                <div class="stat-card">
+                    <h3>PROMEDIO / COLMENA</h3>
+                    <div class="value" id="promedio-colmena">26 kg</div>
+                </div>
+                <div class="stat-card">
+                    <h3>VALIDADAS CON SENSOR</h3>
+                    <div class="value green" id="porcentaje-validado">83 %</div>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <h3>Producción por colmena (kg)</h3>
+                <div class="chart-container">
+                    <div class="chart-y-axis">
+                        <span>40</span>
+                        <span>30</span>
+                        <span>20</span>
+                    </div>
+                    <!-- JS will populate bars -->
+                    <div class="bars-container" id="chart-bars" style="display:flex; justify-content:space-around; width:100%; height:100%;"></div>
+                </div>
+            </div>
+
+            <section class="table-section">
+                <!-- Contenedor de la Tabla -->
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>FECHA</th>
+                                <th>COLMENA</th>
+                                <th>APICULTOR</th>
+                                <th>KG</th>
+                                <th>CALIDAD</th>
+                                <th>VALIDADA CON PESO</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-cosechas-body">
+                            <!-- Datos insertados por JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Script de lógica e interacción -->
+    <script src="../shared/js/historialCosechas.js"></script>
+    <script src="../shared/js/authCheck.js"></script>
+</body>
+</html>

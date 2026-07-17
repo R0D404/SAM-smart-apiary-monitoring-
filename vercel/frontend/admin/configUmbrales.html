@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuración de Umbrales - SAM</title>
+    <link rel="stylesheet" href="../shared/css/dashboardGlobal.css">
+    <link rel="stylesheet" href="../shared/css/configUmbrales.css">
+    <link rel="stylesheet" href="../shared/css/notifications.css">
+    <link rel="stylesheet" href="../shared/css/sidebar.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-shell">
+        <!-- ========== SIDEBAR ========== -->
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="hexagon">
+                    <img src="../assets/img/logo/logoSam.png" alt="Logotipo de SAM">
+                </div>
+                <div class="logo-text">
+                    <h1>SAM</h1>
+                    <p>Smart Apiary Monitoring</p>
+                </div>
+            </div>
+            <nav class="menu">
+                <ul>
+                    <li><a href="dashboardGlobal.html"><img src="../assets/icons/dashboard.svg" alt="" class="menu-icon"> Dashboard</a></li>
+                    <li><a aria-current="page" class="active" href="gestionApiarios.html"><img src="../assets/icons/apiarios.svg" alt="" class="menu-icon"> Apiarios</a></li>
+                    <li><a href="gestionColmenas.html"><img src="../assets/icons/colmenas.svg" alt="" class="menu-icon"> Colmenas</a></li>
+                    <li><a href="alertas.html"><img src="../assets/icons/alertas.svg" alt="" class="menu-icon"> Alertas</a></li>
+                    <li><a href="historialVisita.html"><img src="../assets/icons/visitas.svg" alt="" class="menu-icon"> Visitas / Cosechas</a></li>
+                    <li><a href="historial.html"><img src="../assets/icons/historial.svg" alt="" class="menu-icon"> Historial</a></li>
+                    <li><a href="gestionUsuarios.html"><img src="../assets/icons/usuarios.svg" alt="" class="menu-icon"> Usuarios</a></li>
+                </ul>
+            </nav>
+            <div class="user-profile">
+                <div class="user-avatar-indicator">
+                    <div class="avatar-initials" id="sidebar-user-avatar">--</div>
+                </div>
+                <div class="profile-text">
+                    <h2 id="sidebar-user-name">---</h2>
+                    <p>Administrador</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ========== MAIN CONTENT ========== -->
+        <main class="main-content">
+            <header class="main-header">
+                <div class="header-left">
+                    <h1 style="display: flex; align-items: center; gap: 12px;">
+                        <button class="btn-back" onclick="window.location.href='alertas.html'">
+                            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                        </button>
+                        Umbrales — Apiario Norte
+                    </h1>
+                </div>
+                <div class="header-right">
+                    <button class="btn-primary" type="button" id="btn-guardar-umbrales">
+                        Guardar cambios
+                    </button>
+                </div>
+            </header>
+
+            <section class="table-section" style="margin-top: 24px;">
+                <div style="margin-bottom: 24px;">
+                    <h2 style="color: var(--color-text-white); font-size: 18px; margin-bottom: 8px;">Umbrales contextuales por variable y franja horaria</h2>
+                    <p style="color: var(--color-text-gray); font-size: 14px;">El sistema evalúa cada lectura según la hora del día. Define los rangos normales por zona.</p>
+                </div>
+
+                <div class="table-container">
+                    <table class="data-table umbrales-table">
+                        <thead>
+                            <tr>
+                                <th>VARIABLE</th>
+                                <th>FRANJA HORARIA</th>
+                                <th>MÍN</th>
+                                <th>MÁX</th>
+                                <th>TASA MÁX / H</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-umbrales-body">
+                            <!-- FILA 1 -->
+                            <tr>
+                                <td class="text-variable">Peso</td>
+                                <td>Todo el día</td>
+                                <td>
+                                    <div class="input-wrapper">
+                                        <input type="text" value="30" class="input-umbral">
+                                        <span class="unit">kg</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-wrapper">
+                                        <input type="text" value="70" class="input-umbral">
+                                        <span class="unit">kg</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-wrapper">
+                                        <input type="text" value="3" class="input-umbral">
+                                        <span class="unit">kg</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- FILA 2 -->
+                            <tr>
+                                <td class="text-variable">Temp. interna</td>
+                                <td>Día (6–18 h)</td>
+                                <td>
+                                    <div class="input-wrapper">
+                                        <input type="text" value="33" class="input-umbral">
+                                        <span class="unit">°C</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-wrapper">
+                                        <input type="text" value="36" class="input-umbral">
+                                        <span class="unit">°C</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-wrapper">
+                                        <input type="text" value="2" class="input-umbral">
+                                        <span class="unit">°C</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- FILA 3 -->
+                            <tr>
+                                <td class="text-variable">Temp. interna</td>
+                                <td>Noche (18–6 h)</td>
+                                <td>
+                                    <div class="input-wrapper">
+                                        <input type="text" value="30" class="input-umbral">
+                                        <span class="unit">°C</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-wrapper">
+                                        <input type="text" value="35" class="input-umbral">
+                                        <span class="unit">°C</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-wrapper">
+                                        <input type="text" value="2" class="input-umbral">
+                                        <span class="unit">°C</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- FILA 4 -->
+                            <tr>
+                                <td class="text-variable">Hum. interna</td>
+                                <td>Todo el día</td>
+                                <td>
+                                    <div class="input-wrapper">
+                                        <input type="text" value="50" class="input-umbral">
+                                        <span class="unit">%</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-wrapper">
+                                        <input type="text" value="75" class="input-umbral">
+                                        <span class="unit">%</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-wrapper">
+                                        <input type="text" value="5" class="input-umbral">
+                                        <span class="unit">%</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- JS -->
+    <script src="../shared/js/notifications.js"></script>
+    <script src="../shared/js/configUmbrales.js"></script>
+</body>
+</html>

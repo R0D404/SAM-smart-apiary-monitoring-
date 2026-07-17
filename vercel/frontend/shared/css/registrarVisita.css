@@ -1,0 +1,486 @@
+/* =========================================
+   ESTILOS DE LA BARRA LATERAL (SIDEBAR)
+   ========================================= */
+   body {
+    background-color: #1A1206;
+    color: #F5F5F5;
+    min-height: 100vh;
+    overflow-y: scroll;
+}
+
+/* =========================================
+   ESTILOS DEL LOGOTIPO Y SU TEXTO
+   ========================================= */
+
+/* =========================================
+   ESTILOS DE CONTENEDOR DE USUARIO ANTIGUO (Opcional si ya no se usa)
+   ========================================= */
+
+/* =========================================
+   ESTILOS DEL MENÚ DE NAVEGACIÓN
+   ========================================= */
+
+/* Nuevos estilos para los iconos del menú */
+
+/* Estilos solo cuando pasas el mouse (:hover) */
+
+
+
+/* Efecto para el icono al pasar el cursor */
+
+/* Estado activo del menú (página actual) */
+
+
+/* =========================================
+   ESTILOS DEL PERFIL DE USUARIO EN LA BARRA LATERAL
+   ========================================= */
+
+/* =========================================
+   ESTILOS DEL CONTENIDO PRINCIPAL Y BOTÓN "MI CUENTA"
+   ========================================= */
+.main-content {
+    margin-left: clamp(240px, 20%, 300px);
+    min-height: 100vh;
+    background-color: #1A1206;
+    padding: 2% 3%;
+    overflow-y: auto;
+}
+.main-content .user-info {
+    position: fixed; /* Fija este botón flotante en la pantalla sin importar si scrolleas */
+    top: clamp(18px, 1.25vw, 30px); /* Lo separa clamp(18px, 1.25vw, 30px) del techo de la pantalla */
+    right: clamp(18px, 1.25vw, 30px); /* Lo separa clamp(18px, 1.25vw, 30px) del borde derecho para no chocar */
+    display: flex; /* Habilita layout flex para alinear la ruedita amarilla y el texto 'Mi cuenta' */
+    align-items: center; /* Asegura que estén centrados sobre la misma línea horizontal */
+    gap: clamp(10px, 0.62vw, 14px); /* Añade clamp(10px, 0.62vw, 14px) de distancia entre la imagen y el texto */
+    padding: clamp(5px, 0.37vw, 10px) clamp(14px, 1.0vw, 24px) clamp(5px, 0.37vw, 10px) clamp(5px, 0.37vw, 10px); /* Da un relleno asimétrico: más relleno a la derecha del texto, menos en la izquierda donde está el círculo */
+    border: clamp(1px, 0.06vw, 1px) solid #3b3222; /* Dibuja una línea de contorno sutil color café oscuro imitando tu diseño */
+    border-radius: clamp(46px, 3.12vw, 74px); /* Convierte los bordes rectos en bordes completamente redondeados en forma de pastilla */
+    background-color: transparent; /* Mantiene el fondo sin color sólido */
+    cursor: pointer; /* Cambia la flecha del mouse a una 'manita' para indicar que es un botón pulsable */
+}
+.main-content .user-info img {
+    width: clamp(31px, 2.18vw, 53px); /* Tamaño del icono circular amarillo */
+    height: clamp(31px, 2.18vw, 53px); /* Tamaño del icono circular amarillo */
+    border-radius: 50%; /* Asegura que la imagen sea totalmente redonda */
+}
+.main-content .user-info p {
+    color: #F5F5F5; /* Letra blanca */
+    font-family: 'Inter', sans-serif; /* Tipografía principal */
+    font-weight: medium; /* Grosor un poco menor a bold pero visible */
+    font-size: clamp(11px, 0.74vw, 18px); /* Tamaño de letra pequeño para el botón superior */
+    margin: 0; /* Quita el margen por defecto para no romper el centrado vertical */
+    white-space: nowrap; /* Propiedad crucial: prohíbe que el texto salte de línea si el espacio es reducido */
+}
+
+/* ── VARIABLES ──────────────────────────────────────────────────────
+   Colores principales de SAM
+────────────────────────────────────────────────────────────────────── */
+:root {
+    --fondo-oscuro:    #1A1206;
+    --fondo-card:      #2A1F0E;
+    --amarillo:        #F2A900;
+    --texto-blanco:    #F5F5F5;
+    --texto-gris:      #9C9993;
+    --borde-sutil:     #3B3222;
+    --verde:           #3FB8A0;
+    --input-fondo:     #1E1508;
+    --input-borde:     #4A3820;
+}
+
+/* ── RESET ──────────────────────────────────────────────────────────*/
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+/* ── CONTENIDO PRINCIPAL ────────────────────────────────────────────*/
+.main-content {
+    margin-left: clamp(240px, 20%, 300px);
+    min-height: 100vh;
+    background-color: var(--fundo-ucuro);
+    padding: 2% 3%;
+    overflow-y: auto;
+}
+
+/* ── ENCABEZADO ─────────────────────────────────────────────────────*/
+.encabezado {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1%;
+}
+
+.encabezado-texto h1 {
+    font-size: clamp(18px, 1.6vw, 28px);
+    font-weight: 700;
+    color: var(--texto-blanco);
+}
+
+.encabezado-texto p {
+    color: var(--texto-gris);
+    font-size: clamp(11px, 0.85vw, 14px);
+    margin-top: 0.3%;
+}
+
+/* Botones del encabezado */
+.encabezado-acciones {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.btn-secundario {
+    background: transparent;
+    border: 1px solid var(--borde-sutil);
+    border-radius: 50px;
+    padding: 8px 24px;
+    color: var(--texto-blanco);
+    font-size: clamp(11px, 0.85vw, 14px);
+    cursor: pointer;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    height: 38px;
+}
+
+.btn-secundario:hover {
+    border-color: var(--amarillo);
+    color: var(--amarillo);
+}
+
+.btn-mi-cuenta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: 1px solid var(--borde-sutil);
+    border-radius: 50px;
+    padding: 4px 20px 4px 4px;
+    color: var(--texto-blanco);
+    cursor: pointer;
+    font-size: clamp(11px, 0.85vw, 14px);
+    white-space: nowrap;
+    box-sizing: border-box;
+    height: 38px;
+}
+
+.cuenta-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background-color: var(--amarillo);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 11px;
+    color: var(--fundo-ucuro);
+}
+
+/* ── BREADCRUMB ─────────────────────────────────────────────────────*/
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 2%;
+    font-size: clamp(11px, 0.85vw, 14px);
+    color: var(--texto-gris);
+}
+
+.breadcrumb-sep {
+    color: var(--texto-gris);
+}
+
+.breadcrumb-actual {
+    color: var(--texto-blanco);
+}
+
+/* ── CUERPO: DOS COLUMNAS ───────────────────────────────────────────*/
+.cuerpo {
+    display: flex;
+    gap: 2%;
+    align-items: flex-start;
+}
+
+/* ── CARDS ──────────────────────────────────────────────────────────*/
+.card {
+    background-color: var(--fondo-card);
+    border-radius: 12px;
+    padding: 3%;
+    border: 1px solid var(--borde-sutil);
+}
+
+.formulario {
+    width: 62%;
+}
+
+.resumen {
+    width: 36%;
+}
+
+.card-header {
+    margin-bottom: 5%;
+}
+
+.card-header h2 {
+    font-size: clamp(14px, 1.1vw, 20px);
+    font-weight: 700;
+    color: var(--texto-blanco);
+}
+
+.card-header p {
+    color: var(--texto-gris);
+    font-size: clamp(10px, 0.8vw, 13px);
+    margin-top: 0.5%;
+}
+
+/* ── CAMPOS DEL FORMULARIO ──────────────────────────────────────────*/
+.campo {
+    margin-bottom: 4%;
+}
+
+.campo label {
+    display: block;
+    font-size: clamp(9px, 0.7vw, 12px);
+    color: var(--texto-gris);
+    letter-spacing: 0.05em;
+    margin-bottom: 1.5%;
+    font-weight: 500;
+}
+
+/* Inputs, selects y textarea comparten el mismo estilo */
+.campo input,
+.campo select,
+.campo textarea {
+    width: 100%;
+    background-color: var(--input-fondo);
+    border: 1px solid var(--input-borde);
+    border-radius: 8px;
+    padding: 3% 4%;
+    color: var(--texto-blanco);
+    font-size: clamp(12px, 0.9vw, 15px);
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+/* Cuando el usuario hace clic en un campo, el borde se vuelve amarillo */
+.campo input:focus,
+.campo select:focus,
+.campo textarea:focus {
+    border-color: var(--amarillo);
+}
+
+/* El placeholder (texto de ayuda) en gris */
+.campo input::placeholder,
+.campo textarea::placeholder {
+    color: var(--texto-gris);
+}
+
+/* El select tiene una flechita por defecto del navegador, la dejamos */
+.campo select {
+    cursor: pointer;
+    appearance: auto;
+}
+
+/* Textarea no se puede redimensionar horizontalmente */
+.campo textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+/* ── SECCIÓN COSECHA ────────────────────────────────────────────────*/
+.seccion-cosecha {
+    margin-bottom: 4%;
+    padding: 3%;
+    border-radius: 8px;
+    border: 1px solid var(--input-borde);
+}
+
+.label-cosecha {
+    font-size: clamp(11px, 0.85vw, 14px);
+    color: var(--amarillo);
+    font-weight: 600;
+    margin-bottom: 3%;
+}
+
+/* Los dos campos de cosecha van lado a lado */
+.fila-cosecha {
+    display: flex;
+    gap: 4%;
+}
+
+.fila-cosecha .campo {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+/* ── CHECKBOX DE LA REINA ───────────────────────────────────────────*/
+.campo-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 4%;
+}
+
+.campo-checkbox input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--amarillo); /* Color del check cuando está marcado */
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.campo-checkbox label {
+    font-size: clamp(11px, 0.85vw, 14px);
+    color: var(--texto-blanco);
+    cursor: pointer;
+}
+
+/* ── NOTAS CON DOT VERDE ────────────────────────────────────────────*/
+.notas-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 1.5%;
+}
+
+.notas-header label {
+    font-size: clamp(11px, 0.85vw, 14px);
+    color: var(--verde);
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: 0;
+}
+
+.dot-verde {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--verde);
+    flex-shrink: 0;
+}
+
+/* El textarea de notas tiene borde verde */
+#notas {
+    border-color: var(--verde);
+}
+
+/* ── BOTÓN GUARDAR ──────────────────────────────────────────────────*/
+.btn-guardar {
+    width: 100%;
+    padding: 3%;
+    background-color: var(--amarillo);
+    color: var(--fundo-ucuro);
+    border: none;
+    border-radius: 8px;
+    font-size: clamp(13px, 1vw, 16px);
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 2%;
+    transition: opacity 0.2s;
+}
+
+.btn-guardar:hover {
+    opacity: 0.85;
+}
+
+/* ── ITEMS DEL RESUMEN ──────────────────────────────────────────────*/
+.resumen-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 3%;
+    border-radius: 8px;
+    border: 1px solid var(--borde-sutil);
+    margin-bottom: 3%;
+}
+
+/* El primer item (colmena seleccionada) tiene borde amarillo */
+.resumen-item-activo {
+    border-color: var(--amarillo);
+}
+
+.resumen-item input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--amarillo);
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.resumen-texto {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.resumen-texto strong {
+    font-size: clamp(12px, 0.9vw, 15px);
+    color: var(--texto-blanco);
+    font-weight: 600;
+}
+
+.resumen-texto span {
+    font-size: clamp(10px, 0.78vw, 13px);
+    color: var(--texto-gris);
+}
+
+/* ── TIP BOX ────────────────────────────────────────────────────────*/
+.tip-box {
+    background-color: var(--input-fondo);
+    border: 1px solid var(--input-borde);
+    border-radius: 8px;
+    padding: 3%;
+    margin-bottom: 3%;
+}
+
+.tip-titulo {
+    font-size: clamp(11px, 0.85vw, 14px);
+    font-weight: 700;
+    color: var(--texto-blanco);
+    margin-bottom: 2%;
+}
+
+.tip-texto {
+    font-size: clamp(10px, 0.78vw, 13px);
+    color: var(--texto-gris);
+    line-height: 1.5;
+}
+
+/* ── ESTADO FINAL ───────────────────────────────────────────────────*/
+.estado-final {
+    padding-top: 3%;
+    border-top: 1px solid var(--borde-sutil);
+}
+
+.estado-label {
+    font-size: clamp(9px, 0.7vw, 12px);
+    color: var(--texto-gris);
+    letter-spacing: 0.05em;
+    margin-bottom: 1%;
+}
+
+.estado-valor {
+    font-size: clamp(12px, 0.9vw, 15px);
+    color: var(--texto-blanco);
+    font-weight: 500;
+}
+
+/* ── USER AVATAR (sidebar) ──────────────────────────────────────────*/
+.user-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background-color: var(--verde);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 13px;
+    color: white;
+    flex-shrink: 0;
+}

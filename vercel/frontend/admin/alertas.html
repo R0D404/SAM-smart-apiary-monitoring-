@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alertas - SAM</title>
+    <link rel="stylesheet" href="../shared/css/dashboardGlobal.css">
+    <link rel="stylesheet" href="../shared/css/alertas.css">
+    <link rel="stylesheet" href="../shared/css/sidebar.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-shell">
+        <!-- ========== SIDEBAR ========== -->
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="hexagon">
+                    <img src="../assets/img/logo/logoSam.png" alt="Logotipo de SAM">
+                </div>
+                <div class="logo-text">
+                    <h1>SAM</h1>
+                    <p>Smart Apiary Monitoring</p>
+                </div>
+            </div>
+            <nav class="menu">
+                <ul>
+                    <li><a href="dashboardGlobal.html"><img src="../assets/icons/dashboard.svg" alt="" class="menu-icon"> Dashboard</a></li>
+                    <li><a href="gestionApiarios.html"><img src="../assets/icons/apiarios.svg" alt="" class="menu-icon"> Apiarios</a></li>
+                    <li><a href="gestionColmenas.html"><img src="../assets/icons/colmenas.svg" alt="" class="menu-icon"> Colmenas</a></li>
+                    <li><a aria-current="page" class="active" href="alertas.html"><img src="../assets/icons/alertas.svg" alt="" class="menu-icon"> Alertas</a></li>
+                    <li><a href="historialVisita.html"><img src="../assets/icons/visitas.svg" alt="" class="menu-icon"> Visitas / Cosechas</a></li>
+                    <li><a href="historial.html"><img src="../assets/icons/historial.svg" alt="" class="menu-icon"> Historial</a></li>
+                    <li><a href="gestionUsuarios.html"><img src="../assets/icons/usuarios.svg" alt="" class="menu-icon"> Usuarios</a></li>
+                </ul>
+            </nav>
+            <div class="user-profile">
+                <div class="user-avatar-indicator">
+                    <div class="avatar-initials" id="sidebar-user-avatar">--</div>
+                </div>
+                <div class="profile-text">
+                    <h2 id="sidebar-user-name">---</h2>
+                    <p>Administrador</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ========== MAIN CONTENT ========== -->
+        <main class="main-content">
+            <header class="main-header">
+                <div class="header-left">
+                    <h1>Alertas</h1>
+                    <p class="subtitle" style="color: var(--color-text-gray); font-size: 14px; margin-top: 4px;">Anomalías detectadas por umbrales contextuales y tasa de cambio</p>
+                </div>
+                <div class="header-right">
+                    <button class="btn-secondary" type="button" onclick="window.location.href='configUmbrales.html'">
+                        Config. umbrales
+                    </button>
+                    <button class="user-account" type="button">
+                        <span class="user-account-dot"></span>
+                        <span>Mi Cuenta</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Tarjetas de Resumen -->
+            <section class="summary-cards">
+                <div class="stat-card">
+                    <div class="stat-card-content">
+                        <span class="stat-label"><span class="dot-status rojo"></span> CRÍTICAS</span>
+                        <span class="stat-value text-red" id="kpi-criticas">--</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-content">
+                        <span class="stat-label"><span class="dot-status amarillo"></span> AVISOS</span>
+                        <span class="stat-value text-yellow" id="kpi-avisos">--</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-content">
+                        <span class="stat-label"><span class="dot-status verde"></span> NORMALES</span>
+                        <span class="stat-value text-green" id="kpi-normales">--</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-content">
+                        <span class="stat-label"><span class="dot-status verde" style="background-color: #009688;"></span> ATENDIDAS HOY</span>
+                        <span class="stat-value" style="color: #009688;" id="kpi-atendidas">--</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Filtros y Tabla -->
+            <section class="table-section" style="margin-top: 32px;">
+                <div class="filters-container">
+                    <button class="filter-btn active">Todas</button>
+                    <button class="filter-btn">Críticas</button>
+                    <button class="filter-btn">Avisos</button>
+                    <button class="filter-btn">Normales</button>
+                    <button class="filter-btn">Atendidas</button>
+                </div>
+
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>COLMENA</th>
+                                <th>MENSAJE</th>
+                                <th>TIPO</th>
+                                <th>FECHA</th>
+                                <th>ESTADO</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-alertas-body">
+                            <!-- Datos inyectados por JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- JS -->
+    <script src="../shared/js/alertas.js"></script>
+</body>
+</html>

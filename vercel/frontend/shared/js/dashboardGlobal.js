@@ -381,6 +381,10 @@ function fetchDashboardData() {
         })
         .catch(error => {
             console.error('Error cargando dashboard:', error);
+            // Fallback a los mock stats si falla
+            renderStats(dashboardStats);
+            renderApiarios(apiariosData);
+            renderUserProfile(userData);
         });
 }
 

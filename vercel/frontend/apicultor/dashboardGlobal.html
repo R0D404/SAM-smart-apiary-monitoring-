@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Global - SAM</title>
+    <meta name="description" content="Panel de control global del sistema SAM - Smart Apiary Monitoring">
+    <link rel="stylesheet" href="../shared/css/dashboardGlobal.css">
+    <!-- Chart.js para gráficas dinámicas -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" defer></script>
+    <link rel="stylesheet" href="../shared/css/sidebar.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Toast de Notificación de Éxito -->
+    <div id="toast-success" class="toast-success hidden">
+        <div class="toast-success-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </div>
+        <div class="toast-success-content">
+            <h4 id="toast-success-title">Sesión iniciada</h4>
+            <p id="toast-success-msg">Bienvenido de nuevo</p>
+        </div>
+    </div>
+
+    <div class="app-shell">
+        <!-- ========== SIDEBAR ========== -->
+        <aside class="sidebar" aria-label="Navegación principal">
+            <div class="logo">
+                <div class="hexagon">
+                    <img src="../assets/img/logo/logoSam.png" alt="Logotipo de SAM">
+                </div>
+                <div class="logo-text">
+                    <h1>SAM</h1>
+                    <p>Smart Apiary Monitoring</p>
+                </div>
+            </div>
+            <nav class="menu" aria-label="Secciones del sistema">
+                <ul>
+                    <li><a aria-current="page" class="active" href="dashboardApiario.html"><img src="../assets/icons/dashboard.svg" alt="" class="menu-icon"> Dashboard</a></li>
+                    <li><a href="misApiarios.html"><img src="../assets/icons/apiarios.svg" alt="" class="menu-icon"> Mis apiarios</a></li>
+                    <li><a href="colmenas.html"><img src="../assets/icons/colmenas.svg" alt="" class="menu-icon"> Colmenas</a></li>
+                    <li><a href="alertas.html"><img src="../assets/icons/alertas.svg" alt="" class="menu-icon"> Alertas</a></li>
+                    <li><a href="registrarVisita.html"><img src="../assets/icons/visitas.svg" alt="" class="menu-icon"> Registrar visita</a></li>
+                    <li><a href="historial.html"><img src="../assets/icons/historial.svg" alt="" class="menu-icon"> Historial</a></li>
+                </ul>
+            </nav>
+            <div class="user-profile">
+                <div class="user-avatar-indicator">
+                    <div class="avatar-initials" id="sidebar-user-avatar">--</div>
+                </div>
+                <div class="profile-text">
+                    <h2 id="sidebar-user-name">---</h2>
+                    <p>Apicultor</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ========== CONTENIDO PRINCIPAL ========== -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="main-header">
+                <div class="header-left">
+                    <h1 id="page-title">Dashboard Global</h1>
+                    <p id="page-subtitle">Visión general del negocio apícola</p>
+                </div>
+                <div class="header-right">
+                    <button class="btn-historial" type="button" id="btn-ver-historial">
+                        Ver historial
+                    </button>
+                    <a href="miCuenta.html" class="user-account" id="btn-mi-cuenta" style="text-decoration: none;">
+                        <span class="user-account-dot" id="header-user-avatar" style="display: inline-flex; align-items: center; justify-content: center; font-weight: bold; color: #1e1e1e; font-size: 11px;">--</span>
+                        <span>Mi cuenta</span>
+                    </a>
+                </div>
+            </header>
+
+            <!-- Tarjetas de estadísticas -->
+            <section class="stats-cards" aria-label="Estadísticas generales">
+                <article class="stat-card" id="card-produccion">
+                    <div class="stat-card-content">
+                        <span class="stat-label">PRODUCCIÓN TOTAL</span>
+                        <span class="stat-value" id="stat-produccion-total">--</span>
+                    </div>
+                    <span class="stat-arrow" aria-hidden="true">&#8250;</span>
+                </article>
+                <article class="stat-card" id="card-colmenas">
+                    <div class="stat-card-content">
+                        <span class="stat-label">COLMENAS ACTIVAS</span>
+                        <span class="stat-value" id="stat-colmenas-activas">-- / --</span>
+                    </div>
+                </article>
+                <article class="stat-card" id="card-alertas">
+                    <div class="stat-card-content">
+                        <span class="stat-label">ALERTAS ACTIVAS</span>
+                        <span class="stat-value stat-value-alert" id="stat-alertas-activas">--</span>
+                    </div>
+                </article>
+                <article class="stat-card" id="card-apicultores">
+                    <div class="stat-card-content">
+                        <span class="stat-label">APICULTORES</span>
+                        <span class="stat-value" id="stat-apicultores">--</span>
+                    </div>
+                </article>
+            </section>
+
+            <!-- Gráficas -->
+            <section class="charts-section" aria-label="Gráficas de producción">
+                <article class="chart-card chart-card-line" id="chart-produccion-mensual-card">
+                    <div class="chart-header">
+                        <h2>Producción mensual (kg)</h2>
+                        <p>Últimos 8 meses</p>
+                    </div>
+                    <div class="chart-body">
+                        <canvas id="chart-produccion-mensual"></canvas>
+                    </div>
+                </article>
+                <article class="chart-card chart-card-bar" id="chart-produccion-colmena-card">
+                    <div class="chart-header">
+                        <h2>Producción por colmena</h2>
+                        <p>Temporada actual (kg)</p>
+                    </div>
+                    <div class="chart-body">
+                        <canvas id="chart-produccion-colmena"></canvas>
+                    </div>
+                </article>
+            </section>
+
+            <!-- Sección de Apiarios con scroll horizontal -->
+            <section class="apiarios-section" aria-label="Lista de apiarios">
+                <h2 class="apiarios-title">Apiarios</h2>
+                <div class="apiarios-scroll-container" id="apiarios-container">
+                    <p class="apiarios-empty" id="apiarios-empty-msg">Sin apiarios registrados. Los datos se cargarán desde el servidor.</p>
+                </div>
+            </section>
+        </main>
+
+        <!-- ========== BARRA DE NAVEGACIÓN MÓVIL ========== -->
+        <nav class="mobile-nav" aria-label="Navegación móvil">
+            <a href="dashboardGlobal.html" class="mobile-nav-item ">
+                <img src="../assets/icons/dashboard.svg" alt="" class="mobile-nav-icon">
+                <span>Dashboard</span>
+            </a>
+            <a href="gestionApiarios.html" class="mobile-nav-item">
+                <img src="../assets/icons/apiarios.svg" alt="" class="mobile-nav-icon">
+                <span>Apiarios</span>
+            </a>
+            <a href="#" class="mobile-nav-item">
+                <img src="../assets/icons/colmenas.svg" alt="" class="mobile-nav-icon">
+                <span>Colmenas</span>
+            </a>
+            <a href="#" class="mobile-nav-item">
+                <img src="../assets/icons/alertas.svg" alt="" class="mobile-nav-icon">
+                <span>Alertas</span>
+            </a>
+            <a href="#" class="mobile-nav-item">
+                <img src="../assets/icons/visitas.svg" alt="" class="mobile-nav-icon">
+                <span>Visitas</span>
+            </a>
+            <a href="#" class="mobile-nav-item">
+                <img src="../assets/icons/historial.svg" alt="" class="mobile-nav-icon">
+                <span>Historial</span>
+            </a>
+            <a href="#" class="mobile-nav-item">
+                <img src="../assets/icons/usuarios.svg" alt="" class="mobile-nav-icon">
+                <span>Usuarios</span>
+            </a>
+        </nav>
+    </div>
+
+    <script src="../shared/js/sidebar.js" defer></script>
+    <script src="../shared/js/dashboardGlobal.js" defer></script>
+</body>
+</html>

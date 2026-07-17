@@ -52,8 +52,15 @@ document.addEventListener("DOMContentLoaded", () => {
             })
             .catch(err => {
                 console.error("Error al cargar el dashboard de la colmena:", err);
-                const colmenaTitle = document.getElementById("colmena-codigo");
-                if(colmenaTitle) colmenaTitle.textContent = "Error al cargar";
+                renderizarDashboard({
+                    codigo: colmenaId,
+                    apiario: "--",
+                    ecotipo: "--",
+                    iaDiagnostico: { estado: "--", mensaje: "Servidor local desconectado" },
+                    lecturas: [],
+                    alertas: [],
+                    historial: []
+                });
             });
     }
 
