@@ -52,18 +52,8 @@ document.addEventListener("DOMContentLoaded", () => {
             })
             .catch(err => {
                 console.error("Error al cargar el dashboard de la colmena:", err);
-                renderizarDashboard({
-                    codigo: colmenaId || "C-01",
-                    apiario: "Apiario Vercel",
-                    ecotipo: "Apis mellifera",
-                    iaDiagnostico: { estado: "Normal", mensaje: "Sin problemas detectados" },
-                    lecturas: [
-                        { fecha: "2026-07-17 12:00", peso: 24, tempInt: 35, humInt: 60, tempExt: 30, humExt: 55 },
-                        { fecha: "2026-07-17 11:00", peso: 23, tempInt: 34, humInt: 58, tempExt: 29, humExt: 50 }
-                    ],
-                    alertas: [{ nivel: "aviso", fecha: "2h ago", mensaje: "Humedad baja detectada" }],
-                    historial: [{ tipo: "visita", fecha: "Ayer" }]
-                });
+                const colmenaTitle = document.getElementById("colmena-codigo");
+                if(colmenaTitle) colmenaTitle.textContent = "Error al cargar";
             });
     }
 
@@ -214,7 +204,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnMantenimiento = document.getElementById("btn-mantenimiento");
     if (btnMantenimiento) {
         btnMantenimiento.addEventListener("click", () => {
-            alert("Funcionalidad de mantenimiento en construcción.");
+            if (colmenaId) {
+                window.location.href = `mantenimientoModulo.html?id=${colmenaId}`;
+            } else {
+                window.location.href = `mantenimientoModulo.html`;
+            }
         });
     }
 

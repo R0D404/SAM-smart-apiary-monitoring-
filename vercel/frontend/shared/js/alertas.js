@@ -50,14 +50,16 @@ document.addEventListener('DOMContentLoaded', () => {
             let textClass = '';
             let actionHtml = '';
             
+            const isApicultor = window.location.pathname.includes('apicultor');
+            
             if (alerta.nivel === 'critica') {
                 dotClass = 'rojo';
                 textClass = 'text-red';
-                actionHtml = `<button class="btn-atender">Atender</button>`;
+                actionHtml = isApicultor ? `<button class="btn-atender" data-colmena="${alerta.colmena}" data-nivel="${alerta.nivel}">Atender</button>` : `<span style="color: var(--color-text-gray); font-size: 12px;">Requiere atención</span>`;
             } else if (alerta.nivel === 'aviso') {
                 dotClass = 'amarillo';
                 textClass = 'text-yellow';
-                actionHtml = `<button class="btn-atender">Atender</button>`;
+                actionHtml = isApicultor ? `<button class="btn-atender" data-colmena="${alerta.colmena}" data-nivel="${alerta.nivel}">Atender</button>` : `<span style="color: var(--color-text-gray); font-size: 12px;">Aviso</span>`;
             } else if (alerta.nivel === 'normal') {
                 dotClass = 'verde';
                 textClass = 'text-green';
@@ -90,6 +92,34 @@ document.addEventListener('DOMContentLoaded', () => {
             tbody.appendChild(tr);
         });
     }
+
+    // Event delegation for "Atender" button
+    tbody.addEventListener('click', (e) => {
+        if (e.target.classList.contains('btn-atender')) {
+            const colmenaId = e.target.getAttribute('data-colmena');
+            if (confirm(`¿Estás seguro de que la alerta de la colmena ${colmenaId} fue atendida?`)) {
+                // Find and remove/update the alert in the data array
+                const index = todasLasAlertasYEstados.findIndex(a => a.colmena === colmenaId && (a.nivel === 'critica' || a.nivel === 'aviso'));
+                if (index !== -1) {
+                    todasLasAlertasYEstados[index].nivel = 'atendida';
+                    aplicarFiltro();
+                    
+                    // Update KPIs manually for frontend effect
+                    const isCritica = e.target.getAttribute('data-nivel') === 'critica';
+                    const criticasEl = document.getElementById('kpi-criticas');
+                    const avisosEl = document.getElementById('kpi-avisos');
+                    const atendidasEl = document.getElementById('kpi-atendidas');
+                    
+                    if (isCritica) {
+                        criticasEl.textContent = Math.max(0, parseInt(criticasEl.textContent || 0) - 1);
+                    } else {
+                        avisosEl.textContent = Math.max(0, parseInt(avisosEl.textContent || 0) - 1);
+                    }
+                    atendidasEl.textContent = parseInt(atendidasEl.textContent || 0) + 1;
+                }
+            }
+        }
+    });
 
     async function cargarAlertas() {
         try {
