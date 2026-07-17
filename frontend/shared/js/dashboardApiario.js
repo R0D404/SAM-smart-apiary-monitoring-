@@ -228,11 +228,11 @@ function updateDashboard(data) {
 
 function fetchDashboardData() {
     const urlParams = new URLSearchParams(window.location.search);
-    const apiarioId = urlParams.get('id');
+    let apiarioId = urlParams.get('id');
 
     if (!apiarioId) {
-        console.error("No se proporcionó ID de apiario en la URL");
-        return;
+        console.warn("No se proporcionó ID de apiario en la URL. Usando 'A-1' por defecto.");
+        apiarioId = 'A-1';
     }
 
     fetch(`/api/dashboard/apiario/${apiarioId}`)

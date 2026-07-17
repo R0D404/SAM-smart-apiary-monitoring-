@@ -29,17 +29,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // 3. Fetch Data from Backend
     function fetchDashboardData() {
         if (!colmenaId) {
-            console.warn("No se especificó la colmena. Cargando panel vacío.");
-            renderizarDashboard({
-                codigo: "C-Sin ID",
-                apiario: "No especificado",
-                ecotipo: "N/A",
-                iaDiagnostico: { estado: "Normal", mensaje: "Sin diagnóstico disponible" },
-                lecturas: [],
-                alertas: [],
-                historial: []
-            });
-            return;
+            console.warn("No se especificó la colmena. Usando 'C-01' por defecto.");
+            colmenaId = 'C-01';
         }
 
         fetch(`/api/dashboard/colmena?id=${colmenaId}`)
