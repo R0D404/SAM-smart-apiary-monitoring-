@@ -163,13 +163,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
             apiariosList.innerHTML = `
                 <div class="apiario-card" onclick="window.location.href='dashboardApiario.html?id=A-1'" style="cursor:pointer">
-                    <div class="apiario-header">
-                        <div>
+                    <div class="apiario-card-header">
+                        <span class="status-dot verde"></span>
+                        <div class="apiario-info">
                             <h3>Apiario Vercel</h3>
-                            <p>Tapachula, Chiapas</p>
+                            <p>Tapachula, Chiapas · 2 colmenas</p>
                         </div>
+                        <a href="dashboardApiario.html?id=A-1" class="ver-colmenas">Ver colmenas ›</a>
                     </div>
-                    <div class="apiario-body">
+                    <div class="apiario-card-body">
                         <div class="salud-box">
                             <span class="label">Salud</span>
                             <strong class="estado saludable">Excelente</strong>
