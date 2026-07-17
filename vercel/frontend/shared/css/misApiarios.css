@@ -14,6 +14,8 @@
     --verde:           #3FB8A0;
     --rojo:            #E26248;
     --amarillo-alerta: #F2A900;
+    --color-alert-green: #4CAF50;
+    --color-bg-alert-green: rgba(76, 175, 80, 0.1);
 }
 
 * {
