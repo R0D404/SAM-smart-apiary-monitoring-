@@ -12,7 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <section class="sidebar">
+    <aside class="sidebar" aria-label="Navegación principal">
         <div class="logo">
             <div class="hexagon">
                 <img src="../assets/img/logo/logoSam.png" alt="">
@@ -22,7 +22,7 @@
                 <p>Smart Apiary Monitoring</p>
             </div>
         </div>
-        <div class="menu">
+        <nav class="menu" aria-label="Secciones del sistema">
             <ul>
                 <li><a href="dashboardGlobal.html"><img src="../assets/icons/dashboard.svg" alt="" class="menu-icon"> Dashboard</a></li>
                 <li><a href="gestionApiarios.html"><img src="../assets/icons/apiarios.svg" alt="" class="menu-icon"> Apiarios</a></li>
@@ -33,15 +33,17 @@
                 <li><a href="historial.html"><img src="../assets/icons/historial.svg" alt="" class="menu-icon"> Historial</a></li>
                 <li><a href="gestionUsuarios.html"><img src="../assets/icons/usuarios.svg" alt="" class="menu-icon"> Usuarios</a></li>
             </ul>
-        </div>
+        </nav>
         <div class="user-profile">
-            <div style="width: 41px; height: 41px; border-radius: 50%; background-color: #4ade80;"></div>
+            <div class="user-avatar-indicator">
+                <div class="avatar-initials" id="sidebar-user-avatar">--</div>
+            </div>
             <div class="profile-text">
-                <h2>Emmanuel U.</h2>
+                <h2 id="sidebar-user-name">---</h2>
                 <p>Administrador</p>
             </div>
         </div>
-    </section>
+    </aside>
     
     <section class="main-content">
         <!-- Botón flotante superior derecho de Mi Cuenta -->
@@ -60,7 +62,7 @@
                 <p>Registra limpiezas, recalibraciones, reemplazos, revisiones o fallos del módulo de monitoreo.</p>
             </div>
             <div class="header-actions">
-                <button class="btn-outline-dark">
+                <button class="btn-outline-dark" onclick="window.location.href='gestionColmenas.html'">
                     <svg viewBox="0 0 24 24" width="16" height="16" stroke="#F2A900" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: middle;"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
                     Colmenas
                 </button>
@@ -82,8 +84,8 @@
                         <div class="form-group flex-1">
                             <label class="form-label">MÓDULO</label>
                             <div class="custom-select-wrapper">
-                                <select class="custom-select" name="modulo_id">
-                                    <option value="mod7a3f">MOD-7A3F · Colmena C-03 · Apiario Norte</option>
+                                <select class="custom-select" name="modulo_id" id="modulo_id">
+                                    <option value="" disabled selected>Seleccione un módulo</option>
                                 </select>
                             </div>
                         </div>
@@ -98,7 +100,7 @@
                                 <span>Limpieza</span>
                             </label>
                             <label class="pill-label">
-                                <input type="radio" name="tipo_evento" value="recalibracion" checked>
+                                <input type="radio" name="tipo_evento" value="recalibracion">
                                 <span>Recalibración</span>
                             </label>
                             <label class="pill-label">
@@ -121,14 +123,14 @@
                         <div class="form-group flex-1">
                             <label class="form-label">FECHA DEL EVENTO</label>
                             <div class="input-with-icon">
-                                <input type="date" class="input-field" value="2026-06-05" required>
+                                <input type="date" class="input-field" required>
                             </div>
                         </div>
                         <div class="form-group flex-1">
                             <label class="form-label">VINCULAR A VISITA (OPCIONAL)</label>
                             <div class="custom-select-wrapper">
-                                <select class="custom-select" name="visita_id">
-                                    <option value="sesion0506">Sesión 05/06 · Ap. Norte</option>
+                                <select class="custom-select" name="visita_id" id="visita_id">
+                                    <option value="" disabled selected>Seleccione una visita</option>
                                 </select>
                             </div>
                         </div>
@@ -137,8 +139,8 @@
                     <!-- Fila 4: Descripción -->
                     <div class="form-group mt-3 position-relative">
                         <label class="form-label">DESCRIPCIÓN</label>
-                        <textarea id="desc-mantenimiento" class="input-field textarea-field" rows="4" maxlength="500" required>Se recalibró la celda de carga con una pesa patrón de 10 kg. La desviación previa era de +0.8 kg; tras el ajuste la lectura quedó dentro de ±0.1 kg.</textarea>
-                        <span id="char-count" class="char-counter">148 / 500</span>
+                        <textarea id="desc-mantenimiento" class="input-field textarea-field" rows="4" maxlength="500" placeholder="Describe los detalles del mantenimiento..." required></textarea>
+                        <span id="char-count" class="char-counter">0 / 500</span>
                     </div>
 
                     <!-- Info Alert -->
@@ -164,27 +166,27 @@
                     <div class="data-list mt-3">
                         <div class="data-row">
                             <span class="data-label">Identificador</span>
-                            <span class="data-value text-white text-bold">MOD-7A3F</span>
+                            <span class="data-value text-white text-bold" id="modulo-id-text">---</span>
                         </div>
                         <div class="data-row">
                             <span class="data-label">Tipo</span>
-                            <span class="data-value text-white">Interno + ambiental</span>
+                            <span class="data-value text-white" id="modulo-tipo">---</span>
                         </div>
                         <div class="data-row">
                             <span class="data-label">Estado</span>
-                            <span class="status-pill status-activo">ACTIVO</span>
+                            <span class="status-pill status-activo" id="modulo-estado" style="display: none;">ACTIVO</span>
                         </div>
                         <div class="data-row">
                             <span class="data-label">Instalado</span>
-                            <span class="data-value text-white">12/02/2026</span>
+                            <span class="data-value text-white" id="modulo-instalado">---</span>
                         </div>
                         <div class="data-row">
                             <span class="data-label">Última lectura</span>
-                            <span class="data-value text-teal">hace 4 min</span>
+                            <span class="data-value text-teal" id="modulo-ultima-lectura">---</span>
                         </div>
                         <div class="data-row border-none">
                             <span class="data-label">Eventos registrados</span>
-                            <span class="data-value text-white text-bold">4</span>
+                            <span class="data-value text-white text-bold" id="modulo-eventos-count">0</span>
                         </div>
                     </div>
                 </div>
@@ -192,55 +194,8 @@
                 <!-- Tarjeta 2: Historial reciente -->
                 <div class="main-card">
                     <h3 class="card-title-sm mb-4">Historial reciente</h3>
-                    
-                    <div class="timeline">
-                        <!-- Item 1 -->
-                        <div class="timeline-item">
-                            <div class="timeline-dot dot-yellow"></div>
-                            <div class="timeline-content">
-                                <div class="timeline-header">
-                                    <span class="timeline-title">Limpieza</span>
-                                    <span class="timeline-date">28/05/2026</span>
-                                </div>
-                                <p class="timeline-text">Se retiró propóleo de la sonda de temperatura.</p>
-                            </div>
-                        </div>
-                        
-                        <!-- Item 2 -->
-                        <div class="timeline-item">
-                            <div class="timeline-dot dot-teal"></div>
-                            <div class="timeline-content">
-                                <div class="timeline-header">
-                                    <span class="timeline-title">Revisión</span>
-                                    <span class="timeline-date">14/04/2026</span>
-                                </div>
-                                <p class="timeline-text">Inspección general durante visita al apiario.</p>
-                            </div>
-                        </div>
-
-                        <!-- Item 3 -->
-                        <div class="timeline-item">
-                            <div class="timeline-dot dot-yellow"></div>
-                            <div class="timeline-content">
-                                <div class="timeline-header">
-                                    <span class="timeline-title">Recalibración</span>
-                                    <span class="timeline-date">02/03/2026</span>
-                                </div>
-                                <p class="timeline-text">Ajuste de celda de carga, desviación ±0.1 kg.</p>
-                            </div>
-                        </div>
-
-                        <!-- Item 4 -->
-                        <div class="timeline-item">
-                            <div class="timeline-dot dot-teal"></div>
-                            <div class="timeline-content">
-                                <div class="timeline-header">
-                                    <span class="timeline-title">Instalación</span>
-                                    <span class="timeline-date">12/02/2026</span>
-                                </div>
-                                <p class="timeline-text">Módulo instalado y verificado en C-03.</p>
-                            </div>
-                        </div>
+                         <div class="timeline" id="timeline-historial">
+                        <p style="color: var(--color-text-gray); font-size: 14px; text-align: center; padding: 20px 0;">No hay historial reciente disponible.</p>
                     </div>
 
                     <a href="#" class="link-yellow mt-4 block">Ver todo el historial <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a>

@@ -124,16 +124,28 @@ document.addEventListener('DOMContentLoaded', () => {
                         monitoreo: "Sí (Sensor Peso & Temp)",
                         ecotipo: "Apis mellifera",
                         estado: "activa",
-                        estadoTexto: "Activa"
+                        estadoTexto: "Activa",
+                        peso: (Math.random() * 10 + 20).toFixed(1)
                     },
                     {
                         id: "C-02",
                         db_id: 2,
                         apiario: "Apiario Vercel",
-                        monitoreo: "No",
-                        ecotipo: "Italiana",
+                        monitoreo: "Sí (Sensor Peso)",
+                        ecotipo: "Apis mellifera",
                         estado: "activa",
-                        estadoTexto: "Activa"
+                        estadoTexto: "Activa",
+                        peso: (Math.random() * 10 + 20).toFixed(1)
+                    },
+                    {
+                        id: "C-03",
+                        db_id: 3,
+                        apiario: "Apiario Vercel",
+                        monitoreo: "No",
+                        ecotipo: "Carniola",
+                        estado: "inactiva",
+                        estadoTexto: "Inactiva",
+                        peso: null
                     }
                 ];
                 renderizarColmenas(mockColmenas);

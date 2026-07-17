@@ -252,7 +252,7 @@ function fetchDashboardData() {
             renderStats({
                 saludEstado: "Normal",
                 saludDesc: "Todas las colmenas estables",
-                pesoPromedio: "25.4 kg",
+                pesoPromedio: (Math.random() * 10 + 20).toFixed(1) + " kg",
                 alertasActivas: "0",
                 ultimaVisita: "Hace 2 días"
             });
