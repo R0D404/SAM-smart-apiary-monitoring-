@@ -385,10 +385,10 @@ function fetchDashboardData() {
             let storedColmena = localStorage.getItem('produccionColmenaData');
             let storedApiarios = localStorage.getItem('apiariosData');
 
-            if (storedStats) dashboardStats = JSON.parse(storedStats);
-            if (storedMensual) produccionMensualData = JSON.parse(storedMensual);
-            if (storedColmena) produccionColmenaData = JSON.parse(storedColmena);
-            if (storedApiarios) apiariosData = JSON.parse(storedApiarios);
+            if (storedStats) { try { dashboardStats = JSON.parse(storedStats); } catch(e){} }
+            if (storedMensual) { try { produccionMensualData = JSON.parse(storedMensual); } catch(e){} }
+            if (storedColmena) { try { produccionColmenaData = JSON.parse(storedColmena); } catch(e){} }
+            if (storedApiarios) { try { apiariosData = JSON.parse(storedApiarios); } catch(e){} }
             
             // Fallback a los mock stats si falla
             renderStats(dashboardStats);
@@ -396,8 +396,10 @@ function fetchDashboardData() {
             renderUserProfile(userData);
             
             // Asegurar que se rendericen las gráficas!
-            renderChartProduccionMensual(produccionMensualData);
-            renderChartProduccionColmena(produccionColmenaData);
+            if (typeof Chart !== 'undefined') {
+                renderChartProduccionMensual(produccionMensualData);
+                renderChartProduccionColmena(produccionColmenaData);
+            }
         });
 }
 

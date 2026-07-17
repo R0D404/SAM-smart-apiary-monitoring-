@@ -78,7 +78,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 let storedColmenaData = localStorage.getItem('colmenaData');
                 if (storedColmenaData) {
-                    defaultColmenaData = JSON.parse(storedColmenaData);
+                    try {
+                        defaultColmenaData = JSON.parse(storedColmenaData);
+                    } catch(e) {
+                        console.error('Error parsing colmenaData', e);
+                    }
                 }
 
                 renderizarDashboard(defaultColmenaData);

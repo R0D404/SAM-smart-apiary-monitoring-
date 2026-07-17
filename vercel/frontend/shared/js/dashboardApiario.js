@@ -265,8 +265,12 @@ function fetchDashboardData() {
                 { id: "C-02", estado: "verde", estadoTexto: "Saludable", peso: "22.5" }
             ];
 
-            if (storedStats) defaultStats = JSON.parse(storedStats);
-            if (storedColmenas) defaultColmenas = JSON.parse(storedColmenas);
+            if (storedStats) {
+                try { defaultStats = JSON.parse(storedStats); } catch(e) { console.error('Error parsing stats', e); }
+            }
+            if (storedColmenas) {
+                try { defaultColmenas = JSON.parse(storedColmenas); } catch(e) { console.error('Error parsing colmenas', e); }
+            }
             
             // Hardcoded data for vercel presentation
             renderStats(defaultStats);
@@ -274,7 +278,11 @@ function fetchDashboardData() {
             renderColmenas(defaultColmenas);
             
             // Render chart manually for hardcoded data
-            renderChartEvolucionPeso();
+            if (typeof Chart !== 'undefined') {
+                renderChartEvolucionPeso();
+            } else {
+                console.warn("Chart no definido");
+            }
             renderUserProfile({nombre: "Vercel Admin"});
         });
 }
