@@ -98,6 +98,7 @@
     align-items: center;
     gap: clamp(13px, 0.94vw, 23px);
     width: auto;
+    margin: 0 clamp(10px, 0.7vw, 16px);
     padding: clamp(10px, 0.62vw, 14px) clamp(18px, 1.25vw, 30px);
     color: var(--color-text-white, var(--texto-blanco, #F5F5F5));
     text-decoration: none;
