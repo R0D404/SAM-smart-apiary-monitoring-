@@ -201,3 +201,5 @@
 @media (max-width: 1100px) {
     .account-grid { grid-template-columns: 1fr; }
 }
+.btn-outline-danger { background-color: transparent; color: var(--rojo, #E26248); border: 1px solid var(--rojo, #E26248); padding: 12px 24px; border-radius: 12px; cursor: pointer; font-size: 13px; font-weight: 600; font-family: 'Inter', sans-serif; transition: all 0.3s; }
+.btn-outline-danger:hover { background-color: rgba(226, 98, 72, 0.1); }
