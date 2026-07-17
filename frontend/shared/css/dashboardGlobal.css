@@ -41,6 +41,7 @@ body {
     background-color: var(--color-bg-dark);
     color: var(--color-text-white);
     overflow-x: hidden;
+    overflow-y: scroll; /* Force scrollbar to prevent horizontal layout shifting between pages */
 }
 
 /* =========================================

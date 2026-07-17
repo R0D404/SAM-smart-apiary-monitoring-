@@ -24,6 +24,7 @@ body {
     margin: 0;
     background-color: var(--fondo-oscuro);
     font-family: 'Inter', sans-serif;
+    overflow-y: scroll;
 }
 
 /* =========================================

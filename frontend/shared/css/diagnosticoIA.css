@@ -32,6 +32,7 @@ body {
     background-color: var(--fondo-oscuro);
     color: var(--texto-blanco);
     min-height: 100vh;
+    overflow-y: scroll;
 }
 
 /* ── SIDEBAR SE REMOVIÓ PARA USAR EL GLOBAL sidebar.css ── */
