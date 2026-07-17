@@ -413,10 +413,17 @@ document.addEventListener("DOMContentLoaded", () => {
             // Ocultar después de 4 segundos
             setTimeout(() => {
                 toast.classList.add('hidden');
+                // Limpiar URL
+                window.history.replaceState({}, document.title, window.location.pathname);
             }, 4000);
         }
-        
-        // Limpiar la URL para que no vuelva a salir si recargan la página
-        window.history.replaceState({}, document.title, window.location.pathname);
     }
+
+    // Event listeners para botones de "Mi Cuenta"
+    const botonesMiCuenta = document.querySelectorAll(".user-account, #btn-mi-cuenta, .user-info-btn");
+    botonesMiCuenta.forEach(btn => {
+        btn.addEventListener("click", () => {
+            window.location.href = "miCuenta.html";
+        });
+    });
 });
