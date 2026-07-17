@@ -48,4 +48,12 @@ document.addEventListener("DOMContentLoaded", () => {
             console.warn("No se pudo cargar el perfil del usuario (servidor apagado):", error);
             renderUserProfile(null);
         });
+
+    // Event listeners para botones de "Mi Cuenta"
+    const botonesMiCuenta = document.querySelectorAll(".user-account, #btn-mi-cuenta, .user-info-btn");
+    botonesMiCuenta.forEach(btn => {
+        btn.addEventListener("click", () => {
+            window.location.href = "miCuenta.html";
+        });
+    });
 });
