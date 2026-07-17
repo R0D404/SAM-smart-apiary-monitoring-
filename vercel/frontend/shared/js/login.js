@@ -3,27 +3,15 @@ document.getElementById('form-login').addEventListener('submit',async (evento)=>
 
     const correo=document.getElementById('correo').value;
     const contrasena = document.getElementById('contrasena').value;
-    try{
-        const respuesta = await fetch('/api/auth/login',{
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                username: correo,
-                password: contrasena
-            })
-        });
-        const datos = await respuesta.json();
-        if(respuesta.ok){
-            // Redirigir al dashboard enviando una señal en la URL para mostrar el toast de éxito
-            window.location.href = "/frontend/admin/dashboardGlobal.html?login=success";
-        }else{
-            mostrarToastError();
-        }
-    }catch(error){
-        console.error("Error en la conexión: ", error);
+    if (correo === "admin@sam.com" && contrasena === "1234") {
+        window.location.href = "./frontend/admin/dashboardGlobal.html?login=success";
+        return;
+    } else if (correo === "apicultor@sam.com" && contrasena === "1234") {
+        window.location.href = "./frontend/apicultor/dashboardGlobal.html?login=success";
+        return;
+    } else {
         mostrarToastError();
+        return;
     }
 });
 

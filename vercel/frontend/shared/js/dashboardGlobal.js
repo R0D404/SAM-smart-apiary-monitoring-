@@ -18,44 +18,41 @@
  * Por defecto son nulos hasta que el backend responda.
  */
 let dashboardStats = {
-    produccionTotal: null,
-    colmenasActivas: null,
-    alertasActivas: null,
-    apicultores: null
+    produccionTotal: "1,245 kg",
+    colmenasActivas: 4,
+    alertasActivas: 1,
+    apicultores: 2
 };
 
-/**
- * Datos para la gráfica de producción mensual (línea).
- * labels: meses a mostrar en el eje X.
- * data: producción en kg por cada mes.
- * null hasta que el backend envíe datos reales.
- */
-let produccionMensualData = null;
+let produccionMensualData = {
+    labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+    data: [120, 150, 180, 100, 200, 250]
+};
 
-/**
- * Datos para la gráfica de producción por colmena (barras).
- * labels: identificadores de cada colmena.
- * data: producción en kg por colmena.
- * null hasta que el backend envíe datos reales.
- */
-let produccionColmenaData = null;
+let produccionColmenaData = {
+    labels: ['C-01', 'C-02', 'C-03', 'C-04'],
+    data: [45, 60, 50, 40]
+};
+
+let apiariosData = [
+    {
+        id: "A-1",
+        nombre: "Apiario Vercel",
+        ubicacion: "Tapachula, Chiapas",
+        colmenas: 4,
+        estado: "Normal"
+    }
+];
+
+let userData = {
+    nombre: "Vercel User",
+    rol: "Admin"
+};
 
 /**
  * Datos de los apiarios.
- * Cada apiario tiene: nombre, ubicación, número de colmenas y estado.
- * El estado puede ser: "verde", "amarillo" o "rojo".
- * Arreglo vacío hasta que el backend envíe datos.
  */
-let apiariosData = [];
-
-/**
- * Datos del usuario logueado.
- * El nombre y la foto dependen del backend.
- * null hasta que el backend responda.
- */
-let userData = {
-    nombre: null
-};
+// apiariosData and userData already defined above.
 
 // =========================================
 // 2. REFERENCIAS AL DOM

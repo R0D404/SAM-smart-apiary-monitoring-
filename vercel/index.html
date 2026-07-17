@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./frontend/shared/css/loging.css">
+</head>
+<body>
+    
+    <!-- Toast de Notificación -->
+    <div id="toast-container" class="toast hidden">
+        <div class="toast-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+        </div>
+        <div class="toast-content">
+            <h4 id="toast-title">Correo o contraseña incorrectos</h4>
+            <p id="toast-msg">Verifica tus credenciales e inténtalo de nuevo</p>
+        </div>
+    </div>
+
+    <section id="present-card">
+       <div id="banner-login">
+            <div id="logo">
+                <img src="./frontend/assets/img/logo/logoSam.png" alt="logo-Sam">
+            </div>
+            
+            <div id="baner-logo">
+                <h2 class="banner-Sam">SAM</h2>
+                <h6 class="banner-Sam">SMART APIARY MONITORING</h6>
+            </div>
+        </div>
+        
+        <div id="presentacion">
+            <h1 class="presntation-info">MONITOREO INTELIGENTE</h1>
+            <h1 class="presntation-info">para tus colmenas</h1>
+            <h5 class="presntation-info">Del dato al diagnóstico: sensores, detección contextual e IA al servicio de la colmena.</h5>
+        </div>
+        
+       
+        
+    </section>
+
+    <section id="imput-form">
+
+        <form id="form-login">
+            <h2>Iniciar sesión</h2>
+            <p>Accede a tu panel de gestión apicula</p>
+            <label for="correo">CORREO ELECTRÓNICO</label>
+            <input type="email" id="correo" placeholder="apicultor@correo.com">
+        
+            <label for="contrasena">CONTRASEÑA</label>
+            <input type="password" id="contrasena" placeholder="ingresa la contraseña">
+
+            <button id="iniciar" type="submit">Iniciar Sesión</button>
+        </form>
+    </section>
+    <script src="./frontend/shared/js/login.js" defer></script>
+</body>
+</html>

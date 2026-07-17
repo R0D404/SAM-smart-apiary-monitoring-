@@ -245,11 +245,32 @@ function fetchDashboardData() {
             console.error('Error:', error);
             const titleEl = document.getElementById("page-title");
             const subtitleEl = document.getElementById("page-subtitle");
-            if (titleEl) titleEl.textContent = "---";
-            if (subtitleEl) subtitleEl.textContent = "---";
-            renderStats(apiarioStats);
-            renderColmenas(colmenasData);
-            renderUserProfile(userData);
+            if (titleEl) titleEl.textContent = "Apiario Vercel";
+            if (subtitleEl) subtitleEl.textContent = "Ubicación: Vercel";
+            
+            // Hardcoded data for vercel presentation
+            renderStats({
+                saludEstado: "Normal",
+                saludDesc: "Todas las colmenas estables",
+                pesoPromedio: "25.4 kg",
+                alertasActivas: "0",
+                ultimaVisita: "Hace 2 días"
+            });
+            renderColmenas([
+                { id: "C-01", estado: "verde", estadoTexto: "Saludable" },
+                { id: "C-02", estado: "verde", estadoTexto: "Saludable" }
+            ]);
+            
+            // Render chart manually for hardcoded data
+            evolucionPesoData = {
+                labels: ['Ene', 'Feb', 'Mar'],
+                datasets: [
+                    { label: 'C-01', data: [20, 22, 24] },
+                    { label: 'C-02', data: [18, 19, 21] }
+                ]
+            };
+            renderChartEvolucionPeso();
+            renderUserProfile({nombre: "Vercel Admin"});
         });
 }
 

@@ -156,18 +156,42 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch (error) {
             console.error("Error al cargar apiarios de apicultor:", error);
             
-            // Restablecer los KPIs de las tarjetas a '--'
-            statColmenas.textContent = "--";
-            statAlertas.textContent = "--";
-            statVisita.textContent = "--";
+            // Renderizar apiario hardcodeado para vercel
+            statColmenas.textContent = "2";
+            statAlertas.textContent = "0";
+            statVisita.textContent = "Hace 1 día";
 
-            // Mostrar mensaje de error en la lista de apiarios
             apiariosList.innerHTML = `
-                <div style="text-align: center; color: var(--color-text-gray); padding: 40px; width: 100%;">
-                    <p style="font-weight: 500; font-size: 16px; margin-bottom: 8px; color: var(--color-text-white);">Error al cargar apiarios</p>
-                    <p style="font-size: 14px;">No se pudo conectar con el servidor local. Verifique que el servicio esté encendido.</p>
+                <div class="apiario-card" onclick="window.location.href='dashboardApiario.html?id=A-1'" style="cursor:pointer">
+                    <div class="apiario-header">
+                        <div>
+                            <h3>Apiario Vercel</h3>
+                            <p>Tapachula, Chiapas</p>
+                        </div>
+                    </div>
+                    <div class="apiario-body">
+                        <div class="salud-box">
+                            <span class="label">Salud</span>
+                            <strong class="estado verde">Excelente</strong>
+                            <div class="conteo-colmenas">
+                                <span class="dot verde"></span><span>2</span>
+                                <span class="dot amarillo"></span><span>0</span>
+                                <span class="dot rojo"></span><span>0</span>
+                            </div>
+                        </div>
+                        <div class="chart-box">
+                            <div class="chart-canvas-wrap">
+                                <canvas class="mini-chart" id="chart-apiario-A-1"></canvas>
+                            </div>
+                            <p class="chart-caption">Peso promedio · 30 días</p>
+                        </div>
+                        <div class="alerta-box">
+                            <span class="alerta-pill" style="background-color: var(--color-bg-alert-green); color: var(--color-alert-green); border-color: rgba(76, 175, 80, 0.2);">Sin alertas</span>
+                        </div>
+                    </div>
                 </div>
             `;
+            setTimeout(() => dibujarMiniGrafica("chart-apiario-A-1"), 100);
         }
     }
 

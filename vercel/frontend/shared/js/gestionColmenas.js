@@ -115,14 +115,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 renderizarColmenas(datos);
             })
             .catch(err => {
-                console.error("Servidor desconectado, cargando colmena de respaldo:", err);
+                console.error("Servidor desconectado:", err);
                 const mockColmenas = [
                     {
                         id: "C-01",
                         db_id: 1,
-                        apiario: "Apiario Norte",
+                        apiario: "Apiario Vercel",
                         monitoreo: "Sí (Sensor Peso & Temp)",
                         ecotipo: "Apis mellifera",
+                        estado: "activa",
+                        estadoTexto: "Activa"
+                    },
+                    {
+                        id: "C-02",
+                        db_id: 2,
+                        apiario: "Apiario Vercel",
+                        monitoreo: "No",
+                        ecotipo: "Italiana",
                         estado: "activa",
                         estadoTexto: "Activa"
                     }
