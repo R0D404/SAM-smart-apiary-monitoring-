@@ -270,6 +270,7 @@ function fetchDashboardData() {
             
             // Hardcoded data for vercel presentation
             renderStats(defaultStats);
+            colmenasData = defaultColmenas;
             renderColmenas(defaultColmenas);
             
             // Render chart manually for hardcoded data
