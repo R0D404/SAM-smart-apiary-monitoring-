@@ -21,6 +21,18 @@ document.addEventListener("DOMContentLoaded", () => {
         if (userAvatarEl) userAvatarEl.textContent = iniciales;
         if (userNameEl)   userNameEl.textContent   = user.nombre;
 
+        // Populate header avatars across different pages
+        document.querySelectorAll('.cuenta-avatar, .circle-avatar, .user-account-dot').forEach(el => {
+            el.textContent = iniciales;
+            // Ensure avatar elements display text correctly
+            el.style.display = 'inline-flex';
+            el.style.alignItems = 'center';
+            el.style.justifyContent = 'center';
+            el.style.fontWeight = '700';
+            el.style.fontSize = '11px';
+            el.style.color = '#1A1206';
+        });
+
         if (userPhotoEl && user.fotoUrl) {
             userPhotoEl.onload = () => userPhotoEl.classList.add("loaded");
             userPhotoEl.onerror = () => userPhotoEl.classList.remove("loaded");

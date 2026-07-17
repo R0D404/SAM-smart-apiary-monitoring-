@@ -92,13 +92,30 @@ public class App
                 put("/{id}", com.sam.controladores.AlertasControlador::actualizarAlerta);
                 delete("/{id}", com.sam.controladores.AlertasControlador::eliminarAlerta);
             });
+            path("/api/alertas", () -> {
+                get(com.sam.controladores.AlertasControlador::listarAlertas);
+                post(com.sam.controladores.AlertasControlador::crearAlerta);
+                put("/{id}", com.sam.controladores.AlertasControlador::actualizarAlerta);
+                delete("/{id}", com.sam.controladores.AlertasControlador::eliminarAlerta);
+            });
             path("/visitas", () -> {
                 get(com.sam.controladores.VisitasControlador::listarVisitas);
                 post(com.sam.controladores.VisitasControlador::crearVisita);
                 put("/{id}", com.sam.controladores.VisitasControlador::actualizarVisita);
                 delete("/{id}", com.sam.controladores.VisitasControlador::eliminarVisita);
             });
+            path("/api/visitas", () -> {
+                get(com.sam.controladores.VisitasControlador::listarVisitas);
+                post(com.sam.controladores.VisitasControlador::crearVisita);
+                put("/{id}", com.sam.controladores.VisitasControlador::actualizarVisita);
+                delete("/{id}", com.sam.controladores.VisitasControlador::eliminarVisita);
+            });
             path("/cosechas", () -> {
+                get("/resumen", com.sam.controladores.CosechasControlador::obtenerResumen);
+                get("/grafica", com.sam.controladores.CosechasControlador::graficaProduccion);
+                get(com.sam.controladores.CosechasControlador::listarCosechas);
+            });
+            path("/api/cosechas", () -> {
                 get("/resumen", com.sam.controladores.CosechasControlador::obtenerResumen);
                 get("/grafica", com.sam.controladores.CosechasControlador::graficaProduccion);
                 get(com.sam.controladores.CosechasControlador::listarCosechas);

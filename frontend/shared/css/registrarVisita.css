@@ -22,6 +22,19 @@
 /* =========================================
    ESTILOS DEL LOGOTIPO Y SU TEXTO
    ========================================= */
+
+.sidebar .logo .hexagon {
+    flex-shrink: 0;
+    width: clamp(58px, 4.0vw, 96px);
+    min-width: clamp(58px, 4.0vw, 96px);
+    height: clamp(56px, 3.94vw, 95px);
+    background-color: #F2A900;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .sidebar .logo {
     display: flex; /* Flexbox para poner el hexágono y los textos uno al lado del otro */
     flex-direction: row; /* Orienta los elementos en fila (horizontal) */
@@ -528,15 +541,18 @@
     display: flex;
     align-items: flex-start;
     gap: 12px;
-    padding: 3%;
+    padding: 16px;
     border-radius: 8px;
     border: 1px solid var(--borde-sutil);
-    margin-bottom: 3%;
+    background-color: var(--input-fondo);
+    margin-bottom: 16px;
+    transition: border-color 0.3s, background-color 0.3s;
 }
 
 /* El primer item (colmena seleccionada) tiene borde amarillo */
 .resumen-item-activo {
     border-color: var(--amarillo);
+    background-color: rgba(242, 169, 0, 0.05);
 }
 
 .resumen-item input[type="checkbox"] {
@@ -645,5 +661,10 @@
     }
     .formulario, .resumen {
         width: 100% !important;
+    }
+}
+@media (max-width: 768px) {
+    .main-content {
+        padding-bottom: 90px !important;
     }
 }

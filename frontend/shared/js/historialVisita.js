@@ -8,6 +8,20 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.addEventListener('click', () => {
             filterBtns.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
+
+            const filterValue = btn.textContent.trim().toLowerCase();
+            const rows = tbody.querySelectorAll('tr');
+
+            rows.forEach(row => {
+                // 'todas' shows everything. Otherwise, we check if the row text contains the button text.
+                if (filterValue === 'todas') {
+                    row.style.display = '';
+                } else {
+                    const text = row.textContent.toLowerCase();
+                    // 'mayo' should match 'may', etc.
+                    row.style.display = text.includes(filterValue) ? '' : 'none';
+                }
+            });
         });
     });
 

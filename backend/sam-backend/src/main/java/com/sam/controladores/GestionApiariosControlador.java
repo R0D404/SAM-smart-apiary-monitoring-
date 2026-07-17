@@ -21,38 +21,60 @@ public class GestionApiariosControlador {
     private static final ObjectMapper mapper = new ObjectMapper();
 
     public static void listarApiarios(Context ctx) {
-        if (ctx.sessionAttribute("usuarioLogueado") == null) {
+        String emailLogueado = ctx.sessionAttribute("usuarioLogueado");
+        if (emailLogueado == null) {
             ctx.status(401).json("{\"mensaje\": \"No autorizado\"}");
             return;
         }
 
+        String rolUsuario = ctx.sessionAttribute("rolUsuario");
+
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             ArrayNode apiarios = mapper.createArrayNode();
-            String sql = "SELECT a.id, a.nombre, a.estado, a.municipio, a.localidad, a.microclima_id, " +
-                         "COUNT(c.id) as colmenas, cm.nombre as microclima " +
-                         "FROM APIARIO a " +
-                         "LEFT JOIN COLMENA c ON a.id = c.apiario_id AND c.estado <> 'de_baja' " +
-                         "LEFT JOIN CATALAGO_MICROCLIMA cm ON a.microclima_id = cm.id " +
-                         "WHERE a.estado IS NULL OR a.estado <> 'de_baja' " +
-                         "GROUP BY a.id, a.nombre, a.estado, a.municipio, a.localidad, a.microclima_id, cm.nombre";
-                         
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-                try (ResultSet rs = stmt.executeQuery()) {
-                    while (rs.next()) {
-                        ObjectNode node = mapper.createObjectNode();
-                        node.put("id", rs.getInt("id"));
-                        node.put("nombre", rs.getString("nombre"));
-                        node.put("estado", rs.getString("estado"));
-                        node.put("municipio", rs.getString("municipio"));
-                        node.put("localidad", rs.getString("localidad"));
-                        node.put("colmenas", rs.getInt("colmenas"));
-                        
-                        String mc = rs.getString("microclima");
-                        node.put("microclima", mc != null ? mc : "Desconocido");
-                        node.put("microclima_id", rs.getInt("microclima_id"));
-                        
-                        apiarios.add(node);
-                    }
+
+            String sql;
+            PreparedStatement stmt;
+
+            if ("apicultor".equals(rolUsuario)) {
+                // Apicultor: solo ver los apiarios asignados mediante APIARIO_APICULTOR
+                sql = "SELECT a.id, a.nombre, a.estado, a.municipio, a.localidad, a.microclima_id, " +
+                      "COUNT(c.id) as colmenas, cm.nombre as microclima " +
+                      "FROM APIARIO a " +
+                      "JOIN APIARIO_APICULTOR aa ON aa.apiario_id = a.id " +
+                      "JOIN USUARIO u ON aa.usuario_id = u.id AND u.email = ? " +
+                      "LEFT JOIN COLMENA c ON a.id = c.apiario_id AND c.estado <> 'de_baja' " +
+                      "LEFT JOIN CATALAGO_MICROCLIMA cm ON a.microclima_id = cm.id " +
+                      "WHERE (a.estado IS NULL OR a.estado <> 'de_baja') " +
+                      "GROUP BY a.id, a.nombre, a.estado, a.municipio, a.localidad, a.microclima_id, cm.nombre";
+                stmt = conn.prepareStatement(sql);
+                stmt.setString(1, emailLogueado);
+            } else {
+                // Admin: ver todos los apiarios
+                sql = "SELECT a.id, a.nombre, a.estado, a.municipio, a.localidad, a.microclima_id, " +
+                      "COUNT(c.id) as colmenas, cm.nombre as microclima " +
+                      "FROM APIARIO a " +
+                      "LEFT JOIN COLMENA c ON a.id = c.apiario_id AND c.estado <> 'de_baja' " +
+                      "LEFT JOIN CATALAGO_MICROCLIMA cm ON a.microclima_id = cm.id " +
+                      "WHERE a.estado IS NULL OR a.estado <> 'de_baja' " +
+                      "GROUP BY a.id, a.nombre, a.estado, a.municipio, a.localidad, a.microclima_id, cm.nombre";
+                stmt = conn.prepareStatement(sql);
+            }
+
+            try (stmt; ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    ObjectNode node = mapper.createObjectNode();
+                    node.put("id", rs.getInt("id"));
+                    node.put("nombre", rs.getString("nombre"));
+                    node.put("estado", rs.getString("estado"));
+                    node.put("municipio", rs.getString("municipio"));
+                    node.put("localidad", rs.getString("localidad"));
+                    node.put("colmenas", rs.getInt("colmenas"));
+
+                    String mc = rs.getString("microclima");
+                    node.put("microclima", mc != null ? mc : "Desconocido");
+                    node.put("microclima_id", rs.getInt("microclima_id"));
+
+                    apiarios.add(node);
                 }
             }
             ctx.status(200).json(apiarios);

@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const calidadMiel = inputCalidad ? inputCalidad.value : '';
 
             if (!colmenaId || !estadoColonia || !fecha) {
-                alert('Por favor selecciona una colmena, ingresa el estado de la colonia y la fecha.');
+                mostrarToast('Por favor selecciona una colmena, ingresa el estado de la colonia y la fecha.', 'error');
                 return;
             }
 
@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
             btnGuardar.disabled = true;
             btnGuardar.textContent = 'Guardando...';
 
-            fetch('/visitas', {
+            fetch('/api/visitas', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -138,15 +138,39 @@ document.addEventListener('DOMContentLoaded', () => {
                 return res.json();
             })
             .then(data => {
-                alert('Visita registrada con éxito.');
-                window.location.href = 'historial.html';
+                mostrarToast('Visita registrada con éxito.', 'success');
+                setTimeout(() => {
+                    window.location.href = 'historial.html';
+                }, 1500);
             })
             .catch(err => {
                 console.error(err);
-                alert('Error al guardar la visita. Inténtalo nuevamente.');
+                mostrarToast('Error al guardar la visita. Inténtalo nuevamente.', 'error');
                 btnGuardar.disabled = false;
                 btnGuardar.textContent = 'Guardar visita';
             });
         });
+    }
+
+    // Helper: Toast
+    function mostrarToast(mensaje, tipo = 'success') {
+        let toast = document.getElementById('toast-registro');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'toast-registro';
+            toast.style.cssText = `
+                position: fixed; top: 20px; right: 20px; z-index: 9999;
+                padding: 14px 20px; border-radius: 10px; font-size: .9rem;
+                color: #fff; font-family: 'Inter', sans-serif;
+                box-shadow: 0 4px 20px rgba(0,0,0,.35);
+                transition: opacity .3s ease;
+            `;
+            document.body.appendChild(toast);
+        }
+        toast.style.background = tipo === 'success' ? '#22c55e' : '#ef4444';
+        toast.textContent = mensaje;
+        toast.style.opacity = '1';
+        clearTimeout(toast._timer);
+        toast._timer = setTimeout(() => { toast.style.opacity = '0'; }, 3500);
     }
 });

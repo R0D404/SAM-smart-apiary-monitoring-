@@ -45,6 +45,19 @@ body {
 /* =========================================
    ESTILOS DEL LOGOTIPO Y SU TEXTO
    ========================================= */
+
+.sidebar .logo .hexagon {
+    flex-shrink: 0;
+    width: clamp(58px, 4.0vw, 96px);
+    min-width: clamp(58px, 4.0vw, 96px);
+    height: clamp(56px, 3.94vw, 95px);
+    background-color: #F2A900;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .sidebar .logo {
     display: flex;
     flex-direction: row;
@@ -505,5 +518,10 @@ body {
     .salud-box, .chart-box, .alerta-box {
         width: 100% !important;
         flex: 1 1 auto !important;
+    }
+}
+@media (max-width: 768px) {
+    .main-content {
+        padding-bottom: 90px !important;
     }
 }

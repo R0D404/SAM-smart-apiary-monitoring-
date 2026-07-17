@@ -83,6 +83,7 @@ body {
 }
 
 .sidebar .logo .hexagon {
+    flex-shrink: 0;
     width: clamp(58px, 4.0vw, 96px);
     min-width: clamp(58px, 4.0vw, 96px);
     height: clamp(56px, 3.94vw, 95px);

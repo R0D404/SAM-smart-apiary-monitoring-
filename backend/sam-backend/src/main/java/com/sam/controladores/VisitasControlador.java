@@ -19,37 +19,58 @@ public class VisitasControlador {
     private static final ObjectMapper mapper = new ObjectMapper();
 
     public static void listarVisitas(Context ctx) {
-        if (ctx.sessionAttribute("usuarioLogueado") == null) {
+        String email = ctx.sessionAttribute("usuarioLogueado");
+        if (email == null) {
             ctx.status(401).json("{\"mensaje\": \"No autorizado\"}");
             return;
         }
 
+        String rolUsuario = ctx.sessionAttribute("rolUsuario");
+
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             ArrayNode visitas = mapper.createArrayNode();
-            
-            // In the real schema we have SESION_VISITA and VISITA (which might be missing data).
-            // Let's create a query that attempts to fetch visits or harvests.
-            // Since dummy_data.sql inserted into SESION_VISITA and COSECHA, let's just return those as visits.
-            String sql = "SELECT sv.fecha, c.codigo as colmena, u.nombre as apicultor, " +
-                         "'Excelente' as estado_colonia, 'Reina joven' as reina, 'Sesión de ' as notas, sv.tipo " +
-                         "FROM SESION_VISITA sv " +
-                         "JOIN USUARIO u ON sv.usuario_id = u.id " +
-                         "JOIN APIARIO a ON sv.apiario_id = a.id " +
-                         "JOIN COLMENA c ON c.apiario_id = a.id " +
-                         "LIMIT 10";
-                         
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-                try (ResultSet rs = stmt.executeQuery()) {
-                    while (rs.next()) {
-                        ObjectNode node = mapper.createObjectNode();
-                        node.put("fecha", rs.getDate("fecha").toString());
-                        node.put("colmena", rs.getString("colmena"));
-                        node.put("apicultor", rs.getString("apicultor"));
-                        node.put("estado_colonia", rs.getString("estado_colonia"));
-                        node.put("reina", rs.getString("reina"));
-                        node.put("notas", rs.getString("notas") + rs.getString("tipo"));
-                        visitas.add(node);
-                    }
+
+            String sql;
+            PreparedStatement stmt;
+
+            if ("apicultor".equals(rolUsuario)) {
+                // Apicultor: solo ve sus propias visitas
+                sql = "SELECT sv.fecha, c.codigo as colmena, u.nombre as apicultor, " +
+                      "v.estado_colonia, CASE WHEN v.reina_vista = 1 THEN 'Vista' ELSE 'No vista' END as reina, v.notas " +
+                      "FROM SESION_VISITA sv " +
+                      "JOIN USUARIO u ON sv.usuario_id = u.id " +
+                      "JOIN VISITA v ON v.sesion_id = sv.id " +
+                      "JOIN COLMENA c ON v.colmena_id = c.id " +
+                      "WHERE u.email = ? " +
+                      "ORDER BY sv.fecha DESC, sv.id DESC " +
+                      "LIMIT 50";
+                stmt = conn.prepareStatement(sql);
+                stmt.setString(1, email);
+            } else {
+                // Admin: ve todas las visitas
+                sql = "SELECT sv.fecha, c.codigo as colmena, u.nombre as apicultor, " +
+                      "v.estado_colonia, CASE WHEN v.reina_vista = 1 THEN 'Vista' ELSE 'No vista' END as reina, v.notas " +
+                      "FROM SESION_VISITA sv " +
+                      "JOIN USUARIO u ON sv.usuario_id = u.id " +
+                      "JOIN VISITA v ON v.sesion_id = sv.id " +
+                      "JOIN COLMENA c ON v.colmena_id = c.id " +
+                      "ORDER BY sv.fecha DESC, sv.id DESC " +
+                      "LIMIT 50";
+                stmt = conn.prepareStatement(sql);
+            }
+
+            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd MMM", new java.util.Locale("es", "ES"));
+            try (stmt; ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    ObjectNode node = mapper.createObjectNode();
+                    java.sql.Date fecha = rs.getDate("fecha");
+                    node.put("fecha", fecha != null ? sdf.format(fecha) : "");
+                    node.put("colmena", rs.getString("colmena"));
+                    node.put("apicultor", rs.getString("apicultor"));
+                    node.put("estado_colonia", rs.getString("estado_colonia") != null ? rs.getString("estado_colonia") : "N/A");
+                    node.put("reina", rs.getString("reina"));
+                    node.put("notas", rs.getString("notas") != null ? rs.getString("notas") : "");
+                    visitas.add(node);
                 }
             }
             ctx.status(200).json(visitas);

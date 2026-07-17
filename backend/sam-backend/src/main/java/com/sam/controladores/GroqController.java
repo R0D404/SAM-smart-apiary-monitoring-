@@ -64,12 +64,12 @@ public class GroqController {
 
             // Hacemos la petición a Groq con límites de tiempo (timeout) para evitar bloqueos indefinidos
             HttpClient client = HttpClient.newBuilder()
-                .connectTimeout(java.time.Duration.ofSeconds(6))
+                .connectTimeout(java.time.Duration.ofSeconds(30))
                 .build();
 
             HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(GROQ_URL))
-                .timeout(java.time.Duration.ofSeconds(6))
+                .timeout(java.time.Duration.ofSeconds(30))
                 .header("Content-Type", "application/json")
                 .header("Authorization", "Bearer " + API_KEY)
                 .POST(HttpRequest.BodyPublishers.ofString(jsonBody))

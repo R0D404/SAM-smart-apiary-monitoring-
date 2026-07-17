@@ -2,11 +2,6 @@
    ESTILOS DEL CONTENIDO PRINCIPAL
    ========================================= */
 .main-content {
-    position: fixed; 
-    top: 0; 
-    left: clamp(240px, 20%, 300px); 
-    height: 100vh; 
-    width: calc(100% - clamp(240px, 20%, 300px)); 
     background-color: #1A1206; 
     padding: clamp(30px, 2.5vw, 50px); 
     box-sizing: border-box;
@@ -168,5 +163,22 @@ input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.6) sepi
         flex-direction: column;
         gap: 12px;
         align-items: flex-start;
+    }
+}
+.sidebar .logo .hexagon {
+    flex-shrink: 0;
+    width: clamp(58px, 4.0vw, 96px);
+    min-width: clamp(58px, 4.0vw, 96px);
+    height: clamp(56px, 3.94vw, 95px);
+    background-color: #F2A900;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        padding-bottom: 90px !important;
     }
 }

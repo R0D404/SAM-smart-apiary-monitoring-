@@ -6,16 +6,17 @@
     <title>SAM - Mantenimiento del módulo</title>
     <link rel="stylesheet" href="../shared/css/plantilla.css"> 
     <link rel="stylesheet" href="../shared/css/mantenimientoModulo.css">
+    <link rel="stylesheet" href="../shared/css/mobileNav.css">
 </head>
 <body>
     <section class="sidebar">
         <div class="logo">
-            <hexagon>
-                <img src="../assets/img/logo/logoSam.png" alt="">
-            </hexagon>
+            <div class="hexagon">
+                <img src="../assets/img/logo/logoSam.png" alt="Logotipo de SAM">
+            </div>
             <div class="logo-text">
                 <h1>SAM</h1>
-                <p>Smart Apiary Monitoring</p>
+                <p>Smart Apiary</p>
             </div>
         </div>
         <div class="menu">
@@ -76,10 +77,10 @@
                     <!-- Fila 1: Selects -->
                     <div class="form-row">
                         <div class="form-group flex-1">
-                            <label class="form-label">MÓDULO</label>
+                            <label class="form-label">COLMENA / MÓDULO</label>
                             <div class="custom-select-wrapper">
-                                <select class="custom-select" name="modulo_id">
-                                    <option value="mod7a3f">MOD-7A3F · Colmena C-03 · Apiario Norte</option>
+                                <select id="select-colmena" class="custom-select" name="modulo_id">
+                                    <option value="">Cargando colmenas...</option>
                                 </select>
                             </div>
                         </div>
@@ -112,20 +113,12 @@
                         </div>
                     </div>
 
-                    <!-- Fila 3: Fechas y Visitas -->
+                    <!-- Fila 3: Fecha -->
                     <div class="form-row mt-3">
                         <div class="form-group flex-1">
                             <label class="form-label">FECHA DEL EVENTO</label>
                             <div class="input-with-icon">
-                                <input type="date" class="input-field" value="2026-06-05" required>
-                            </div>
-                        </div>
-                        <div class="form-group flex-1">
-                            <label class="form-label">VINCULAR A VISITA (OPCIONAL)</label>
-                            <div class="custom-select-wrapper">
-                                <select class="custom-select" name="visita_id">
-                                    <option value="sesion0506">Sesión 05/06 · Ap. Norte</option>
-                                </select>
+                                <input type="date" class="input-field" required>
                             </div>
                         </div>
                     </div>
@@ -133,8 +126,8 @@
                     <!-- Fila 4: Descripción -->
                     <div class="form-group mt-3 position-relative">
                         <label class="form-label">DESCRIPCIÓN</label>
-                        <textarea id="desc-mantenimiento" class="input-field textarea-field" rows="4" maxlength="500" required>Se recalibró la celda de carga con una pesa patrón de 10 kg. La desviación previa era de +0.8 kg; tras el ajuste la lectura quedó dentro de ±0.1 kg.</textarea>
-                        <span id="char-count" class="char-counter">148 / 500</span>
+                        <textarea id="desc-mantenimiento" class="input-field textarea-field" rows="4" maxlength="500" required placeholder="Describe el evento de mantenimiento..."></textarea>
+                        <span id="char-count" class="char-counter">0 / 500</span>
                     </div>
 
                     <!-- Info Alert -->
@@ -160,27 +153,23 @@
                     <div class="data-list mt-3">
                         <div class="data-row">
                             <span class="data-label">Identificador</span>
-                            <span class="data-value text-white text-bold">MOD-7A3F</span>
+                            <span id="mod-identificador" class="data-value text-white text-bold">—</span>
                         </div>
                         <div class="data-row">
                             <span class="data-label">Tipo</span>
-                            <span class="data-value text-white">Interno + ambiental</span>
+                            <span id="mod-tipo" class="data-value text-white">—</span>
                         </div>
                         <div class="data-row">
                             <span class="data-label">Estado</span>
-                            <span class="status-pill status-activo">ACTIVO</span>
+                            <span id="mod-estado" class="status-pill">—</span>
                         </div>
                         <div class="data-row">
                             <span class="data-label">Instalado</span>
-                            <span class="data-value text-white">12/02/2026</span>
-                        </div>
-                        <div class="data-row">
-                            <span class="data-label">Última lectura</span>
-                            <span class="data-value text-teal">hace 4 min</span>
+                            <span id="mod-instalado" class="data-value text-white">—</span>
                         </div>
                         <div class="data-row border-none">
                             <span class="data-label">Eventos registrados</span>
-                            <span class="data-value text-white text-bold">4</span>
+                            <span id="mod-eventos" class="data-value text-white text-bold">—</span>
                         </div>
                     </div>
                 </div>
@@ -188,58 +177,9 @@
                 <!-- Tarjeta 2: Historial reciente -->
                 <div class="main-card">
                     <h3 class="card-title-sm mb-4">Historial reciente</h3>
-                    
-                    <div class="timeline">
-                        <!-- Item 1 -->
-                        <div class="timeline-item">
-                            <div class="timeline-dot dot-yellow"></div>
-                            <div class="timeline-content">
-                                <div class="timeline-header">
-                                    <span class="timeline-title">Limpieza</span>
-                                    <span class="timeline-date">28/05/2026</span>
-                                </div>
-                                <p class="timeline-text">Se retiró propóleo de la sonda de temperatura.</p>
-                            </div>
-                        </div>
-                        
-                        <!-- Item 2 -->
-                        <div class="timeline-item">
-                            <div class="timeline-dot dot-teal"></div>
-                            <div class="timeline-content">
-                                <div class="timeline-header">
-                                    <span class="timeline-title">Revisión</span>
-                                    <span class="timeline-date">14/04/2026</span>
-                                </div>
-                                <p class="timeline-text">Inspección general durante visita al apiario.</p>
-                            </div>
-                        </div>
-
-                        <!-- Item 3 -->
-                        <div class="timeline-item">
-                            <div class="timeline-dot dot-yellow"></div>
-                            <div class="timeline-content">
-                                <div class="timeline-header">
-                                    <span class="timeline-title">Recalibración</span>
-                                    <span class="timeline-date">02/03/2026</span>
-                                </div>
-                                <p class="timeline-text">Ajuste de celda de carga, desviación ±0.1 kg.</p>
-                            </div>
-                        </div>
-
-                        <!-- Item 4 -->
-                        <div class="timeline-item">
-                            <div class="timeline-dot dot-teal"></div>
-                            <div class="timeline-content">
-                                <div class="timeline-header">
-                                    <span class="timeline-title">Instalación</span>
-                                    <span class="timeline-date">12/02/2026</span>
-                                </div>
-                                <p class="timeline-text">Módulo instalado y verificado en C-03.</p>
-                            </div>
-                        </div>
+                    <div id="timeline-container" class="timeline">
+                        <p style="color:var(--color-text-gray);font-size:.85rem;">Cargando historial...</p>
                     </div>
-
-                    <a href="#" class="link-yellow mt-4 block">Ver todo el historial <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a>
                 </div>
 
             </aside>
@@ -248,5 +188,6 @@
 
     <script src="../shared/js/mantenimientoModulo.js"></script>
     <script src="../shared/js/sidebar.js" defer></script>
+    <script src="../shared/js/mobileNav.js" defer></script>
 </body>
 </html>

@@ -197,9 +197,16 @@ document.addEventListener("DOMContentLoaded", () => {
     // Initialize
     fetchDashboardData();
 
-    document.getElementById("btn-mantenimiento").addEventListener("click", () => {
-        alert("Funcionalidad de mantenimiento en construcción.");
-    });
+    const btnMantenimiento = document.getElementById("btn-mantenimiento");
+    if (btnMantenimiento) {
+        btnMantenimiento.addEventListener("click", () => {
+            if (colmenaId) {
+                window.location.href = `mantenimientoModulo.html?colmenaId=${colmenaId}`;
+            } else {
+                alert("Por favor, selecciona una colmena válida primero.");
+            }
+        });
+    }
 
     const btnIa = document.getElementById("btn-ia");
     if (btnIa) {

@@ -7,24 +7,25 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../shared/css/misApiarios.css">
+    <link rel="stylesheet" href="../shared/css/mobileNav.css">
 </head>
 <body>
 
     <!-- ============ SIDEBAR ============ -->
     <section class="sidebar">
         <div class="logo">
-            <hexagon>
-                <img src="../assets/img/logo/logoSam.png" alt="Logo SAM">
-            </hexagon>
+            <div class="hexagon">
+                <img src="../assets/img/logo/logoSam.png" alt="Logotipo de SAM">
+            </div>
             <div class="logo-text">
                 <h1>SAM</h1>
-                <p>Apicultor</p>
+                <p>Smart Apiary</p>
             </div>
         </div>
 
         <nav class="menu">
             <ul>
-                <li><a href="dashboardApiario.html"><img src="../assets/icons/dashboard.svg" alt="" class="menu-icon"> Dashboard</a></li>
+                <li><a href="dashboardGlobal.html"><img src="../assets/icons/dashboard.svg" alt="" class="menu-icon"> Dashboard</a></li>
                 <li><a href="misApiarios.html" class="activo"><img src="../assets/icons/apiarios.svg" alt="" class="menu-icon"> Mis apiarios</a></li>
                 <li><a href="colmenas.html"><img src="../assets/icons/colmenas.svg" alt="" class="menu-icon"> Colmenas</a></li>
                 <li><a href="alertas.html"><img src="../assets/icons/alertas.svg" alt="" class="menu-icon"> Alertas</a></li>
@@ -46,8 +47,8 @@
     <section class="main-content">
 
         <!-- Botón flotante "Mi cuenta" -->
-        <a href="miCuenta.html" class="user-info">
-            <img src="./img/user.png" alt="Foto de perfil">
+        <a href="miCuenta.html" class="user-info" style="text-decoration: none;">
+            <span class="cuenta-avatar" style="width:32px;height:32px;border-radius:50%;background-color:#F2A900;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:#1A1206;">--</span>
             <p>Mi cuenta</p>
         </a>
 
@@ -84,5 +85,6 @@
 
     <script src="../shared/js/sidebar.js" defer></script>
     <script src="../shared/js/misApiarios.js"></script>
+    <script src="../shared/js/mobileNav.js" defer></script>
 </body>
 </html>
