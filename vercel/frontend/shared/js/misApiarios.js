@@ -183,7 +183,11 @@ document.addEventListener("DOMContentLoaded", () => {
                         </div>
                         <div class="chart-box">
                             <div class="chart-canvas-wrap">
+                                <div class="chart-axis-y"><span>50</span><span>40</span><span>30</span></div>
                                 <canvas class="mini-chart" id="chart-apiario-A-1"></canvas>
+                            </div>
+                            <div class="chart-axis-x">
+                                <span>23 may</span><span>30 may</span><span>06 jun</span>
                             </div>
                             <p class="chart-caption">Peso promedio · 30 días</p>
                         </div>
