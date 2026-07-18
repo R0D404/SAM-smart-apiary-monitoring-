@@ -150,34 +150,6 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(err => {
             console.warn("No se pudo cargar el perfil del usuario (servidor apagado):", err);
-            
-            // MOCK DATA PARA VERCEL
-            let mockUser = {
-                nombre: "Administrador SAM",
-                email: "admin@sam.com"
-            };
-            if (window.location.pathname.includes('/apicultor/')) {
-                mockUser = {
-                    nombre: "Apicultor Invitado",
-                    email: "apicultor@sam.com"
-                };
-            }
-
-            if (inputNombre) inputNombre.value = mockUser.nombre;
-            if (inputCorreo) inputCorreo.value = mockUser.email;
-            
-            if (summaryName) summaryName.textContent = mockUser.nombre;
-            if (summaryEmail) summaryEmail.textContent = mockUser.email;
-            
-            if (summaryAvatar) {
-                const iniciales = mockUser.nombre
-                    .split(" ")
-                    .filter(p => p.length > 0)
-                    .map(p => p[0].toUpperCase())
-                    .slice(0, 2)
-                    .join("");
-                summaryAvatar.textContent = iniciales;
-            }
         });
 
 });

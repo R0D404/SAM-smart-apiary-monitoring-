@@ -116,21 +116,9 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .catch(err => {
                 console.error("Servidor desconectado:", err);
-                const mockColmenas = Array.from({ length: 10 }, (_, i) => {
-                    const idStr = String(i + 1).padStart(3, '0');
-                    const isMonitoreo = Math.random() > 0.3;
-                    return {
-                        id: `C-${idStr}`,
-                        db_id: i + 1,
-                        apiario: "Apiario Norte",
-                        monitoreo: isMonitoreo ? "Sí (Sensor Peso & Temp)" : "No",
-                        ecotipo: Math.random() > 0.5 ? "Apis mellifera" : "Carniola",
-                        estado: "activa",
-                        estadoTexto: "Activa",
-                        peso: isMonitoreo ? (Math.random() * 10 + 20).toFixed(1) : null
-                    };
-                });
-                renderizarColmenas(mockColmenas);
+                if (tbody) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--color-text-dim);">No se pudieron cargar las colmenas.</td></tr>';
+                }
             });
     }
 

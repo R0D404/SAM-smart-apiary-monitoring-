@@ -46,19 +46,6 @@ document.addEventListener("DOMContentLoaded", () => {
         })
         .catch(error => {
             console.warn("No se pudo cargar el perfil del usuario (servidor apagado):", error);
-            
-            // MOCK DATA PARA VERCEL
-            let mockUser = {
-                nombre: "Administrador SAM",
-                email: "admin@sam.com"
-            };
-            if (window.location.pathname.includes('/apicultor/')) {
-                mockUser = {
-                    nombre: "Apicultor Invitado",
-                    email: "apicultor@sam.com"
-                };
-            }
-            renderUserProfile(mockUser);
         });
 
     // Event listeners para botones de "Mi Cuenta"

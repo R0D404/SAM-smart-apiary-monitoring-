@@ -378,48 +378,6 @@ function fetchDashboardData() {
         })
         .catch(error => {
             console.error('Error cargando dashboard:', error);
-            
-            // Intentar cargar de localStorage primero (si el usuario lo pide)
-            let storedStats = localStorage.getItem('dashboardStats');
-            let storedMensual = localStorage.getItem('produccionMensualData');
-            let storedColmena = localStorage.getItem('produccionColmenaData');
-            let storedApiarios = localStorage.getItem('apiariosData');
-
-            if (storedStats) { 
-                try { 
-                    const parsed = JSON.parse(storedStats); 
-                    if (parsed && Object.keys(parsed).length > 0) dashboardStats = parsed; 
-                } catch(e){} 
-            }
-            if (storedMensual) { 
-                try { 
-                    const parsed = JSON.parse(storedMensual); 
-                    if (parsed && parsed.labels && parsed.labels.length > 0) produccionMensualData = parsed; 
-                } catch(e){} 
-            }
-            if (storedColmena) { 
-                try { 
-                    const parsed = JSON.parse(storedColmena); 
-                    if (parsed && parsed.labels && parsed.labels.length > 0) produccionColmenaData = parsed; 
-                } catch(e){} 
-            }
-            if (storedApiarios) { 
-                try { 
-                    const parsed = JSON.parse(storedApiarios); 
-                    if (parsed && Array.isArray(parsed) && parsed.length > 0) apiariosData = parsed; 
-                } catch(e){} 
-            }
-            
-            // Fallback a los mock stats si falla
-            renderStats(dashboardStats);
-            renderApiarios(apiariosData);
-            renderUserProfile(userData);
-            
-            // Asegurar que se rendericen las gráficas!
-            if (typeof Chart !== 'undefined') {
-                renderChartProduccionMensual(produccionMensualData);
-                renderChartProduccionColmena(produccionColmenaData);
-            }
         });
 }
 
