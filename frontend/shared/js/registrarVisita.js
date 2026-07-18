@@ -102,15 +102,34 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // All required fields filled -> Simulate Network Error since there is no backend
+            // Send to backend
             btnGuardar.textContent = 'Guardando...';
             btnGuardar.disabled = true;
 
-            setTimeout(() => {
-                mostrarToast('Error de conexión al servidor (Backend no disponible)', 'error');
+            const payload = {
+                fecha: inputFecha.value,
+                estado: inputEstado.value,
+                notas: document.getElementById('notas-adicionales')?.value || ''
+            };
+
+            fetch('/api/visitas', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(res => {
+                if (!res.ok) throw new Error('Error en el servidor');
+                mostrarToast('Visita registrada con éxito', 'success');
+                // Reset form or redirect if needed
+            })
+            .catch(err => {
+                console.error(err);
+                mostrarToast('Error de conexión al servidor', 'error');
+            })
+            .finally(() => {
                 btnGuardar.textContent = 'Guardar visita';
                 btnGuardar.disabled = false;
-            }, 1500);
+            });
         });
     }
 

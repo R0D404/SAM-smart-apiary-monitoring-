@@ -17,37 +17,11 @@
  * El backend retornará un objeto con esta estructura.
  * Por defecto son nulos hasta que el backend responda.
  */
-let dashboardStats = {
-    produccionTotal: "1,245 kg",
-    colmenasActivas: 4,
-    alertasActivas: 1,
-    apicultores: 2
-};
-
-let produccionMensualData = {
-    labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
-    data: [120, 150, 180, 100, 200, 250]
-};
-
-let produccionColmenaData = {
-    labels: ['C-01', 'C-02', 'C-03', 'C-04'],
-    data: [45, 60, 50, 40]
-};
-
-let apiariosData = [
-    {
-        id: "A-1",
-        nombre: "Apiario Vercel",
-        ubicacion: "Tapachula, Chiapas",
-        colmenas: 4,
-        estado: "Normal"
-    }
-];
-
-let userData = {
-    nombre: window.location.pathname.includes('/apicultor/') ? "Apicultor Invitado" : "Administrador SAM",
-    rol: window.location.pathname.includes('/apicultor/') ? "Apicultor Invitado" : "Administrador"
-};
+let dashboardStats = null;
+let produccionMensualData = { labels: [], data: [] };
+let produccionColmenaData = { labels: [], data: [] };
+let apiariosData = [];
+let userData = null;
 
 /**
  * Datos de los apiarios.
