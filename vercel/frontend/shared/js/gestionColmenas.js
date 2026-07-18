@@ -116,38 +116,20 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .catch(err => {
                 console.error("Servidor desconectado:", err);
-                const mockColmenas = [
-                    {
-                        id: "C-01",
-                        db_id: 1,
-                        apiario: "Apiario Vercel",
-                        monitoreo: "Sí (Sensor Peso & Temp)",
-                        ecotipo: "Apis mellifera",
+                const mockColmenas = Array.from({ length: 10 }, (_, i) => {
+                    const idStr = String(i + 1).padStart(3, '0');
+                    const isMonitoreo = Math.random() > 0.3;
+                    return {
+                        id: `C-${idStr}`,
+                        db_id: i + 1,
+                        apiario: "Apiario Norte",
+                        monitoreo: isMonitoreo ? "Sí (Sensor Peso & Temp)" : "No",
+                        ecotipo: Math.random() > 0.5 ? "Apis mellifera" : "Carniola",
                         estado: "activa",
                         estadoTexto: "Activa",
-                        peso: (Math.random() * 10 + 20).toFixed(1)
-                    },
-                    {
-                        id: "C-02",
-                        db_id: 2,
-                        apiario: "Apiario Vercel",
-                        monitoreo: "Sí (Sensor Peso)",
-                        ecotipo: "Apis mellifera",
-                        estado: "activa",
-                        estadoTexto: "Activa",
-                        peso: (Math.random() * 10 + 20).toFixed(1)
-                    },
-                    {
-                        id: "C-03",
-                        db_id: 3,
-                        apiario: "Apiario Vercel",
-                        monitoreo: "No",
-                        ecotipo: "Carniola",
-                        estado: "inactiva",
-                        estadoTexto: "Inactiva",
-                        peso: null
-                    }
-                ];
+                        peso: isMonitoreo ? (Math.random() * 10 + 20).toFixed(1) : null
+                    };
+                });
                 renderizarColmenas(mockColmenas);
             });
     }
@@ -155,6 +137,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderizarColmenas(datos) {
         if (!tbody) return;
         tbody.innerHTML = '';
+        
+        const isApicultor = window.location.pathname.includes('/apicultor/');
         
         datos.forEach(col => {
             const tr = document.createElement('tr');
@@ -165,19 +149,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.location.href = `dashboardColmena.html?id=${col.id}`;
             };
 
+            let accionesHTML = '';
+            if (!isApicultor) {
+                accionesHTML = `
+                <td>
+                    <button class="btn-primary" onclick="editarColmena(event, ${col.db_id}, '${col.id}', '${col.ecotipo}', '${col.estado}')" style="margin-right: 8px;">Editar</button>
+                    <button class="btn-baja" data-id="${col.db_id}">Dar de baja</button>
+                </td>`;
+            }
+
             tr.innerHTML = `
                 <td><strong>${col.id}</strong></td>
                 <td>${col.apiario}</td>
                 <td>${col.monitoreo}</td>
                 <td>${col.ecotipo}</td>
-                <td>
-                    <span class="dot-status ${col.estado}"></span>
-                    ${col.estadoTexto}
-                </td>
-                <td>
-                    <button class="btn-primary" onclick="editarColmena(event, ${col.db_id}, '${col.id}', '${col.ecotipo}', '${col.estado}')" style="margin-right: 8px;">Editar</button>
-                    <button class="btn-baja" data-id="${col.db_id}">Dar de baja</button>
-                </td>
+                ${accionesHTML}
             `;
             tbody.appendChild(tr);
         });
