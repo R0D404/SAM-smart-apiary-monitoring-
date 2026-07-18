@@ -8,6 +8,7 @@
     
     <link rel="stylesheet" href="../shared/css/registrarVisita.css">
     <link rel="stylesheet" href="../shared/css/sidebar.css">
+    <link rel="stylesheet" href="../shared/css/notifications.css">
 </head>
 <body>
 
@@ -43,7 +44,7 @@
 
    
     <section class="main-content">
-
+        <div id="toast-container" style="position: fixed; top: 20px; right: 20px; z-index: 1000; display: flex; flex-direction: column; gap: 10px;"></div>
         
         <div class="encabezado">
             <div class="encabezado-texto">
@@ -59,7 +60,6 @@
             </div>
         </div>
 
-        
         <div class="breadcrumb">
             <span>Visitas</span>
             <span class="breadcrumb-sep">›</span>
@@ -168,7 +168,7 @@
 
                 <!-- Item 1: Colmena seleccionada -->
                 <div class="resumen-item resumen-item-activo">
-                    <input type="checkbox" checked disabled>
+                    <input type="checkbox" id="check-colmena" checked>
                     <div class="resumen-texto">
                         <!-- JS llenará esto cuando el usuario seleccione la colmena -->
                         <strong id="resumen-colmena">Colmena —</strong>
@@ -178,7 +178,7 @@
 
                 <!-- Item 2: Estado de la colonia -->
                 <div class="resumen-item">
-                    <input type="checkbox" id="check-estado" disabled>
+                    <input type="checkbox" id="check-estado">
                     <div class="resumen-texto">
                         <strong id="resumen-estado">Estado: —</strong>
                         <span id="resumen-reina">—</span>
@@ -187,7 +187,7 @@
 
                 <!-- Item 3: Cosecha -->
                 <div class="resumen-item">
-                    <input type="checkbox" id="check-cosecha" disabled>
+                    <input type="checkbox" id="check-cosecha">
                     <div class="resumen-texto">
                         <strong id="resumen-cosecha-kg">Cosecha: — kg</strong>
                         <span id="resumen-cosecha-calidad">—</span>
@@ -212,5 +212,6 @@
 
     </section>
     <script src="../shared/js/sidebar.js" defer></script>
+    <script src="../shared/js/registrarVisita.js" defer></script>
 </body>
 </html>

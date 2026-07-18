@@ -326,6 +326,15 @@
     appearance: auto;
 }
 
+/* Hacer que el ícono de calendario en inputs de fecha sea blanco y más grande */
+.campo input[type="date"] {
+    color-scheme: dark;
+}
+.campo input[type="date"]::-webkit-calendar-picker-indicator {
+    transform: scale(1.4);
+    cursor: pointer;
+}
+
 /* Textarea no se puede redimensionar horizontalmente */
 .campo textarea {
     resize: vertical;
