@@ -6,6 +6,7 @@
     <title>Dashboard Global - SAM</title>
     <meta name="description" content="Panel de control global del sistema SAM - Smart Apiary Monitoring">
     <link rel="stylesheet" href="../shared/css/dashboardGlobal.css">
+    <link rel="stylesheet" href="../shared/css/chartModals.css">
     <!-- Chart.js para gráficas dinámicas -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" defer></script>
     <link rel="stylesheet" href="../shared/css/sidebar.css">
@@ -108,26 +109,16 @@
                 </article>
             </section>
 
-            <!-- Gráficas -->
-            <section class="charts-section" aria-label="Gráficas de producción">
-                <article class="chart-card chart-card-line" id="chart-produccion-mensual-card">
-                    <div class="chart-header">
-                        <h2>Producción mensual (kg)</h2>
-                        <p>Últimos 8 meses</p>
-                    </div>
-                    <div class="chart-body">
-                        <canvas id="chart-produccion-mensual"></canvas>
-                    </div>
-                </article>
-                <article class="chart-card chart-card-bar" id="chart-produccion-colmena-card">
-                    <div class="chart-header">
-                        <h2>Producción por colmena</h2>
-                        <p>Temporada actual (kg)</p>
-                    </div>
-                    <div class="chart-body">
-                        <canvas id="chart-produccion-colmena"></canvas>
-                    </div>
-                </article>
+            <!-- Chart Buttons -->
+            <section class="chart-buttons-row" aria-label="Botones de gráficas">
+                <button class="chart-btn" onclick="openModal('modal-prod-mensual')">
+                    <img src="../assets/icons/historial.svg" alt="" class="btn-icon">
+                    <span>Producción mensual</span>
+                </button>
+                <button class="chart-btn" onclick="openModal('modal-prod-colmena')">
+                    <img src="../assets/icons/colmenas.svg" alt="" class="btn-icon">
+                    <span>Producción por colmena</span>
+                </button>
             </section>
 
             <!-- Sección de Apiarios con scroll horizontal -->
@@ -172,7 +163,43 @@
         </nav>
     </div>
 
+    <!-- Modals -->
+    <div id="modal-prod-mensual" class="modal-overlay">
+        <div class="modal-content">
+            <header class="modal-header">
+                <div>
+                    <h2>Producción mensual (kg)</h2>
+                    <p class="modal-subtitle">Últimos 8 meses</p>
+                </div>
+                <button class="close-btn" onclick="closeModal('modal-prod-mensual')">&times;</button>
+            </header>
+            <div class="modal-body">
+                <div class="chart-wrapper-modal">
+                    <canvas id="chart-produccion-mensual"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-prod-colmena" class="modal-overlay">
+        <div class="modal-content">
+            <header class="modal-header">
+                <div>
+                    <h2>Producción por colmena</h2>
+                    <p class="modal-subtitle">Temporada actual (kg)</p>
+                </div>
+                <button class="close-btn" onclick="closeModal('modal-prod-colmena')">&times;</button>
+            </header>
+            <div class="modal-body scrollable-x">
+                <div class="chart-wrapper-modal" id="barChartWrapperGlobal">
+                    <canvas id="chart-produccion-colmena"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="../shared/js/sidebar.js" defer></script>
+    <script src="../shared/js/chartModals.js" defer></script>
     <script src="../shared/js/dashboardGlobal.js" defer></script>
 </body>
 </html>

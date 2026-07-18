@@ -8,6 +8,7 @@
     <!-- Reusing global CSS for shell, adding apiario specific CSS -->
     <link rel="stylesheet" href="../shared/css/dashboardGlobal.css">
     <link rel="stylesheet" href="../shared/css/dashboardApiario.css">
+    <link rel="stylesheet" href="../shared/css/chartModals.css">
     <!-- Chart.js para gráficas dinámicas -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" defer></script>
     <link rel="stylesheet" href="../shared/css/sidebar.css">
@@ -106,17 +107,12 @@
                 </article>
             </section>
 
-            <!-- Gráficas -->
-            <section class="charts-section-apiario" aria-label="Gráficas de peso">
-                <article class="chart-card chart-card-line" id="chart-evolucion-peso-card">
-                    <div class="chart-header">
-                        <h2>Evolución del peso — colmenas del apiario</h2>
-                        <p>Últimos 30 días (kg)</p>
-                    </div>
-                    <div class="chart-body">
-                        <canvas id="chart-evolucion-peso"></canvas>
-                    </div>
-                </article>
+            <!-- Chart Button -->
+            <section class="chart-buttons-row" aria-label="Gráficas de peso">
+                <button class="chart-btn" onclick="openModal('modal-evolucion-peso')">
+                    <img src="../assets/icons/historial.svg" alt="" class="btn-icon">
+                    <span>Peso por colmena — colmenas del apiario</span>
+                </button>
             </section>
 
             <!-- Sección de Colmenas -->
@@ -164,7 +160,26 @@
         </nav>
     </div>
 
+    <!-- Modal -->
+    <div id="modal-evolucion-peso" class="modal-overlay">
+        <div class="modal-content">
+            <header class="modal-header">
+                <div>
+                    <h2>Peso por colmena</h2>
+                    <p class="modal-subtitle">Peso actual de cada colmena en el apiario (kg)</p>
+                </div>
+                <button class="close-btn" onclick="closeModal('modal-evolucion-peso')">&times;</button>
+            </header>
+            <div class="modal-body scrollable-x">
+                <div class="chart-wrapper-modal" id="barChartWrapperApiario">
+                    <canvas id="chart-evolucion-peso"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="../shared/js/sidebar.js" defer></script>
+    <script src="../shared/js/chartModals.js" defer></script>
     <script src="../shared/js/dashboardApiario.js" defer></script>
 </body>
 </html>

@@ -7,6 +7,7 @@
     <meta name="description" content="Panel de control de la colmena SAM - Smart Apiary Monitoring">
     <link rel="stylesheet" href="../shared/css/dashboardGlobal.css">
     <link rel="stylesheet" href="../shared/css/dashboardColmena.css">
+    <link rel="stylesheet" href="../shared/css/chartModals.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" defer></script>
     <link rel="stylesheet" href="../shared/css/sidebar.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -131,12 +132,10 @@
                 <!-- MIDDLE ROW -->
                 <div class="middle-row">
                     <section class="chart-section">
-                        <div class="chart-header">
-                            <h3>Peso — últimos 30 días</h3>
-                        </div>
-                        <div class="chart-container">
-                            <canvas id="colmenaPesoChart"></canvas>
-                        </div>
+                        <button class="chart-btn" style="width:100%" onclick="openModal('modal-peso-colmena')">
+                            <img src="../assets/icons/historial.svg" alt="" class="btn-icon">
+                            <span>Peso — últimos 30 días</span>
+                        </button>
                     </section>
 
                     <section class="alerts-section">
@@ -165,7 +164,26 @@
         </main>
     </div>
 
+    <!-- Modal -->
+    <div id="modal-peso-colmena" class="modal-overlay">
+        <div class="modal-content">
+            <header class="modal-header">
+                <div>
+                    <h2>Peso — últimos 30 días</h2>
+                    <p class="modal-subtitle">Evolución del peso de la colmena (kg)</p>
+                </div>
+                <button class="close-btn" onclick="closeModal('modal-peso-colmena')">&times;</button>
+            </header>
+            <div class="modal-body">
+                <div class="chart-wrapper-modal">
+                    <canvas id="colmenaPesoChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="../shared/js/sidebar.js" defer></script>
-    <script src="../shared/js/dashboardColmena.js"></script>
+    <script src="../shared/js/chartModals.js" defer></script>
+    <script src="../shared/js/dashboardColmena.js" defer></script>
 </body>
 </html>
