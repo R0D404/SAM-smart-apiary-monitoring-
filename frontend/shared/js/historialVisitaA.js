@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const claseReina = visita.reina === 'No vista' ? 'text-muted' : '';
             const reinaTexto = visita.reina || 'Sí';
             const estadoTexto = visita.estado_colonia || visita.estado || 'Saludable';
-            const apicultorTexto = visita.apicultor || 'Rodrigo G.';
+            const apicultorTexto = visita.apicultor || 'Desconocido';
             const colmenaTexto = visita.colmena || '--';
             const notasTexto = visita.notas || 'Sin observaciones';
 
