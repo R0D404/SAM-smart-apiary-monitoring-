@@ -240,11 +240,8 @@
 }
 
 .formulario {
-    width: 62%;
-}
-
-.resumen {
-    width: 36%;
+    width: 100%;
+    max-width: 800px;
 }
 
 .card-header {

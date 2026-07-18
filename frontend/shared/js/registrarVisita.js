@@ -31,64 +31,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateSummary() {
-        let allRequiredFilled = true;
-
-        // 1. Colmena
-        if (selectColmena && selectColmena.value) {
-            checkResumenColmena.checked = true;
-            checkResumenColmena.parentElement.classList.add('resumen-item-activo');
-            txtResumenColmena.textContent = `Colmena ${selectColmena.value}`;
-            txtResumenApiario.textContent = `Apiario Norte`; // Hardcoded apiario
-        } else {
-            checkResumenColmena.checked = false;
-            checkResumenColmena.parentElement.classList.remove('resumen-item-activo');
-            txtResumenColmena.textContent = `Colmena —`;
-            txtResumenApiario.textContent = `Apiario —`;
-            allRequiredFilled = false;
-        }
-
-        // 2. Estado
-        if (inputEstado && inputEstado.value.trim() !== '') {
-            checkResumenEstado.checked = true;
-            checkResumenEstado.parentElement.classList.add('resumen-item-activo');
-            txtResumenEstado.textContent = `Estado: ${inputEstado.value}`;
-            txtResumenReina.textContent = checkReina && checkReina.checked ? 'Reina vista' : 'Reina no vista';
-        } else {
-            checkResumenEstado.checked = false;
-            checkResumenEstado.parentElement.classList.remove('resumen-item-activo');
-            txtResumenEstado.textContent = `Estado: —`;
-            txtResumenReina.textContent = `—`;
-            allRequiredFilled = false;
-        }
-
-        // 3. Cosecha (Optional)
-        if (inputKg && inputKg.value.trim() !== '') {
-            checkResumenCosecha.checked = true;
-            checkResumenCosecha.parentElement.classList.add('resumen-item-activo');
-            txtResumenCosechaKg.textContent = `Cosecha: ${inputKg.value} kg`;
-            txtResumenCosechaCal.textContent = (inputCalidad && inputCalidad.value.trim() !== '') ? inputCalidad.value : 'Sin especificar tipo';
-        } else {
-            checkResumenCosecha.checked = false;
-            checkResumenCosecha.parentElement.classList.remove('resumen-item-activo');
-            txtResumenCosechaKg.textContent = `Cosecha: — kg`;
-            txtResumenCosechaCal.textContent = `—`;
-        }
-
-        // Validate Date
-        if (!inputFecha || !inputFecha.value) {
-            allRequiredFilled = false;
-        }
-
-        // Form State Status
-        if (txtEstadoForm) {
-            if (allRequiredFilled) {
-                txtEstadoForm.textContent = 'Listo para guardar';
-                txtEstadoForm.style.color = '#F2A900'; // Yellow color
-            } else {
-                txtEstadoForm.textContent = 'Completa los datos';
-                txtEstadoForm.style.color = 'var(--texto-gris)';
-            }
-        }
+        // No resumen card anymore, but we can still validate the date to enable/disable button if we wanted to
+        // For now, we just leave this empty or minimal.
     }
 
     // Attach listeners
