@@ -80,9 +80,10 @@
                 
                 <div class="campo">
                     <label for="colmena">COLMENA</label>
-                    <select id="colmena" name="colmena">
-                        <option value="">Selecciona una colmena</option>
-                        <!-- JS llenará estas opciones dinámicamente desde la API -->
+                    <select id="colmena" name="colmena" required>
+                        <option value="" disabled selected hidden>Selecciona una colmena</option>
+                        <option value="C-01">C-01</option>
+                        <option value="C-02">C-02</option>
                     </select>
                 </div>
 

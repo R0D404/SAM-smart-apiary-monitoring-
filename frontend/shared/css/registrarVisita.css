@@ -299,6 +299,21 @@
     border-color: var(--amarillo);
 }
 
+/* Color de placeholder para el select cuando no se ha seleccionado nada válido */
+.campo select:invalid {
+    color: var(--texto-gris);
+}
+
+/* Estilos específicos para las opciones del dropdown */
+.campo select option {
+    background-color: var(--color-bg-sidebar, #241A0B);
+    color: var(--texto-blanco, #F5F5F5);
+    font-size: 14px;
+}
+.campo select option[value=""] {
+    color: var(--texto-gris);
+}
+
 /* El placeholder (texto de ayuda) en gris */
 .campo input::placeholder,
 .campo textarea::placeholder {
