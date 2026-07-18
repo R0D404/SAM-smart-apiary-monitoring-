@@ -509,3 +509,9 @@
     color: white;
     flex-shrink: 0;
 }
+
+select option {
+    background-color: var(--color-bg-sidebar, #241A0B);
+    color: var(--color-text-white, #F5F5F5);
+    font-family: var(--font-main, 'Inter', sans-serif);
+}

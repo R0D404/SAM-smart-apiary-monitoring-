@@ -43,6 +43,15 @@ body {
 }
 
 /* =========================================
+   ELEMENTOS GLOBALES DE FORMULARIO
+   ========================================= */
+select option {
+    background-color: var(--color-bg-sidebar);
+    color: var(--color-text-white);
+    font-family: var(--font-main);
+}
+
+/* =========================================
    APP SHELL (contenedor general)
    ========================================= */
 .app-shell {

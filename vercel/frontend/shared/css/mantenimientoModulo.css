@@ -147,3 +147,9 @@ input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.6) sepi
 @media (max-width: 1150px) {
     .maintenance-grid { grid-template-columns: 1fr; }
 }
+
+select option {
+    background-color: var(--color-bg-sidebar, #241A0B);
+    color: var(--color-text-white, #F5F5F5);
+    font-family: var(--font-main, 'Inter', sans-serif);
+}
