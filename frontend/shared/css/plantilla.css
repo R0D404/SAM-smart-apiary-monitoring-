@@ -153,8 +153,8 @@ select option {
 .user-account {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 6px 18px 6px 6px;
+    gap: 14px;
+    padding: 8px 24px 8px 8px;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-pill);
     background-color: transparent;
@@ -167,8 +167,8 @@ select option {
 }
 
 .user-account-dot {
-    width: 34px;
-    height: 34px;
+    width: clamp(24px, 1.6vw, 34px);
+    height: clamp(24px, 1.6vw, 34px);
     border-radius: 50%;
     background-color: var(--color-primary);
     display: inline-block;
@@ -179,7 +179,7 @@ select option {
     color: var(--color-text-white);
     font-family: var(--font-main);
     font-weight: 500;
-    font-size: clamp(12px, 0.78vw, 16px);
+    font-size: clamp(12px, 0.82vw, 16px);
     white-space: nowrap;
 }
 
