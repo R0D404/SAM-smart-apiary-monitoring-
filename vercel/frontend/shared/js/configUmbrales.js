@@ -18,10 +18,23 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (allValid) {
-                showSuccessToast(
-                    "¡Umbrales Guardados!", 
-                    "Los límites normales se actualizaron correctamente para este apiario."
-                );
+                // Disable button and show loading text
+                const originalText = btnGuardar.textContent;
+                btnGuardar.textContent = 'Guardando...';
+                btnGuardar.disabled = true;
+
+                // Simulate network request delay
+                setTimeout(() => {
+                    // Simulate network failure as backend is down
+                    showErrorToast(
+                        "Error de conexión al servidor", 
+                        "El backend no está disponible en este momento."
+                    );
+                    
+                    // Reset button
+                    btnGuardar.textContent = originalText;
+                    btnGuardar.disabled = false;
+                }, 1500);
             } else {
                 showErrorToast(
                     "Error de Validación", 
