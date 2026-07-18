@@ -5,15 +5,49 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!res.ok) throw new Error('Error fetching historial');
         
         const data = await res.json();
-        
-        // 2. Update KPIs
-        document.getElementById('kpi-total').textContent = data.totalTemporada || '-- kg';
-        document.getElementById('kpi-promedio').textContent = data.promedioColmena || '-- kg';
-        document.getElementById('kpi-mejor').textContent = data.mejorColmena || '--';
-        document.getElementById('kpi-visitas').textContent = data.visitasRegistradas || '--';
+        renderHistorialData(data);
 
-        // 3. Render Line Chart (Producción acumulada)
-        const ctxLine = document.getElementById('lineChart').getContext('2d');
+    } catch (error) {
+        console.warn('Error fetching historial, usando mock data:', error);
+        
+        // Mock data
+        const mockData = {
+            totalTemporada: "450 kg",
+            promedioColmena: "25 kg",
+            mejorColmena: "C-003",
+            visitasRegistradas: "12",
+            produccionAcumulada: {
+                labels: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
+                data: [0, 0, 50, 120, 210, 290, 350, 400, 450, 450, 450, 450]
+            },
+            produccionPorColmena: {
+                labels: ["C-001", "C-002", "C-003", "C-004", "C-005", "C-006", "C-007", "C-008", "C-009", "C-010"],
+                data: [20, 22, 35, 18, 25, 28, 24, 30, 21, 27]
+            },
+            historialCosechas: [
+                { fecha: "15 Oct 2023", colmena: "C-003", kg: "15", calidad: "Alta", validada: "Sí" },
+                { fecha: "12 Oct 2023", colmena: "C-008", kg: "12", calidad: "Media", validada: "Sí" },
+                { fecha: "05 Oct 2023", colmena: "C-001", kg: "8", calidad: "Alta", validada: "No" },
+                { fecha: "28 Sep 2023", colmena: "C-005", kg: "14", calidad: "Alta", validada: "Sí" },
+                { fecha: "20 Sep 2023", colmena: "C-002", kg: "10", calidad: "Baja", validada: "No" }
+            ]
+        };
+        
+        renderHistorialData(mockData);
+    }
+});
+
+function renderHistorialData(data) {
+    // 2. Update KPIs
+    document.getElementById('kpi-total').textContent = data.totalTemporada || '-- kg';
+    document.getElementById('kpi-promedio').textContent = data.promedioColmena || '-- kg';
+    document.getElementById('kpi-mejor').textContent = data.mejorColmena || '--';
+    document.getElementById('kpi-visitas').textContent = data.visitasRegistradas || '--';
+
+    // 3. Render Line Chart (Producción acumulada)
+    const lineCanvas = document.getElementById('lineChart');
+    if (lineCanvas) {
+        const ctxLine = lineCanvas.getContext('2d');
         new Chart(ctxLine, {
             type: 'line',
             data: {
@@ -47,13 +81,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             }
         });
+    }
 
-        // 4. Render Bar Chart (Producción por colmena)
-        const barLabelsCount = data.produccionPorColmena.labels.length;
+    // 4. Render Bar Chart (Producción por colmena)
+    const barLabelsCount = data.produccionPorColmena.labels.length;
+    const barWrapper = document.getElementById('barChartWrapper');
+    if (barWrapper) {
         if (barLabelsCount > 15) {
-            document.getElementById('barChartWrapper').style.width = Math.max(1000, barLabelsCount * 40) + 'px';
+            barWrapper.style.width = Math.max(1000, barLabelsCount * 40) + 'px';
         }
-
+        
         const ctxBar = document.getElementById('barChart').getContext('2d');
         new Chart(ctxBar, {
             type: 'bar',
@@ -84,9 +121,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             }
         });
+    }
 
-        // 5. Populate Table
-        const tbody = document.getElementById('historial-tbody');
+    // 5. Populate Table
+    const tbody = document.getElementById('historial-tbody');
+    if (tbody) {
         tbody.innerHTML = '';
         data.historialCosechas.forEach(row => {
             const tr = document.createElement('tr');
@@ -102,8 +141,5 @@ document.addEventListener('DOMContentLoaded', async () => {
             `;
             tbody.appendChild(tr);
         });
-
-    } catch (error) {
-        console.error('Error:', error);
     }
-});
+}
