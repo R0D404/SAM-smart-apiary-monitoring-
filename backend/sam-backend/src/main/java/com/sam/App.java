@@ -104,6 +104,10 @@ public class App
                 post(com.sam.controladores.UmbralesControlador::guardarUmbrales);
             });
 
+            path("/api/datos", () -> {
+                post(com.sam.controladores.TelemetriaControlador::recibirDatos);
+            });
+
             path("/api/groq", () -> {
                 post("/diagnostico", com.sam.controladores.GroqController::generarDiagnostico);
             });
