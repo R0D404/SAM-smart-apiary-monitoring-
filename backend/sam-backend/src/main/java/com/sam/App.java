@@ -95,6 +95,15 @@ public class App
                 get("/{id}", com.sam.controladores.DiagnosticoController::getDatosColmena);
             });
 
+            path("/api/perfil", () -> {
+                post(com.sam.controladores.PerfilControlador::actualizarPerfil);
+                post("/foto", com.sam.controladores.PerfilControlador::subirFoto);
+            });
+
+            path("/api/umbrales", () -> {
+                post(com.sam.controladores.UmbralesControlador::guardarUmbrales);
+            });
+
             path("/api/groq", () -> {
                 post("/diagnostico", com.sam.controladores.GroqController::generarDiagnostico);
             });
