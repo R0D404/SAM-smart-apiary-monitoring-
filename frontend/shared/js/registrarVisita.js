@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 notas: document.getElementById('notas-adicionales')?.value || ''
             };
 
-            fetch('/api/visitas', {
+            fetch('/visitas', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
