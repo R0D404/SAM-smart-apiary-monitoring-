@@ -81,6 +81,9 @@ public class App
             });
             path("/visitas", () -> {
                 get(com.sam.controladores.VisitasControlador::listarVisitas);
+                get("/cosechas", com.sam.controladores.VisitasControlador::listarCosechasVisitas);
+                get("/mantenimiento", com.sam.controladores.VisitasControlador::listarMantenimientos);
+                get("/apiarios", com.sam.controladores.VisitasControlador::listarApiariosDisponibles);
                 post(com.sam.controladores.VisitasControlador::crearVisita);
                 put("/{id}", com.sam.controladores.VisitasControlador::actualizarVisita);
                 delete("/{id}", com.sam.controladores.VisitasControlador::eliminarVisita);

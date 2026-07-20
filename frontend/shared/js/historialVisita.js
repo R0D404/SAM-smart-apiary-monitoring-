@@ -1,84 +1,213 @@
 document.addEventListener('DOMContentLoaded', () => {
-    
+
     const tbody = document.getElementById('tabla-visitas-body');
-    const filterBtns = document.querySelectorAll('.filter-btn');
+    const thead = document.getElementById('tabla-thead');
+    const tipoTabs = document.querySelectorAll('.tipo-tab');
+    const filtroApiario = document.getElementById('filtro-apiario');
+    const filtroFechaTipo = document.getElementById('filtro-fecha-tipo');
+    const filtroAnio = document.getElementById('filtro-anio');
+    const filtroMes = document.getElementById('filtro-mes');
+    const filtroDia = document.getElementById('filtro-dia');
+    const btnAplicar = document.getElementById('btn-aplicar-filtros');
+    const pageSubtitle = document.getElementById('page-subtitle');
 
-    // Filtros interactivos
-    filterBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            filterBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-        });
-    });
+    let tipoActual = 'visitas'; // 'visitas' | 'cosechas' | 'mantenimiento'
 
-    function esTipoMantenimiento(visita) {
-        return visita.estado_colonia === 'Mantenimiento de hardware' ||
-               (visita.notas && visita.notas.startsWith('Mantenimiento del módulo:'));
+    // ==========================================
+    // CARGAR APIARIOS DESDE LA BASE DE DATOS
+    // ==========================================
+    function cargarApiarios() {
+        fetch('/visitas/apiarios')
+            .then(res => res.ok ? res.json() : [])
+            .then(data => {
+                data.forEach(a => {
+                    const opt = document.createElement('option');
+                    opt.value = a.id;
+                    opt.textContent = a.nombre;
+                    filtroApiario.appendChild(opt);
+                });
+            })
+            .catch(() => {}); // silencioso si falla
     }
 
-    function renderizarTabla(datos) {
-        tbody.innerHTML = ''; 
+    // ==========================================
+    // FECHA FILTER TOGGLE
+    // ==========================================
+    filtroFechaTipo.addEventListener('change', () => {
+        filtroAnio.style.display = 'none';
+        filtroMes.style.display = 'none';
+        filtroDia.style.display = 'none';
+        const val = filtroFechaTipo.value;
+        if (val === 'anio') filtroAnio.style.display = '';
+        else if (val === 'mes') filtroMes.style.display = '';
+        else if (val === 'dia') filtroDia.style.display = '';
+    });
 
-        if (!datos || datos.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--color-text-gray); padding: 40px;">No hay registros de visitas disponibles.</td></tr>';
+    // ==========================================
+    // CONSTRUIR QUERY PARAMS
+    // ==========================================
+    function construirParams() {
+        const params = new URLSearchParams();
+        if (filtroApiario.value) params.set('apiario_id', filtroApiario.value);
+
+        const ft = filtroFechaTipo.value;
+        if (ft === 'anio' && filtroAnio.value) params.set('fecha', filtroAnio.value);
+        else if (ft === 'mes' && filtroMes.value) params.set('fecha', filtroMes.value);
+        else if (ft === 'dia' && filtroDia.value) params.set('fecha', filtroDia.value);
+
+        return params.toString();
+    }
+
+    // ==========================================
+    // FETCH Y RENDER VISITAS
+    // ==========================================
+    function renderHeadersVisitas() {
+        thead.innerHTML = '<tr>' +
+            '<th>FECHA</th><th>COLMENA</th><th>APIARIO</th><th>APICULTOR</th>' +
+            '<th>ESTADO COLONIA</th><th>REINA VISTA</th><th>NOTAS</th>' +
+            '</tr>';
+        pageSubtitle.textContent = 'Visitas de seguimiento al apiario';
+    }
+
+    function renderRowsVisitas(datos) {
+        if (!datos.length) {
+            tbody.innerHTML = '<tr><td colspan="7" class="text-empty">No hay visitas para el período seleccionado.</td></tr>';
             return;
         }
+        tbody.innerHTML = '';
+        datos.forEach(v => {
+            let badgeClase = '';
+            const est = v.estado_colonia || '';
+            if (est === 'Excelente' || est === 'Buena') badgeClase = 'excelente';
+            else if (est === 'Regular') badgeClase = 'regular';
+            else if (est === 'Crítico' || est === 'Mala') badgeClase = 'critico';
 
-        datos.forEach(visita => {
             const tr = document.createElement('tr');
-            const esMantenimiento = esTipoMantenimiento(visita);
-            
-            let estadoCell = '';
-            let reinaCell = '';
-            let notasTexto = visita.notas || '—';
-
-            if (esMantenimiento) {
-                // Extraer tipo de mantenimiento de las notas: "Mantenimiento del módulo: [TIPO] descripción"
-                const match = notasTexto.match(/\[([^\]]+)\]/);
-                const tipoMant = match ? match[1] : 'MANTENIMIENTO';
-                // Limpiar el prefijo de las notas para mostrar solo la descripción
-                notasTexto = notasTexto.replace(/^Mantenimiento del módulo: \[[^\]]+\] /, '').trim();
-
-                estadoCell = '<td><span style="background: rgba(56,189,248,0.12); color: #38bdf8; border: 1px solid rgba(56,189,248,0.3); padding: 3px 10px; border-radius: 10px; font-size: 12px; font-weight: 600; white-space: nowrap;">' + tipoMant + '</span></td>';
-                reinaCell = '<td style="color: var(--color-text-gray); font-size: 13px;">—</td>';
-            } else {
-                // Visita normal
-                let badgeClase = '';
-                const estado = visita.estado_colonia || '';
-                if (estado === 'Excelente' || estado === 'Buena') badgeClase = 'excelente';
-                else if (estado === 'Regular') badgeClase = 'regular';
-                else if (estado === 'Crítico' || estado === 'Mala') badgeClase = 'critico';
-
-                estadoCell = '<td><span class="badge-estado ' + badgeClase + '">' + estado + '</span></td>';
-                reinaCell = '<td style="color: var(--color-text-gray);">' + (visita.reina || '—') + '</td>';
-            }
-
             tr.innerHTML =
-                '<td><span class="text-subtle">' + visita.fecha + '</span></td>' +
-                '<td style="font-weight: 600; color: var(--color-primary);">' + (visita.colmena || '—') + '</td>' +
-                '<td><span style="color: var(--color-text-white);">' + (visita.apicultor || '—') + '</span></td>' +
-                estadoCell +
-                reinaCell +
-                '<td class="text-subtle" style="max-width: 300px;">' + notasTexto + '</td>';
-            
+                '<td><span class="text-subtle">' + v.fecha + '</span></td>' +
+                '<td class="text-primary-bold">' + (v.colmena || '—') + '</td>' +
+                '<td><span class="text-subtle">' + (v.apiario || '—') + '</span></td>' +
+                '<td>' + (v.apicultor || '—') + '</td>' +
+                '<td><span class="badge-estado ' + badgeClase + '">' + est + '</span></td>' +
+                '<td>' + (v.reina || '—') + '</td>' +
+                '<td class="text-subtle" style="max-width:260px;">' + (v.notas || '—') + '</td>';
             tbody.appendChild(tr);
         });
     }
 
-    function cargarVisitas() {
-        fetch('/visitas')
-            .then(res => {
-                if (!res.ok) throw new Error("Error fetching visitas");
-                return res.json();
-            })
-            .then(datos => {
-                renderizarTabla(datos);
-            })
-            .catch(err => {
-                console.error(err);
-                if(tbody) tbody.innerHTML = '<tr><td colspan="5">Error al cargar historial</td></tr>';
-            });
+    // ==========================================
+    // FETCH Y RENDER COSECHAS
+    // ==========================================
+    function renderHeadersCosechas() {
+        thead.innerHTML = '<tr>' +
+            '<th>FECHA</th><th>COLMENA</th><th>APIARIO</th><th>APICULTOR</th>' +
+            '<th>KG MIEL</th><th>CALIDAD</th><th>VALIDADA CON PESO</th>' +
+            '</tr>';
+        pageSubtitle.textContent = 'Registros de cosecha de miel';
     }
 
-    cargarVisitas();
+    function renderRowsCosechas(datos) {
+        if (!datos.length) {
+            tbody.innerHTML = '<tr><td colspan="7" class="text-empty">No hay cosechas para el período seleccionado.</td></tr>';
+            return;
+        }
+        tbody.innerHTML = '';
+        datos.forEach(v => {
+            const validadaClass = v.validada === 'Sí' ? 'excelente' : 'regular';
+            const tr = document.createElement('tr');
+            tr.innerHTML =
+                '<td><span class="text-subtle">' + v.fecha + '</span></td>' +
+                '<td class="text-primary-bold">' + (v.colmena || '—') + '</td>' +
+                '<td><span class="text-subtle">' + (v.apiario || '—') + '</span></td>' +
+                '<td>' + (v.apicultor || '—') + '</td>' +
+                '<td><strong>' + (v.kg_miel || '—') + '</strong> kg</td>' +
+                '<td><span class="badge-cosecha">' + (v.calidad || '—') + '</span></td>' +
+                '<td><span class="badge-estado ' + validadaClass + '">' + v.validada + '</span></td>';
+            tbody.appendChild(tr);
+        });
+    }
+
+    // ==========================================
+    // FETCH Y RENDER MANTENIMIENTO
+    // ==========================================
+    function renderHeadersMantenimiento() {
+        thead.innerHTML = '<tr>' +
+            '<th>FECHA</th><th>COLMENA</th><th>APIARIO</th><th>TÉCNICO</th>' +
+            '<th>TIPO DE EVENTO</th><th>DESCRIPCIÓN</th>' +
+            '</tr>';
+        pageSubtitle.textContent = 'Mantenimiento de hardware (módulos ESP32)';
+    }
+
+    function renderRowsMantenimiento(datos) {
+        if (!datos.length) {
+            tbody.innerHTML = '<tr><td colspan="6" class="text-empty">No hay registros de mantenimiento para el período seleccionado.</td></tr>';
+            return;
+        }
+        tbody.innerHTML = '';
+        datos.forEach(v => {
+            const tr = document.createElement('tr');
+            tr.innerHTML =
+                '<td><span class="text-subtle">' + v.fecha + '</span></td>' +
+                '<td class="text-primary-bold">' + (v.colmena || '—') + '</td>' +
+                '<td><span class="text-subtle">' + (v.apiario || '—') + '</span></td>' +
+                '<td>' + (v.tecnico || '—') + '</td>' +
+                '<td><span class="badge-mant">' + (v.tipo || '—') + '</span></td>' +
+                '<td class="text-subtle" style="max-width:280px;">' + (v.descripcion || '—') + '</td>';
+            tbody.appendChild(tr);
+        });
+    }
+
+    // ==========================================
+    // CARGAR DATOS SEGÚN TIPO ACTIVO
+    // ==========================================
+    function cargarDatos() {
+        const params = construirParams();
+        tbody.innerHTML = '<tr><td colspan="7" class="text-empty" style="opacity:0.6;">Cargando...</td></tr>';
+
+        let url = '';
+        if (tipoActual === 'visitas') {
+            url = '/visitas' + (params ? '?' + params : '');
+            renderHeadersVisitas();
+            fetch(url)
+                .then(r => r.ok ? r.json() : [])
+                .then(d => renderRowsVisitas(d))
+                .catch(() => { tbody.innerHTML = '<tr><td colspan="7" class="text-empty" style="color:#ef4444;">Error al cargar visitas.</td></tr>'; });
+
+        } else if (tipoActual === 'cosechas') {
+            url = '/visitas/cosechas' + (params ? '?' + params : '');
+            renderHeadersCosechas();
+            fetch(url)
+                .then(r => r.ok ? r.json() : [])
+                .then(d => renderRowsCosechas(d))
+                .catch(() => { tbody.innerHTML = '<tr><td colspan="7" class="text-empty" style="color:#ef4444;">Error al cargar cosechas.</td></tr>'; });
+
+        } else if (tipoActual === 'mantenimiento') {
+            url = '/visitas/mantenimiento' + (params ? '?' + params : '');
+            renderHeadersMantenimiento();
+            fetch(url)
+                .then(r => r.ok ? r.json() : [])
+                .then(d => renderRowsMantenimiento(d))
+                .catch(() => { tbody.innerHTML = '<tr><td colspan="6" class="text-empty" style="color:#ef4444;">Error al cargar mantenimientos.</td></tr>'; });
+        }
+    }
+
+    // ==========================================
+    // EVENTOS
+    // ==========================================
+    tipoTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            tipoTabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            tipoActual = tab.dataset.tipo;
+            cargarDatos();
+        });
+    });
+
+    btnAplicar.addEventListener('click', cargarDatos);
+
+    // ==========================================
+    // INICIO
+    // ==========================================
+    cargarApiarios();
+    cargarDatos();
 });
