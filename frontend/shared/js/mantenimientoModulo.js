@@ -67,18 +67,18 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .catch(console.error);
     }
-    cargarDatos();
 
     // ==========================================
     // 1. CONTADOR DE CARACTERES DEL TEXTAREA
     // ==========================================
     const textareaDesc = document.getElementById('desc-mantenimiento');
     const charCounter = document.getElementById('char-count');
-    const maxLength = textareaDesc.getAttribute('maxlength') || 500;
+    const maxLength = textareaDesc ? (textareaDesc.getAttribute('maxlength') || 500) : 500;
 
     function actualizarContador() {
+        if (!textareaDesc || !charCounter) return;
         const currentLength = textareaDesc.value.length;
-        if(charCounter) charCounter.textContent = `${currentLength} / ${maxLength}`;
+        charCounter.textContent = `${currentLength} / ${maxLength}`;
     }
 
     if(textareaDesc) {
