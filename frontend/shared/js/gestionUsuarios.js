@@ -115,9 +115,107 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span class="dot-status ${estadoDot}" style="width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 8px;"></span>
                     <span style="color: var(--color-text-gray);">${estadoText}</span>
                 </td>
+                <td>
+                    <button class="btn-editar" style="background:none; border:none; color:#F2A900; cursor:pointer; margin-right:10px; font-weight:600;" data-id="${user.id}">Editar</button>
+                    ${user.id !== 1 ? `<button class="btn-eliminar" style="background:none; border:none; color:#F44336; cursor:pointer; font-weight:600;" data-id="${user.id}">Eliminar</button>` : ''}
+                </td>
             `;
             
             tbody.appendChild(tr);
+        });
+        
+        // Asignar eventos a los botones de editar y eliminar
+        document.querySelectorAll('.btn-editar').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const userId = parseInt(e.target.getAttribute('data-id'));
+                const user = usuarios.find(u => u.id === userId);
+                if (user) abrirModalEditar(user);
+            });
+        });
+
+        document.querySelectorAll('.btn-eliminar').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const userId = parseInt(e.target.getAttribute('data-id'));
+                if (confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
+                    eliminarUsuario(userId);
+                }
+            });
+        });
+    }
+
+    // Modal de edición
+    const modalEditar = document.getElementById('modal-editar-usuario');
+    const btnCerrarEditar = document.getElementById('btn-cerrar-editar');
+    const btnCancelarEditar = document.getElementById('btn-cancelar-editar');
+
+    function abrirModalEditar(user) {
+        document.getElementById('editar-id').value = user.id;
+        document.getElementById('editar-nombre').value = user.nombre;
+        document.getElementById('editar-email').value = user.email || '';
+        document.getElementById('editar-rol').value = user.rol.toLowerCase() === 'admin' ? '1' : '2';
+        document.getElementById('editar-estado').value = user.activo ? 'true' : 'false';
+        modalEditar.classList.add('active');
+    }
+
+    function cerrarModalEditar() {
+        modalEditar.classList.remove('active');
+    }
+
+    if (btnCerrarEditar) btnCerrarEditar.addEventListener('click', cerrarModalEditar);
+    if (btnCancelarEditar) btnCancelarEditar.addEventListener('click', cerrarModalEditar);
+    
+    window.addEventListener('click', (e) => {
+        if (e.target === modalEditar) {
+            cerrarModalEditar();
+        }
+    });
+
+    const formEditar = document.getElementById('form-editar-usuario');
+    if (formEditar) {
+        formEditar.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const id = document.getElementById('editar-id').value;
+            const payload = {
+                nombre: document.getElementById('editar-nombre').value,
+                email: document.getElementById('editar-email').value,
+                rol_id: parseInt(document.getElementById('editar-rol').value),
+                activo: document.getElementById('editar-estado').value === 'true'
+            };
+            
+            fetch(`/api/gestion/usuarios/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(res => {
+                if (res.ok) return res.json();
+                throw new Error("No se pudo actualizar el usuario.");
+            })
+            .then(() => {
+                cerrarModalEditar();
+                cargarUsuarios();
+                showSuccessToast("¡Éxito!", "Usuario actualizado con éxito.");
+            })
+            .catch(err => {
+                showErrorToast("Error", err.message);
+            });
+        });
+    }
+
+    function eliminarUsuario(id) {
+        fetch(`/api/gestion/usuarios/${id}`, {
+            method: 'DELETE'
+        })
+        .then(res => {
+            if (res.ok) return res.json();
+            throw new Error("No se pudo eliminar el usuario.");
+        })
+        .then(() => {
+            cargarUsuarios();
+            showSuccessToast("¡Éxito!", "Usuario eliminado con éxito.");
+        })
+        .catch(err => {
+            showErrorToast("Error", err.message);
         });
     }
 

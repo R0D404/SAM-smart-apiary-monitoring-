@@ -74,6 +74,7 @@
                                 <th>ROL</th>
                                 <th>APIARIOS ASIGNADOS</th>
                                 <th>ESTADO</th>
+                                <th>ACCIONES</th>
                             </tr>
                         </thead>
                         <tbody id="tabla-usuarios-body">
@@ -143,6 +144,62 @@
                 <div class="modal-actions full-width-actions">
                     <button type="button" class="btn-secondary" id="btn-cancelar-crear">Cancelar</button>
                     <button type="submit" form="form-crear-apicultor" class="btn-primary">Crear cuenta</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- =========================================
+             MODAL: EDITAR USUARIO
+        ========================================= -->
+        <div id="modal-editar-usuario" class="modal-overlay">
+            <div class="modal-content modal-large">
+                <div class="modal-header">
+                    <div>
+                        <h3 class="modal-title">Editar usuario</h3>
+                        <p class="modal-subtitle">Modifica la información del usuario</p>
+                    </div>
+                    <button class="btn-close-modal" id="btn-cerrar-editar">&times;</button>
+                </div>
+
+                <form id="form-editar-usuario" class="modal-form split-form">
+                    <input type="hidden" id="editar-id">
+                    <div class="form-col">
+                        <h4>Datos principales</h4>
+                        
+                        <div class="form-group">
+                            <label class="form-label">NOMBRE COMPLETO</label>
+                            <input type="text" id="editar-nombre" class="input-field" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">CORREO ELECTRÓNICO</label>
+                            <input type="email" id="editar-email" class="input-field" required>
+                        </div>
+                    </div>
+
+                    <div class="form-col">
+                        <h4>Configuración</h4>
+                        
+                        <div class="form-group">
+                            <label class="form-label">ROL</label>
+                            <select id="editar-rol" class="input-field">
+                                <option value="1">Admin</option>
+                                <option value="2">Apicultor</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">ESTADO</label>
+                            <select id="editar-estado" class="input-field">
+                                <option value="true">Activo</option>
+                                <option value="false">Inactivo</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+                <div class="modal-actions full-width-actions">
+                    <button type="button" class="btn-secondary" id="btn-cancelar-editar">Cancelar</button>
+                    <button type="submit" form="form-editar-usuario" class="btn-primary">Guardar cambios</button>
                 </div>
             </div>
         </div>

@@ -28,7 +28,7 @@ public class GestionUsuariosControlador {
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             ArrayNode usuariosNode = mapper.createArrayNode();
             
-            String sql = "SELECT u.id, u.nombre, r.nombre as rol_nombre, u.activo, " +
+            String sql = "SELECT u.id, u.nombre, u.email, r.nombre as rol_nombre, u.activo, " +
                          "(SELECT GROUP_CONCAT(a.nombre SEPARATOR ', ') " +
                          " FROM APIARIO_APICULTOR aa JOIN APIARIO a ON aa.apiario_id = a.id " +
                          " WHERE aa.usuario_id = u.id) as apiarios " +
@@ -41,6 +41,7 @@ public class GestionUsuariosControlador {
                         ObjectNode node = mapper.createObjectNode();
                         node.put("id", rs.getInt("id"));
                         node.put("nombre", rs.getString("nombre"));
+                        node.put("email", rs.getString("email"));
                         node.put("rol", capitalize(rs.getString("rol_nombre")));
                         
                         String apiariosAsignados = rs.getString("apiarios");
