@@ -78,7 +78,7 @@ public class DashboardApiarioControlador {
                 "(SELECT ROUND(valor, 1) FROM LECTURA_SENSOR l JOIN MODULO_MONITOREO m ON l.modulo_id = m.id WHERE m.colmena_id = c.id AND l.tipo_sensor = 'peso' ORDER BY l.timestamp_dispositivo DESC LIMIT 1) as peso, " +
                 "(SELECT ROUND(valor, 1) FROM LECTURA_SENSOR l JOIN MODULO_MONITOREO m ON l.modulo_id = m.id WHERE m.colmena_id = c.id AND l.tipo_sensor = 'temp' ORDER BY l.timestamp_dispositivo DESC LIMIT 1) as temp, " +
                 "(SELECT ROUND(valor, 1) FROM LECTURA_SENSOR l JOIN MODULO_MONITOREO m ON l.modulo_id = m.id WHERE m.colmena_id = c.id AND l.tipo_sensor = 'humedad' ORDER BY l.timestamp_dispositivo DESC LIMIT 1) as humedad " +
-                "FROM COLMENA c WHERE c.apiario_id = ?")) {
+                "FROM COLMENA c WHERE c.apiario_id = ? AND c.estado != 'baja'")) {
                 stmt.setInt(1, apiarioId);
                 try (ResultSet rs = stmt.executeQuery()) {
                     while (rs.next()) {
@@ -134,7 +134,7 @@ public class DashboardApiarioControlador {
             try (PreparedStatement stmt = conn.prepareStatement(
                 "SELECT AVG(ultima_lectura) as prom FROM (" +
                 "  SELECT (SELECT valor FROM LECTURA_SENSOR l JOIN MODULO_MONITOREO m ON l.modulo_id = m.id WHERE m.colmena_id = c.id AND l.tipo_sensor = 'peso' ORDER BY l.timestamp_dispositivo DESC LIMIT 1) as ultima_lectura " +
-                "  FROM COLMENA c WHERE c.apiario_id = ? " +
+                "  FROM COLMENA c WHERE c.apiario_id = ? AND c.estado != 'baja' " +
                 ") as sub WHERE ultima_lectura IS NOT NULL")) {
                 stmt.setInt(1, apiarioId);
                 try (ResultSet rs = stmt.executeQuery()) {
