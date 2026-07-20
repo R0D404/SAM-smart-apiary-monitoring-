@@ -6,6 +6,13 @@ import java.util.Map;
 public class TelemetriaControlador {
     
     public static void recibirDatos(Context ctx) {
+        // Validar token de seguridad de hardware
+        String clientToken = ctx.header("X-ESP32-TOKEN");
+        if (clientToken == null || !clientToken.equals("SAM_SECURE_TOKEN_2026")) {
+            ctx.status(401).json("{\"mensaje\": \"Acceso denegado: Token de hardware inválido\"}");
+            return;
+        }
+
         try {
             Map payload = ctx.bodyAsClass(Map.class);
             System.out.println("Telemetría recibida del ESP32: " + payload);
