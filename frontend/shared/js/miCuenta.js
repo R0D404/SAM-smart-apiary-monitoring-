@@ -75,15 +75,22 @@ document.addEventListener('DOMContentLoaded', () => {
         const pActual = pwdActual.value;
         const pNueva = pwdNueva.value;
 
-        // Caso 1: Faltan campos
-        if (!nombre || !correo || !pActual || !pNueva) {
-            mostrarToast('error', 'Faltan campos obligatorios', 'Completa los campos marcados para continuar');
+        // Caso 1: Faltan campos básicos
+        if (!nombre || !correo) {
+            mostrarToast('error', 'Faltan campos obligatorios', 'El nombre y correo son obligatorios');
             return;
         }
 
-        if (pActual === pNueva) {
-            mostrarToast('error', 'La contraseña es la misma', 'Las contraseñas deben ser diferentes');
-            return;
+        // Si intenta cambiar la contraseña, debe proveer ambas
+        if (pActual || pNueva) {
+            if (!pActual || !pNueva) {
+                mostrarToast('error', 'Contraseñas incompletas', 'Debes ingresar tu contraseña actual y la nueva para cambiarla');
+                return;
+            }
+            if (pActual === pNueva) {
+                mostrarToast('error', 'La contraseña es la misma', 'Las contraseñas deben ser diferentes');
+                return;
+            }
         }
 
         const btnSubmit = e.target.querySelector('button[type="submit"]');

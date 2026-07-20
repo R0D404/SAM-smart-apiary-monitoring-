@@ -33,16 +33,19 @@ public class DashboardControlador {
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             // 1. Obtener nombre del usuario
             String nombreUsuario = "Admin";
-            try (PreparedStatement stmt = conn.prepareStatement("SELECT nombre FROM USUARIO WHERE email = ?")) {
+            String emailUsuario = usuarioActual;
+            try (PreparedStatement stmt = conn.prepareStatement("SELECT nombre, email FROM USUARIO WHERE email = ?")) {
                 stmt.setString(1, usuarioActual);
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (rs.next()) {
                         nombreUsuario = rs.getString("nombre");
+                        emailUsuario = rs.getString("email");
                     }
                 }
             }
             ObjectNode usuarioNode = mapper.createObjectNode();
             usuarioNode.put("nombre", nombreUsuario);
+            usuarioNode.put("email", emailUsuario);
             response.set("usuario", usuarioNode);
 
             // 2. Stats
