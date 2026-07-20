@@ -53,14 +53,30 @@ public class DashboardApiarioControlador {
             response.set("usuario", usuarioNode);
             // 1. Apiario Info
             ObjectNode apiarioNode = mapper.createObjectNode();
-            try (PreparedStatement stmt = conn.prepareStatement("SELECT nombre, localidad, municipio FROM APIARIO WHERE id = ?")) {
+            
+            int usuarioId = -1;
+            String rol = ctx.sessionAttribute("rol");
+            if ("apicultor".equals(rol)) {
+                try (PreparedStatement stmt = conn.prepareStatement("SELECT id FROM USUARIO WHERE email = ?")) {
+                    stmt.setString(1, usuarioActual);
+                    try (ResultSet rs = stmt.executeQuery()) {
+                        if (rs.next()) usuarioId = rs.getInt("id");
+                    }
+                }
+            }
+
+            String sqlApiario = "SELECT nombre, localidad, municipio FROM APIARIO a " + 
+                ("apicultor".equals(rol) ? "JOIN APIARIO_APICULTOR aa ON aa.apiario_id = a.id AND aa.usuario_id = " + usuarioId + " " : "") +
+                "WHERE a.id = ?";
+                
+            try (PreparedStatement stmt = conn.prepareStatement(sqlApiario)) {
                 stmt.setInt(1, apiarioId);
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (rs.next()) {
                         apiarioNode.put("nombre", rs.getString("nombre"));
                         apiarioNode.put("ubicacion", rs.getString("localidad") + ", " + rs.getString("municipio"));
                     } else {
-                        ctx.status(404).json("{\"mensaje\": \"Apiario no encontrado\"}");
+                        ctx.status(404).json("{\"mensaje\": \"Apiario no encontrado o acceso denegado\"}");
                         return;
                     }
                 }

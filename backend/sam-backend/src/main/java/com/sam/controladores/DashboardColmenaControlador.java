@@ -41,10 +41,14 @@ public class DashboardColmenaControlador {
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             // Obtener nombre del usuario
             String nombreUsuario = "Apicultor";
-            try (PreparedStatement stmt = conn.prepareStatement("SELECT nombre FROM USUARIO WHERE email = ?")) {
+            int usuarioId = -1;
+            String rol = ctx.sessionAttribute("rol");
+
+            try (PreparedStatement stmt = conn.prepareStatement("SELECT id, nombre FROM USUARIO WHERE email = ?")) {
                 stmt.setString(1, usuarioActual);
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (rs.next()) {
+                        usuarioId = rs.getInt("id");
                         nombreUsuario = rs.getString("nombre");
                     }
                 }
@@ -53,9 +57,11 @@ public class DashboardColmenaControlador {
             usuarioNode.put("nombre", nombreUsuario);
             response.set("usuario", usuarioNode);
             // 1. Info Colmena y Apiario
-            try (PreparedStatement stmt = conn.prepareStatement(
-                    "SELECT c.id as c_id, c.ecotipo, a.nombre as apiario_nombre " +
-                    "FROM COLMENA c JOIN APIARIO a ON c.apiario_id = a.id WHERE c.codigo = ?")) {
+            String sqlColmena = "SELECT c.id as c_id, c.ecotipo, a.nombre as apiario_nombre " +
+                    "FROM COLMENA c JOIN APIARIO a ON c.apiario_id = a.id " +
+                    ("apicultor".equals(rol) ? "JOIN APIARIO_APICULTOR aa ON aa.apiario_id = a.id AND aa.usuario_id = " + usuarioId + " " : "") +
+                    "WHERE c.codigo = ?";
+            try (PreparedStatement stmt = conn.prepareStatement(sqlColmena)) {
                 stmt.setString(1, colmenaCodigo);
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (rs.next()) {

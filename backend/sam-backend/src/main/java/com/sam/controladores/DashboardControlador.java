@@ -160,12 +160,26 @@ public class DashboardControlador {
             produccionColmena.set("data", dataColmena);
             response.set("produccionColmena", produccionColmena);
 
-            // 5. Producción Mensual (mock)
+            // 5. Producción Mensual
             ObjectNode produccionMensual = mapper.createObjectNode();
             ArrayNode labelsMensual = mapper.createArrayNode();
             ArrayNode dataMensual = mapper.createArrayNode();
-            labelsMensual.add("Oct").add("Nov").add("Dic").add("Ene").add("Feb").add("Mar");
-            dataMensual.add(45).add(60).add(30).add(0).add(10).add(80);
+            String qProdMensual = "SELECT DATE_FORMAT(s.fecha, '%b') as mes, SUM(co.kg_miel) as total " +
+                "FROM COSECHA co JOIN SESION_VISITA s ON co.sesion_id = s.id " +
+                (esApicultor ? "JOIN APIARIO_APICULTOR aa ON aa.apiario_id = s.apiario_id AND aa.usuario_id = " + usuarioId + " " : "") +
+                "GROUP BY MONTH(s.fecha), DATE_FORMAT(s.fecha, '%b') ORDER BY MONTH(s.fecha) ASC";
+            try (PreparedStatement stmt = conn.prepareStatement(qProdMensual)) {
+                try (ResultSet rs = stmt.executeQuery()) {
+                    while(rs.next()) {
+                        labelsMensual.add(rs.getString("mes"));
+                        dataMensual.add(rs.getDouble("total"));
+                    }
+                }
+            }
+            if (labelsMensual.size() == 0) {
+                labelsMensual.add("Sin datos");
+                dataMensual.add(0);
+            }
             produccionMensual.set("labels", labelsMensual);
             produccionMensual.set("data", dataMensual);
             response.set("produccionMensual", produccionMensual);

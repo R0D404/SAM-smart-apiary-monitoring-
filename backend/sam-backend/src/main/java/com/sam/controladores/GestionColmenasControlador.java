@@ -15,17 +15,31 @@ public class GestionColmenasControlador {
     private static final ObjectMapper mapper = new ObjectMapper();
 
     public static void listarColmenas(Context ctx) {
-        if (ctx.sessionAttribute("usuarioLogueado") == null) {
+        String usuarioActual = ctx.sessionAttribute("usuarioLogueado");
+        if (usuarioActual == null) {
             ctx.status(401).json("{\"mensaje\": \"No autorizado\"}");
             return;
         }
+        String rol = ctx.sessionAttribute("rol");
 
         try (Connection conn = com.sam.Conexion.conectar()) {
             if (conn == null) throw new Exception("DB Connection failed");
+            
+            int usuarioId = -1;
+            if ("apicultor".equals(rol)) {
+                try (PreparedStatement stmt = conn.prepareStatement("SELECT id FROM USUARIO WHERE email = ?")) {
+                    stmt.setString(1, usuarioActual);
+                    try (ResultSet rs = stmt.executeQuery()) {
+                        if (rs.next()) usuarioId = rs.getInt("id");
+                    }
+                }
+            }
+
             ArrayNode colmenas = mapper.createArrayNode();
             String sql = "SELECT c.id as db_id, c.codigo, a.nombre as apiario, c.ecotipo, c.estado, m.identificador as monitoreo " +
                          "FROM COLMENA c " +
                          "JOIN APIARIO a ON c.apiario_id = a.id " +
+                         ("apicultor".equals(rol) ? "JOIN APIARIO_APICULTOR aa ON aa.apiario_id = a.id AND aa.usuario_id = " + usuarioId + " " : "") +
                          "LEFT JOIN MODULO_MONITOREO m ON m.colmena_id = c.id " +
                          "WHERE c.estado != 'baja'";
                          
