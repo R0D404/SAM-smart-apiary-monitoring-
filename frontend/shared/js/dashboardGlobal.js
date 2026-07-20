@@ -357,7 +357,7 @@ function fetchDashboardData() {
         })
         .catch(error => {
             console.error('Error cargando dashboard:', error);
-            window.location.href = "/index.html";
+            // window.location.href = "/index.html";
         });
 }
 
