@@ -5,10 +5,23 @@ import java.util.Map;
 
 public class TelemetriaControlador {
     
+    // Cargar token desde .env de forma segura sin causar crasheos si no existe
+    private static String EXPECTED_TOKEN = "SAM_SECURE_TOKEN_2026"; // Fallback por defecto
+    static {
+        try {
+            io.github.cdimascio.dotenv.Dotenv dotenv = io.github.cdimascio.dotenv.Dotenv.configure().ignoreIfMissing().load();
+            if (dotenv.get("ESP32_SECRET_TOKEN") != null) {
+                EXPECTED_TOKEN = dotenv.get("ESP32_SECRET_TOKEN");
+            }
+        } catch (Exception e) {
+            System.out.println("No se pudo cargar ESP32_SECRET_TOKEN desde .env, usando fallback.");
+        }
+    }
+
     public static void recibirDatos(Context ctx) {
         // Validar token de seguridad de hardware
         String clientToken = ctx.header("X-ESP32-TOKEN");
-        if (clientToken == null || !clientToken.equals("SAM_SECURE_TOKEN_2026")) {
+        if (clientToken == null || !clientToken.equals(EXPECTED_TOKEN)) {
             ctx.status(401).json("{\"mensaje\": \"Acceso denegado: Token de hardware inválido\"}");
             return;
         }
