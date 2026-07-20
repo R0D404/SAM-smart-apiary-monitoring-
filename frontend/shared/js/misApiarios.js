@@ -122,6 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             </div>
                         </div>
 
+                        ${(api.colmenas || 0) > 0 ? `
                         <div class="chart-box">
                             <div class="chart-canvas-wrap">
                                 <div class="chart-axis-y"><span>50</span><span>40</span><span>30</span></div>
@@ -132,6 +133,11 @@ document.addEventListener("DOMContentLoaded", () => {
                             </div>
                             <p class="chart-caption">Peso promedio · 30 días</p>
                         </div>
+                        ` : `
+                        <div class="chart-box" style="display: flex; align-items: center; justify-content: center; height: 100px; border: 1px dashed rgba(255,255,255,0.1); border-radius: 8px; margin: 20px 0;">
+                            <p class="chart-caption" style="margin: 0; text-align: center; color: var(--color-text-gray);">Sin colmenas registradas<br><span style="font-size: 0.8em; opacity: 0.7;">No hay historial de peso</span></p>
+                        </div>
+                        `}
 
                         <div class="alerta-box">
                             ${totalAlertasEsteApiario > 0 
@@ -144,8 +150,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 apiariosList.appendChild(card);
 
-                // Dibujar la gráfica lineal en el Canvas
-                dibujarMiniGrafica(`chart-apiario-${api.id}`);
+                // Dibujar la gráfica lineal en el Canvas si hay colmenas
+                if ((api.colmenas || 0) > 0) {
+                    dibujarMiniGrafica(`chart-apiario-${api.id}`);
+                }
             });
 
             // Actualizar estadísticas superiores
