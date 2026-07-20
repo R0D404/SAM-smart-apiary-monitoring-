@@ -100,7 +100,8 @@ public class GestionUsuariosControlador {
                         stmt.setInt(1, rolId);
                         stmt.setString(2, nombre);
                         stmt.setString(3, email);
-                        stmt.setString(4, password);
+                        String hash = org.mindrot.jbcrypt.BCrypt.hashpw(password, org.mindrot.jbcrypt.BCrypt.gensalt());
+                        stmt.setString(4, hash);
                         stmt.executeUpdate();
 
                         try (ResultSet rs = stmt.getGeneratedKeys()) {
