@@ -24,6 +24,11 @@ document.addEventListener("DOMContentLoaded", () => {
         if (userNameEl)   userNameEl.textContent   = user.nombre;
         if (headerAvatarEl) headerAvatarEl.textContent = iniciales;
 
+        const headerDots = document.querySelectorAll(".user-account-dot");
+        headerDots.forEach(dot => {
+            dot.textContent = iniciales;
+        });
+
         if (userPhotoEl && user.fotoUrl) {
             userPhotoEl.onload = () => userPhotoEl.classList.add("loaded");
             userPhotoEl.onerror = () => userPhotoEl.classList.remove("loaded");
