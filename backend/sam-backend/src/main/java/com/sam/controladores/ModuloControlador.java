@@ -69,15 +69,20 @@ public class ModuloControlador {
             }
 
             // Obtener ultima lectura
-            try (PreparedStatement stmt = conn.prepareStatement("SELECT fecha FROM LECTURA_SENSOR WHERE colmena_id = ? ORDER BY fecha DESC LIMIT 1")) {
-                stmt.setInt(1, colmenaId);
-                try (ResultSet rs = stmt.executeQuery()) {
-                    if (rs.next()) {
-                        res.put("ultima_lectura", rs.getTimestamp("fecha").toString());
-                    } else {
-                        res.put("ultima_lectura", "---");
+            int moduloId = res.has("id") ? res.get("id").asInt() : -1;
+            if (moduloId != -1) {
+                try (PreparedStatement stmt = conn.prepareStatement("SELECT timestamp_servidor FROM LECTURA_SENSOR WHERE modulo_id = ? ORDER BY timestamp_servidor DESC LIMIT 1")) {
+                    stmt.setInt(1, moduloId);
+                    try (ResultSet rs = stmt.executeQuery()) {
+                        if (rs.next()) {
+                            res.put("ultima_lectura", rs.getTimestamp("timestamp_servidor").toString());
+                        } else {
+                            res.put("ultima_lectura", "---");
+                        }
                     }
                 }
+            } else {
+                res.put("ultima_lectura", "---");
             }
 
             // Contar eventos de mantenimiento en VISITA

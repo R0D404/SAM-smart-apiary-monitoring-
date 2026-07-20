@@ -14,10 +14,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     function cargarDatos() {
         fetch(`/api/modulos/${colmenaId}`)
-            .then(res => res.json())
+            .then(res => {
+                if (!res.ok) throw new Error("Error al cargar módulo");
+                return res.json();
+            })
             .then(data => {
-                // Populate input
-                document.getElementById('modulo_id').value = data.identificador;
+                // Populate breadcrumbs
+                const bcColmena = document.getElementById('bc-colmena');
+                const bcModulo = document.getElementById('bc-modulo');
+                if (bcColmena) bcColmena.textContent = colmenaId;
+                if (bcModulo) bcModulo.textContent = `Módulo ${data.identificador}`;
                 
                 // Populate summary list
                 const listaModulo = document.querySelector('.data-list.module-data');
