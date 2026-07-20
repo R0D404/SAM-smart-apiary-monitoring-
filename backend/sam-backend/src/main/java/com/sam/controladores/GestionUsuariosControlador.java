@@ -5,6 +5,7 @@ import io.github.cdimascio.dotenv.Dotenv;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -91,7 +92,21 @@ public class GestionUsuariosControlador {
                         if (keys.next()) {
                             ObjectNode res = mapper.createObjectNode();
                             res.put("mensaje", "Usuario creado con éxito");
-                            res.put("id", keys.getInt(1));
+                            int userId = keys.getInt(1);
+                            res.put("id", userId);
+                            
+                            if (body.has("apiarios") && body.get("apiarios").isArray()) {
+                                String sqlApiario = "INSERT INTO APIARIO_APICULTOR (usuario_id, apiario_id) VALUES (?, ?)";
+                                try (PreparedStatement stmtApiario = conn.prepareStatement(sqlApiario)) {
+                                    for (JsonNode apiarioIdNode : body.get("apiarios")) {
+                                        stmtApiario.setInt(1, userId);
+                                        stmtApiario.setInt(2, apiarioIdNode.asInt());
+                                        stmtApiario.addBatch();
+                                    }
+                                    stmtApiario.executeBatch();
+                                }
+                            }
+                            
                             ctx.status(201).json(res);
                         }
                     }

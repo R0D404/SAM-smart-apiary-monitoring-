@@ -55,8 +55,7 @@
                 </div>
 
                 <div class="header-right">
-                    <button id="btn-abrir-crear" class="btn-secondary">+ Crear apicultor</button>
-                    <button id="btn-abrir-formulario" class="btn-primary">Asignar apicultor</button>
+                    <button id="btn-abrir-crear" class="btn-primary">+ Crear apicultor</button>
                     <button class="user-account" type="button" aria-label="Abrir mi cuenta" onclick="window.location.href='miCuenta.html'">
                         <span class="user-account-dot"></span>
                         <span>Mi Cuenta</span>
@@ -85,60 +84,7 @@
             </section>
         </main>
 
-        <!-- =========================================
-             MODAL: ASIGNAR A APIARIO (Oculto por defecto)
-        ========================================= -->
-        <div id="modal-asignar" class="modal-overlay">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <div>
-                        <h3 class="modal-title">Asignar a apiario</h3>
-                        <p class="modal-subtitle">Da acceso de monitoreo a un apicultor</p>
-                    </div>
-                    <button class="btn-close-modal" id="btn-cerrar-formulario">&times;</button>
-                </div>
 
-                <form id="form-gestionUsuarios" class="modal-form"> 
-                    <div class="form-group">
-                        <label class="form-label">APICULTOR</label>
-                        <div class="custom-dropdown" id="dropdown-apicultor">
-                            <div class="dropdown-selected">Selecciona un apicultor...</div>
-                            <ul class="dropdown-options" id="apicultor-list">
-                                <li data-value="rodrigo">Rodrigo González</li>
-                                <li data-value="edgar">Edgar Solís</li>
-                            </ul>
-                        </div>
-                        <input type="hidden" name="apicultor_id" id="apicultor_id">
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">APIARIOS (UNO O VARIOS)</label>
-                        <div class="checkbox-list">
-                            <label class="checkbox-card active">
-                                <input type="checkbox" name="apiarios" value="norte" checked>
-                                Apiario Norte
-                            </label>
-                            <label class="checkbox-card">
-                                <input type="checkbox" name="apiarios" value="sur">
-                                Apiario Sur
-                            </label>
-                            <label class="checkbox-card">
-                                <input type="checkbox" name="apiarios" value="el-roble">
-                                Apiario El Roble
-                            </label>
-                        </div>
-                    </div>
-                    
-                    <div class="modal-actions">
-                        <button type="button" class="btn-secondary" id="btn-cancelar-formulario">Cancelar</button>
-                        <button type="submit" class="btn-primary">Guardar</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-        </div>
-
-        <!-- =========================================
              MODAL: CREAR APICULTOR
         ========================================= -->
         <div id="modal-crear-apicultor" class="modal-overlay">
@@ -183,22 +129,8 @@
                         <h4>Asignar apiarios</h4>
                         <p class="section-desc">¿A qué apiarios tendrá acceso?</p>
 
-                        <div class="checkbox-list flex-fill">
-                            <label class="checkbox-card active">
-                                <input type="checkbox" name="crear_apiarios" value="norte" checked>
-                                Apiario Norte
-                                <span class="card-meta">Tapachula · 12 colmenas</span>
-                            </label>
-                            <label class="checkbox-card">
-                                <input type="checkbox" name="crear_apiarios" value="sur">
-                                Apiario Sur
-                                <span class="card-meta">Tuxtla · 6 colmenas</span>
-                            </label>
-                            <label class="checkbox-card">
-                                <input type="checkbox" name="crear_apiarios" value="rio">
-                                Apiario Río
-                                <span class="card-meta">Soconusco · 2 colmenas</span>
-                            </label>
+                        <div class="checkbox-list flex-fill" id="lista-apiarios-checkboxes">
+                            <!-- JS cargará los apiarios dinámicamente -->
                         </div>
 
                         <div class="recommendation-card">
