@@ -81,36 +81,44 @@ public class GestionUsuariosControlador {
             int rolId = body.has("rol_id") ? body.get("rol_id").asInt() : 2;
 
             try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-                String sql = "INSERT INTO USUARIO (rol_id, nombre, email, password_hash, activo, creado_en) VALUES (?, ?, ?, ?, 1, CURRENT_DATE)";
-                try (PreparedStatement stmt = conn.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS)) {
-                    stmt.setInt(1, rolId);
-                    stmt.setString(2, nombre);
-                    stmt.setString(3, email);
-                    stmt.setString(4, password); // Should hash in real prod
-                    stmt.executeUpdate();
+                conn.setAutoCommit(false);
+                try {
+                    String sqlUsuario = "INSERT INTO USUARIO (rol_id, nombre, email, password_hash, creado_en) VALUES (?, ?, ?, ?, CURDATE())";
+                    try (PreparedStatement stmt = conn.prepareStatement(sqlUsuario, java.sql.Statement.RETURN_GENERATED_KEYS)) {
+                        stmt.setInt(1, rolId);
+                        stmt.setString(2, nombre);
+                        stmt.setString(3, email);
+                        stmt.setString(4, password);
+                        stmt.executeUpdate();
 
-                    try (ResultSet keys = stmt.getGeneratedKeys()) {
-                        if (keys.next()) {
-                            ObjectNode res = mapper.createObjectNode();
-                            res.put("mensaje", "Usuario creado con éxito");
-                            int userId = keys.getInt(1);
-                            res.put("id", userId);
-                            
-                            if (body.has("apiarios") && body.get("apiarios").isArray()) {
-                                String sqlApiario = "INSERT INTO APIARIO_APICULTOR (usuario_id, apiario_id) VALUES (?, ?)";
-                                try (PreparedStatement stmtApiario = conn.prepareStatement(sqlApiario)) {
-                                    for (JsonNode apiarioIdNode : body.get("apiarios")) {
-                                        stmtApiario.setInt(1, userId);
-                                        stmtApiario.setInt(2, apiarioIdNode.asInt());
-                                        stmtApiario.addBatch();
+                        try (ResultSet rs = stmt.getGeneratedKeys()) {
+                            if (rs.next()) {
+                                int userId = rs.getInt(1);
+                                ObjectNode res = mapper.createObjectNode();
+                                res.put("id", userId);
+                                res.put("mensaje", "Usuario creado con éxito");
+
+                                // Asignar apiarios si existen
+                                if (body.has("apiarios") && body.get("apiarios").isArray()) {
+                                    String sqlApiario = "INSERT INTO APIARIO_APICULTOR (usuario_id, apiario_id, asignado_en) VALUES (?, ?, CURDATE())";
+                                    try (PreparedStatement stmtApiario = conn.prepareStatement(sqlApiario)) {
+                                        for (JsonNode apiarioIdNode : body.get("apiarios")) {
+                                            stmtApiario.setInt(1, userId);
+                                            stmtApiario.setInt(2, apiarioIdNode.asInt());
+                                            stmtApiario.addBatch();
+                                        }
+                                        stmtApiario.executeBatch();
                                     }
-                                    stmtApiario.executeBatch();
                                 }
+                                
+                                conn.commit();
+                                ctx.status(201).json(res);
                             }
-                            
-                            ctx.status(201).json(res);
                         }
                     }
+                } catch (Exception e) {
+                    conn.rollback();
+                    throw e;
                 }
             }
         } catch (Exception e) {
