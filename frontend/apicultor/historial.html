@@ -45,22 +45,18 @@
     
     <section class="main-content">
         <!-- Cabecera principal -->
-        <header class="header-container">
-            <div class="page-title">
-                <h2>Historial de visitas</h2>
-                <p>Apiario Norte · registros realizados por el apicultor</p>
+        <header class="main-header" style="justify-content: space-between; align-items: flex-start;">
+            <div class="header-left">
+                <h1 id="page-title" style="font-size: 24px; font-weight: 600; color: #facc15; margin: 0;">Historial de visitas</h1>
+                <p class="subtitle" style="color: #a3a3a3; font-size: 14px; margin-top: 4px; margin-bottom: 0;" id="page-subtitle">Apiario Norte · registros realizados por el apicultor</p>
             </div>
             
-            <div class="header-actions">
-                <button class="btn-primary">Registrar visita</button>
-                <button class="btn-outline-dark">
-                    Ver cosechas 
-                    <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 6px; vertical-align: middle;"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            <div class="header-right" style="display: flex; gap: 16px; align-items: center;">
+                <button class="btn-primary" onclick="window.location.href='registrarVisita.html'" style="height: 36px; padding: 0 16px; font-size: 14px; font-weight: 500; border-radius: 8px;">Registrar visita</button>
+                <button class="user-account" type="button" aria-label="Abrir mi cuenta" onclick="window.location.href='miCuenta.html'">
+                    <span class="user-account-dot"></span>
+                    <span>Mi Cuenta</span>
                 </button>
-                <a href="miCuenta.html" class="user-info-btn" style="text-decoration: none; position: relative !important; top: auto !important; right: auto !important;">
-                    <div class="circle-avatar" id="header-user-avatar" style="display: flex; align-items: center; justify-content: center; font-weight: bold; color: #1e1e1e; font-size: 11px;">--</div>
-                    <p>Mi cuenta</p>
-                </a>
             </div>
         </header>
 
