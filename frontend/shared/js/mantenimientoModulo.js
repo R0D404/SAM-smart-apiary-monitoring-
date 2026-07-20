@@ -26,33 +26,42 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (bcModulo) bcModulo.textContent = `Módulo ${data.identificador}`;
                 
                 // Populate summary list
-                const listaModulo = document.querySelector('.data-list.module-data');
-                if (listaModulo) {
-                    listaModulo.innerHTML = `
-                        <li><span>Identificador</span> <span>${data.identificador}</span></li>
-                        <li><span>Tipo</span> <span style="text-transform: capitalize">${data.tipo}</span></li>
-                        <li><span>Estado</span> <span style="text-transform: capitalize">${data.estado}</span></li>
-                        <li><span>Instalado</span> <span>${data.instalado}</span></li>
-                        <li><span>Última lectura</span> <span>${data.ultima_lectura.split(' ')[0]}</span></li>
-                        <li><span>Eventos registrados</span> <span>${data.eventos || 0}</span></li>
-                    `;
+                const elId = document.getElementById('modulo-id-text');
+                if(elId) elId.textContent = data.identificador || '---';
+                
+                const elTipo = document.getElementById('modulo-tipo');
+                if(elTipo) {
+                    elTipo.textContent = data.tipo || '---';
+                    elTipo.style.textTransform = 'capitalize';
                 }
+                
+                const elEstado = document.getElementById('modulo-estado');
+                if(elEstado) {
+                    elEstado.style.display = 'inline-block';
+                    elEstado.textContent = data.estado ? data.estado.toUpperCase() : '---';
+                }
+                
+                const elInstalado = document.getElementById('modulo-instalado');
+                if(elInstalado) elInstalado.textContent = data.instalado || '---';
+                
+                const elUltLectura = document.getElementById('modulo-ultima-lectura');
+                if(elUltLectura) elUltLectura.textContent = data.ultima_lectura && data.ultima_lectura !== '---' ? data.ultima_lectura.split(' ')[0] : '---';
+                
+                const elEventos = document.getElementById('modulo-eventos-count');
+                if(elEventos) elEventos.textContent = data.eventos || 0;
 
                 // Populate history list
-                const historyList = document.querySelector('.history-list.module-history');
+                const historyList = document.getElementById('timeline-historial');
                 if (historyList) {
                     if (data.historial && data.historial.length > 0) {
                         historyList.innerHTML = data.historial.map(h => `
-                            <li>
-                                <div class="timeline-dot"></div>
-                                <div class="history-item-content">
-                                    <span class="history-date">${h.fecha}</span>
-                                    <span class="history-desc">${h.detalle}</span>
-                                </div>
-                            </li>
+                            <div style="margin-bottom: 12px; border-left: 2px solid var(--color-primary); padding-left: 12px;">
+                                <div style="font-size: 12px; color: var(--color-text-gray);">${h.fecha}</div>
+                                <div style="font-size: 14px; color: var(--color-text-white);">${h.detalle}</div>
+                            </div>
                         `).join('');
                     } else {
-                        historyList.innerHTML = `<li class="empty-state">No hay historial reciente disponible.</li>`;
+                        historyList.innerHTML = \`<p style="color: var(--color-text-gray); font-size: 14px; text-align: center; padding: 20px 0;">No hay historial reciente disponible.</p>\`;
                     }
                 }
             })
