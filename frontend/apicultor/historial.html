@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SAM - Historial de visitas</title>
     <!-- Tu CSS global -->
-    <link rel="stylesheet" href="../shared/css/plantilla.css"> 
-    <!-- CSS específico de esta vista -->
-    <link rel="stylesheet" href="../shared/css/historialVisitaA.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../shared/css/dashboardGlobal.css">
+    <link rel="stylesheet" href="../shared/css/historialVisita.css">
     <link rel="stylesheet" href="../shared/css/sidebar.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -64,43 +64,62 @@
             </div>
         </header>
 
-        <!-- Banner informativo -->
-        <div class="info-banner">
-            <div class="banner-icon"></div>
-            <div class="banner-content">
-                <strong>Tu registro de campo</strong>
-                <p>Aquí registras tus visitas y mantenimientos. Al guardar una visita puedes añadir la cosecha del día.</p>
+        <section class="table-section" style="margin-top: 32px;">
+
+            <!-- FILA DE CONTROLES: Tipo + Apiario + Fecha -->
+            <div class="controls-bar">
+
+                <!-- Selector de tipo -->
+                <div class="tipo-tabs">
+                    <button class="tipo-tab active" data-tipo="visitas">Visitas</button>
+                    <button class="tipo-tab" data-tipo="cosechas">Cosechas</button>
+                    <button class="tipo-tab" data-tipo="mantenimiento">Mantenimiento hardware</button>
+                </div>
+
+                <div class="secondary-filters">
+                    <!-- Filtro por apiario (se carga dinámicamente) -->
+                    <div class="filter-group">
+                        <label class="filter-label">Apiario</label>
+                        <select id="filtro-apiario" class="filter-select">
+                            <option value="">Todos</option>
+                        </select>
+                    </div>
+
+                    <!-- Filtro por fecha -->
+                    <div class="filter-group">
+                        <label class="filter-label">Período</label>
+                        <div class="date-filter-wrapper">
+                            <select id="filtro-fecha-tipo" class="filter-select">
+                                <option value="">Sin filtro</option>
+                                <option value="anio">Por año</option>
+                                <option value="mes">Por mes y año</option>
+                                <option value="dia">Fecha exacta</option>
+                            </select>
+                            <input type="number" id="filtro-anio" class="filter-input" placeholder="2026" min="2020" max="2030" style="display:none; width: 80px;">
+                            <input type="month" id="filtro-mes" class="filter-input" style="display:none;">
+                            <input type="date" id="filtro-dia" class="filter-input" style="display:none;">
+                        </div>
+                    </div>
+
+                    <button id="btn-aplicar-filtros" class="btn-primary" style="height:36px; padding: 0 16px; font-size:13px;">Aplicar</button>
+                </div>
             </div>
-        </div>
 
-        <!-- Filtros -->
-        <div class="filters-container">
-            <button class="filter-btn active">Todas</button>
-            <button class="filter-btn outline">Apiario Norte</button>
-            <button class="filter-btn outline">Mayo</button>
-        </div>
-
-        <!-- Contenedor de la Tabla -->
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>FECHA</th>
-                        <th>COLMENA</th>
-                        <th>APICULTOR</th>
-                        <th>ESTADO COLONIA</th>
-                        <th>REINA</th>
-                        <th>NOTAS</th>
-                    </tr>
-                </thead>
-                <!-- El tbody se llena dinámicamente con JS -->
-                <tbody id="tabla-visitas-body">
-                </tbody>
-            </table>
-        </div>
+            <!-- Tabla -->
+            <div class="table-container" style="margin-top: 24px;">
+                <table class="data-table">
+                    <thead id="tabla-thead">
+                        <!-- JS fill -->
+                    </thead>
+                    <tbody id="tabla-visitas-body">
+                        <!-- JS fill -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
     </section>
-
+    
     <script src="../shared/js/sidebar.js" defer></script>
-    <script src="../shared/js/historialVisitaA.js"></script>
+    <script src="../shared/js/historialVisita.js"></script>
 </body>
-</html>1
+</html>

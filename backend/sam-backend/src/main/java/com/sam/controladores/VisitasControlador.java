@@ -57,11 +57,23 @@ public class VisitasControlador {
             ArrayNode result = mapper.createArrayNode();
             List<Object> params = new ArrayList<>();
 
+            int usuarioId = -1;
+            String rol = ctx.sessionAttribute("rol");
+            if ("apicultor".equals(rol)) {
+                try (PreparedStatement stmt = conn.prepareStatement("SELECT id FROM USUARIO WHERE email = ?")) {
+                    stmt.setString(1, ctx.sessionAttribute("usuarioLogueado"));
+                    try (ResultSet rs = stmt.executeQuery()) {
+                        if (rs.next()) usuarioId = rs.getInt("id");
+                    }
+                }
+            }
+
             String sql = "SELECT sv.fecha, c.codigo as colmena, a.nombre as apiario, u.nombre as apicultor, " +
                          "v.estado_colonia, IF(v.reina_vista=1, 'Sí', 'No') as reina, v.notas " +
                          "FROM VISITA v " +
                          "JOIN COLMENA c ON v.colmena_id = c.id " +
                          "JOIN APIARIO a ON c.apiario_id = a.id " +
+                         ("apicultor".equals(rol) ? "JOIN APIARIO_APICULTOR aa ON aa.apiario_id = a.id AND aa.usuario_id = " + usuarioId + " " : "") +
                          "JOIN SESION_VISITA sv ON v.sesion_id = sv.id " +
                          "JOIN USUARIO u ON sv.usuario_id = u.id " +
                          "WHERE sv.tipo = 'visita' AND v.estado_colonia != 'Mantenimiento de hardware'";
@@ -116,11 +128,23 @@ public class VisitasControlador {
             ArrayNode result = mapper.createArrayNode();
             List<Object> params = new ArrayList<>();
 
+            int usuarioId = -1;
+            String rol = ctx.sessionAttribute("rol");
+            if ("apicultor".equals(rol)) {
+                try (PreparedStatement stmt = conn.prepareStatement("SELECT id FROM USUARIO WHERE email = ?")) {
+                    stmt.setString(1, ctx.sessionAttribute("usuarioLogueado"));
+                    try (ResultSet rs = stmt.executeQuery()) {
+                        if (rs.next()) usuarioId = rs.getInt("id");
+                    }
+                }
+            }
+
             String sql = "SELECT sv.fecha, c.codigo as colmena, a.nombre as apiario, u.nombre as apicultor, " +
                          "co.kg_miel, co.calidad, IF(co.validado_con_peso=1,'Sí','No') as validada " +
                          "FROM COSECHA co " +
                          "JOIN COLMENA c ON co.colmena_id = c.id " +
                          "JOIN APIARIO a ON c.apiario_id = a.id " +
+                         ("apicultor".equals(rol) ? "JOIN APIARIO_APICULTOR aa ON aa.apiario_id = a.id AND aa.usuario_id = " + usuarioId + " " : "") +
                          "JOIN SESION_VISITA sv ON co.sesion_id = sv.id " +
                          "JOIN USUARIO u ON sv.usuario_id = u.id " +
                          "WHERE sv.tipo = 'cosecha'";
@@ -175,10 +199,22 @@ public class VisitasControlador {
             ArrayNode result = mapper.createArrayNode();
             List<Object> params = new ArrayList<>();
 
+            int usuarioId = -1;
+            String rol = ctx.sessionAttribute("rol");
+            if ("apicultor".equals(rol)) {
+                try (PreparedStatement stmt = conn.prepareStatement("SELECT id FROM USUARIO WHERE email = ?")) {
+                    stmt.setString(1, ctx.sessionAttribute("usuarioLogueado"));
+                    try (ResultSet rs = stmt.executeQuery()) {
+                        if (rs.next()) usuarioId = rs.getInt("id");
+                    }
+                }
+            }
+
             String sql = "SELECT sv.fecha, c.codigo as colmena, a.nombre as apiario, u.nombre as tecnico, v.notas " +
                          "FROM VISITA v " +
                          "JOIN COLMENA c ON v.colmena_id = c.id " +
                          "JOIN APIARIO a ON c.apiario_id = a.id " +
+                         ("apicultor".equals(rol) ? "JOIN APIARIO_APICULTOR aa ON aa.apiario_id = a.id AND aa.usuario_id = " + usuarioId + " " : "") +
                          "JOIN SESION_VISITA sv ON v.sesion_id = sv.id " +
                          "JOIN USUARIO u ON sv.usuario_id = u.id " +
                          "WHERE v.estado_colonia = 'Mantenimiento de hardware'";
@@ -233,9 +269,30 @@ public class VisitasControlador {
             ctx.status(401).json("{\"mensaje\": \"No autorizado\"}");
             return;
         }
+        
+        String rol = ctx.sessionAttribute("rol");
+        String usuarioActual = ctx.sessionAttribute("usuarioLogueado");
+        
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            
+            int usuarioId = -1;
+            if ("apicultor".equals(rol)) {
+                try (PreparedStatement stmt = conn.prepareStatement("SELECT id FROM USUARIO WHERE email = ?")) {
+                    stmt.setString(1, usuarioActual);
+                    try (ResultSet rs = stmt.executeQuery()) {
+                        if (rs.next()) usuarioId = rs.getInt("id");
+                    }
+                }
+            }
+
             ArrayNode result = mapper.createArrayNode();
-            try (PreparedStatement stmt = conn.prepareStatement("SELECT id, nombre FROM APIARIO ORDER BY nombre")) {
+            String sql = "SELECT a.id, a.nombre FROM APIARIO a ";
+            if ("apicultor".equals(rol)) {
+                sql += "JOIN APIARIO_APICULTOR aa ON aa.apiario_id = a.id AND aa.usuario_id = " + usuarioId + " ";
+            }
+            sql += "ORDER BY a.nombre";
+
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                 try (ResultSet rs = stmt.executeQuery()) {
                     while (rs.next()) {
                         ObjectNode node = mapper.createObjectNode();
