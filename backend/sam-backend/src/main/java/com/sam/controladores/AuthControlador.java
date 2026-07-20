@@ -12,11 +12,7 @@ import java.sql.ResultSet;
 
 public class AuthControlador {
 
-    // Carga de forma segura los valores desde el archivo .env
-    private static final Dotenv dotenv = Dotenv.load();
-    private static final String DB_URL = dotenv.get("DB_URL"); 
-    private static final String DB_USER = dotenv.get("DB_USER");
-    private static final String DB_PASSWORD = dotenv.get("DB_PASSWORD");
+    // Se eliminó Dotenv de aquí porque Conexion.java ya se encarga de la BD
 
     public static void manejarLogin(Context ctx) {
         Credenciales credenciales = ctx.bodyAsClass(Credenciales.class);
@@ -29,11 +25,15 @@ public class AuthControlador {
             return;
         }
 
-        // Conectar a MariaDB
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+        // Conectar a MariaDB usando la clase Conexion
+        try (Connection conn = com.sam.Conexion.conectar()) {
             
-            // Asumiendo que tu tabla se llama 'usuarios' y las columnas 'email' y 'password'
-            // Modifica "SELECT password_hash FROM USUARIO WHERE email = ?" si tu tabla es diferente.
+            if (conn == null) {
+                ctx.status(500).json("{\"mensaje\": \"No se pudo conectar a la base de datos\"}");
+                return;
+            }
+
+            // Asumiendo que tu tabla se llama 'USUARIO' y las columnas 'email' y 'password_hash'
             String sql = "SELECT password_hash FROM USUARIO WHERE email = ?";
             
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
