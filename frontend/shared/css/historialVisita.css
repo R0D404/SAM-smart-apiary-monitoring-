@@ -77,10 +77,10 @@
 
 .filter-select,
 .filter-input {
-    background: var(--color-bg-sidebar); /* Cafe oscuro */
+    background: var(--color-bg-dark);
     border: 1px solid var(--color-border);
     border-radius: 8px;
-    color: var(--color-primary); /* Amarillo */
+    color: var(--color-text-white);
     font-size: 13px;
     font-family: inherit;
     padding: 7px 10px;
@@ -93,7 +93,7 @@
 
 .filter-select option {
     background-color: var(--color-bg-sidebar);
-    color: var(--color-primary);
+    color: var(--color-text-white);
     padding: 10px;
 }
 
