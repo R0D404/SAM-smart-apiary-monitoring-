@@ -229,7 +229,12 @@ body {
     height: clamp(24px, 1.6vw, 34px);
     border-radius: 50%;
     background-color: var(--color-primary);
-    display: inline-block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    color: var(--color-bg-dark);
+    font-size: 13px;
     flex-shrink: 0;
 }
 
