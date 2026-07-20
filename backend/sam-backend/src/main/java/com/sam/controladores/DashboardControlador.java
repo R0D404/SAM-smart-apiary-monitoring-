@@ -31,23 +31,38 @@ public class DashboardControlador {
         ObjectNode response = mapper.createObjectNode();
 
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            // 1. Obtener nombre del usuario
+            // 1. Obtener nombre del usuario y rol
             String nombreUsuario = "Admin";
-            try (PreparedStatement stmt = conn.prepareStatement("SELECT nombre FROM USUARIO WHERE email = ?")) {
+            String emailUsuario = usuarioActual;
+            int usuarioId = -1;
+            String rolNombre = "";
+            try (PreparedStatement stmt = conn.prepareStatement(
+                "SELECT u.id, u.nombre, u.email, r.nombre as rol FROM USUARIO u JOIN CATALAGO_ROL r ON u.rol_id = r.id WHERE u.email = ?")) {
                 stmt.setString(1, usuarioActual);
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (rs.next()) {
+                        usuarioId = rs.getInt("id");
                         nombreUsuario = rs.getString("nombre");
+                        emailUsuario = rs.getString("email");
+                        rolNombre = rs.getString("rol");
                     }
                 }
             }
             ObjectNode usuarioNode = mapper.createObjectNode();
             usuarioNode.put("nombre", nombreUsuario);
+            usuarioNode.put("email", emailUsuario);
+            usuarioNode.put("rol", rolNombre);
             response.set("usuario", usuarioNode);
+
+            boolean esApicultor = "apicultor".equals(rolNombre);
+            String apiarioFiltroStr = esApicultor ? (" AND c.apiario_id IN (SELECT apiario_id FROM APIARIO_APICULTOR WHERE usuario_id = " + usuarioId + ")") : "";
 
             // 2. Stats
             double produccionTotal = 0;
-            try (PreparedStatement stmt = conn.prepareStatement("SELECT SUM(kg_miel) as total FROM COSECHA")) {
+            String qCosecha = esApicultor 
+                ? "SELECT SUM(co.kg_miel) as total FROM COSECHA co JOIN COLMENA c ON co.colmena_id = c.id WHERE c.estado != 'baja'" + apiarioFiltroStr
+                : "SELECT SUM(kg_miel) as total FROM COSECHA";
+            try (PreparedStatement stmt = conn.prepareStatement(qCosecha)) {
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (rs.next()) produccionTotal = rs.getDouble("total");
                 }
@@ -55,7 +70,9 @@ public class DashboardControlador {
 
             int colmenasTotal = 0;
             int colmenasActivas = 0;
-            try (PreparedStatement stmt = conn.prepareStatement("SELECT count(*) as total, sum(case when estado='activa' then 1 else 0 end) as activas FROM COLMENA")) {
+            try (PreparedStatement stmt = conn.prepareStatement(
+                "SELECT count(*) as total, sum(case when c.id NOT IN (SELECT colmena_id FROM ALERTA WHERE atendida = false) then 1 else 0 end) as activas " +
+                "FROM COLMENA c WHERE c.estado != 'baja'" + apiarioFiltroStr)) {
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (rs.next()) {
                         colmenasTotal = rs.getInt("total");
@@ -65,7 +82,8 @@ public class DashboardControlador {
             }
 
             int alertasActivas = 0;
-            try (PreparedStatement stmt = conn.prepareStatement("SELECT count(*) as total FROM ALERTA WHERE atendida = false")) {
+            try (PreparedStatement stmt = conn.prepareStatement(
+                "SELECT count(*) as total FROM ALERTA al JOIN COLMENA c ON al.colmena_id = c.id WHERE al.atendida = false AND c.estado != 'baja'" + apiarioFiltroStr)) {
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (rs.next()) alertasActivas = rs.getInt("total");
                 }
@@ -87,12 +105,13 @@ public class DashboardControlador {
 
             // 3. Apiarios
             ArrayNode apiariosArray = mapper.createArrayNode();
-            try (PreparedStatement stmt = conn.prepareStatement(
-                "SELECT a.id, a.nombre, a.estado as ubicacion, " +
-                "(SELECT count(*) FROM COLMENA c WHERE c.apiario_id = a.id) as num_colmenas, " +
-                "(SELECT count(*) FROM ALERTA al JOIN COLMENA c ON al.colmena_id = c.id WHERE c.apiario_id = a.id AND al.atendida = false AND al.nivel = 'critico') as criticas, " +
-                "(SELECT count(*) FROM ALERTA al JOIN COLMENA c ON al.colmena_id = c.id WHERE c.apiario_id = a.id AND al.atendida = false AND al.nivel = 'aviso') as avisos " +
-                "FROM APIARIO a")) {
+            String qApiarios = "SELECT a.id, a.nombre, a.estado as ubicacion, " +
+                "(SELECT count(*) FROM COLMENA c WHERE c.apiario_id = a.id AND c.estado != 'baja') as num_colmenas, " +
+                "(SELECT count(*) FROM ALERTA al JOIN COLMENA c ON al.colmena_id = c.id WHERE c.apiario_id = a.id AND al.atendida = false AND al.nivel = 'critico' AND c.estado != 'baja') as criticas, " +
+                "(SELECT count(*) FROM ALERTA al JOIN COLMENA c ON al.colmena_id = c.id WHERE c.apiario_id = a.id AND al.atendida = false AND al.nivel = 'aviso' AND c.estado != 'baja') as avisos " +
+                "FROM APIARIO a " + (esApicultor ? "JOIN APIARIO_APICULTOR aa ON aa.apiario_id = a.id " : "") + 
+                "WHERE a.estatus != 'baja'" + (esApicultor ? " AND aa.usuario_id = " + usuarioId : "");
+            try (PreparedStatement stmt = conn.prepareStatement(qApiarios)) {
                 try (ResultSet rs = stmt.executeQuery()) {
                     while (rs.next()) {
                         ObjectNode apiario = mapper.createObjectNode();
@@ -119,14 +138,15 @@ public class DashboardControlador {
             }
             response.set("apiarios", apiariosArray);
 
-            // 4. Producción por colmena (mock por ahora o leer de DB real si hay)
+            // 4. Producción por colmena
             ObjectNode produccionColmena = mapper.createObjectNode();
             ArrayNode labelsColmena = mapper.createArrayNode();
             ArrayNode dataColmena = mapper.createArrayNode();
-            try (PreparedStatement stmt = conn.prepareStatement(
-                "SELECT c.codigo, sum(co.kg_miel) as total_miel FROM COLMENA c " +
+            String qProdColmena = "SELECT c.codigo, sum(co.kg_miel) as total_miel FROM COLMENA c " +
                 "LEFT JOIN COSECHA co ON co.colmena_id = c.id " +
-                "GROUP BY c.id ORDER BY total_miel DESC LIMIT 5")) {
+                "WHERE c.estado != 'baja'" + apiarioFiltroStr + " " +
+                "GROUP BY c.id ORDER BY total_miel DESC";
+            try (PreparedStatement stmt = conn.prepareStatement(qProdColmena)) {
                 try (ResultSet rs = stmt.executeQuery()) {
                     while(rs.next()) {
                         labelsColmena.add(rs.getString("codigo"));
@@ -135,16 +155,31 @@ public class DashboardControlador {
                     }
                 }
             }
+            System.out.println("DEBUG Dashboard: colmenas labels size = " + labelsColmena.size());
             produccionColmena.set("labels", labelsColmena);
             produccionColmena.set("data", dataColmena);
             response.set("produccionColmena", produccionColmena);
 
-            // 5. Producción Mensual (mock)
+            // 5. Producción Mensual
             ObjectNode produccionMensual = mapper.createObjectNode();
             ArrayNode labelsMensual = mapper.createArrayNode();
             ArrayNode dataMensual = mapper.createArrayNode();
-            labelsMensual.add("Oct").add("Nov").add("Dic").add("Ene").add("Feb").add("Mar");
-            dataMensual.add(45).add(60).add(30).add(0).add(10).add(80);
+            String qProdMensual = "SELECT DATE_FORMAT(s.fecha, '%b') as mes, SUM(co.kg_miel) as total " +
+                "FROM COSECHA co JOIN SESION_VISITA s ON co.sesion_id = s.id " +
+                (esApicultor ? "JOIN APIARIO_APICULTOR aa ON aa.apiario_id = s.apiario_id AND aa.usuario_id = " + usuarioId + " " : "") +
+                "GROUP BY MONTH(s.fecha), DATE_FORMAT(s.fecha, '%b') ORDER BY MONTH(s.fecha) ASC";
+            try (PreparedStatement stmt = conn.prepareStatement(qProdMensual)) {
+                try (ResultSet rs = stmt.executeQuery()) {
+                    while(rs.next()) {
+                        labelsMensual.add(rs.getString("mes"));
+                        dataMensual.add(rs.getDouble("total"));
+                    }
+                }
+            }
+            if (labelsMensual.size() == 0) {
+                labelsMensual.add("Sin datos");
+                dataMensual.add(0);
+            }
             produccionMensual.set("labels", labelsMensual);
             produccionMensual.set("data", dataMensual);
             response.set("produccionMensual", produccionMensual);

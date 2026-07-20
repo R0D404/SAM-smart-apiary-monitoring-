@@ -58,6 +58,30 @@ document.addEventListener("DOMContentLoaded", () => {
         elIaTag.textContent = data.iaDiagnostico.estado;
         elIaMsg.textContent = data.iaDiagnostico.mensaje;
 
+        const stateDots = document.querySelector('.state-dots');
+        if (stateDots) {
+            let colorClass = 'green';
+            let textColor = 'text-saludable';
+            let dotIndex = 2; // bottom for green
+            
+            if (data.iaDiagnostico.estado.toLowerCase() === 'crítico') {
+                colorClass = 'red';
+                textColor = 'text-critico';
+                dotIndex = 0; // top for red
+            } else if (data.iaDiagnostico.estado.toLowerCase() === 'aviso') {
+                colorClass = 'yellow';
+                textColor = 'text-aviso';
+                dotIndex = 1; // middle for yellow
+            }
+            
+            elIaTag.className = textColor;
+            stateDots.innerHTML = `
+                <span class="dot ${dotIndex === 0 ? colorClass : ''}"></span>
+                <span class="dot ${dotIndex === 1 ? colorClass : ''}"></span>
+                <span class="dot ${dotIndex === 2 ? colorClass : ''}"></span>
+            `;
+        }
+
         // Metricas (Latest reading)
         if (data.lecturas && data.lecturas.length > 0) {
             const last = data.lecturas[0];

@@ -12,11 +12,7 @@ import java.sql.ResultSet;
 
 public class AuthControlador {
 
-    // Carga de forma segura los valores desde el archivo .env
-    private static final Dotenv dotenv = Dotenv.load();
-    private static final String DB_URL = dotenv.get("DB_URL"); 
-    private static final String DB_USER = dotenv.get("DB_USER");
-    private static final String DB_PASSWORD = dotenv.get("DB_PASSWORD");
+    // Se eliminó Dotenv de aquí porque Conexion.java ya se encarga de la BD
 
     public static void manejarLogin(Context ctx) {
         Credenciales credenciales = ctx.bodyAsClass(Credenciales.class);
@@ -29,26 +25,29 @@ public class AuthControlador {
             return;
         }
 
-        // Conectar a MariaDB
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+        // Conectar a MariaDB usando la clase Conexion
+        try (Connection conn = com.sam.Conexion.conectar()) {
             
-            // Asumiendo que tu tabla se llama 'usuarios' y las columnas 'email' y 'password'
-            // Modifica "SELECT password_hash FROM USUARIO WHERE email = ?" si tu tabla es diferente.
-            String sql = "SELECT password_hash FROM USUARIO WHERE email = ?";
+            if (conn == null) {
+                ctx.status(500).json("{\"mensaje\": \"No se pudo conectar a la base de datos\"}");
+                return;
+            }
+
+            // Asumiendo que tu tabla se llama 'USUARIO' y las columnas 'email' y 'password_hash'
+            String sql = "SELECT u.password_hash, r.nombre as rol FROM USUARIO u JOIN CATALAGO_ROL r ON u.rol_id = r.id WHERE u.email = ?";
             
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.setString(1, inputUsername);
                 
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (rs.next()) {
-                        // Obtener el hash de la base de datos
                         String hashGuardado = rs.getString("password_hash");
+                        String rol = rs.getString("rol");
                         
-                        // Verificar la contraseña usando BCrypt
                         if (BCrypt.checkpw(inputPassword, hashGuardado)) {
-                            // Crear la sesión del usuario
                             ctx.sessionAttribute("usuarioLogueado", inputUsername);
-                            ctx.status(200).json("{\"mensaje\": \"Login exitoso\"}");
+                            ctx.sessionAttribute("rol", rol);
+                            ctx.status(200).json("{\"mensaje\": \"Login exitoso\", \"rol\": \"" + rol + "\"}");
                             return;
                         }
                     }

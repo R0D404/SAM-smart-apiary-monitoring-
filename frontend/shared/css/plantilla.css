@@ -8,6 +8,7 @@
 }
 
 :root {
+    color-scheme: dark;
     /* Colores principales */
     --color-bg-dark: #1A1206;
     --color-bg-sidebar: #241A0B;
@@ -45,6 +46,21 @@ body {
 /* =========================================
    ELEMENTOS GLOBALES DE FORMULARIO
    ========================================= */
+select, input[type="date"] {
+    background-color: var(--color-bg-sidebar);
+    color: var(--color-text-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 8px 12px;
+    font-family: var(--font-main);
+    color-scheme: dark; /* Fuerza calendario oscuro e icono blanco nativo */
+}
+
+select:focus, input[type="date"]:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
 select option {
     background-color: var(--color-bg-sidebar);
     color: var(--color-text-white);
@@ -171,7 +187,12 @@ select option {
     height: clamp(24px, 1.6vw, 34px);
     border-radius: 50%;
     background-color: var(--color-primary);
-    display: inline-block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    color: var(--color-bg-dark);
+    font-size: 13px;
     flex-shrink: 0;
 }
 

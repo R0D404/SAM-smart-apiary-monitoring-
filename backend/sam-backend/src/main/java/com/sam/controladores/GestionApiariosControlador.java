@@ -14,25 +14,40 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 public class GestionApiariosControlador {
-    private static final Dotenv dotenv = Dotenv.load();
-    private static final String DB_URL = dotenv.get("DB_URL");
-    private static final String DB_USER = dotenv.get("DB_USER");
-    private static final String DB_PASSWORD = dotenv.get("DB_PASSWORD");
     private static final ObjectMapper mapper = new ObjectMapper();
 
     public static void listarApiarios(Context ctx) {
-        if (ctx.sessionAttribute("usuarioLogueado") == null) {
+        String usuarioActual = ctx.sessionAttribute("usuarioLogueado");
+        if (usuarioActual == null) {
             ctx.status(401).json("{\"mensaje\": \"No autorizado\"}");
             return;
         }
+        
+        String rol = ctx.sessionAttribute("rol");
 
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+        try (Connection conn = com.sam.Conexion.conectar()) {
+            if (conn == null) throw new Exception("DB connection failed");
+            
+            int usuarioId = -1;
+            if ("apicultor".equals(rol)) {
+                try (PreparedStatement stmt = conn.prepareStatement("SELECT id FROM USUARIO WHERE email = ?")) {
+                    stmt.setString(1, usuarioActual);
+                    try (ResultSet rs = stmt.executeQuery()) {
+                        if (rs.next()) usuarioId = rs.getInt("id");
+                    }
+                }
+            }
+
             ArrayNode apiarios = mapper.createArrayNode();
+            String filterApicultor = "apicultor".equals(rol) ? " JOIN APIARIO_APICULTOR aa ON aa.apiario_id = a.id AND aa.usuario_id = " + usuarioId : "";
+
             String sql = "SELECT a.id, a.nombre, a.estado, a.municipio, a.localidad, a.microclima_id, " +
                          "COUNT(c.id) as colmenas, cm.nombre as microclima " +
                          "FROM APIARIO a " +
-                         "LEFT JOIN COLMENA c ON a.id = c.apiario_id " +
+                         filterApicultor +
+                         " LEFT JOIN COLMENA c ON a.id = c.apiario_id AND c.estado != 'baja' " +
                          "LEFT JOIN CATALAGO_MICROCLIMA cm ON a.microclima_id = cm.id " +
+                         "WHERE a.estatus != 'baja' " +
                          "GROUP BY a.id, a.nombre, a.estado, a.municipio, a.localidad, a.microclima_id, cm.nombre";
                          
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -50,6 +65,25 @@ public class GestionApiariosControlador {
                         node.put("microclima", mc != null ? mc : "Desconocido");
                         node.put("microclima_id", rs.getInt("microclima_id"));
                         
+                        // Fetch peso_historial
+                        ArrayNode pesoHistorial = mapper.createArrayNode();
+                        String qPeso = "SELECT AVG(valor) as peso_promedio " +
+                                       "FROM LECTURA_SENSOR l " +
+                                       "JOIN MODULO_MONITOREO m ON l.modulo_id = m.id " +
+                                       "JOIN COLMENA c ON m.colmena_id = c.id " +
+                                       "WHERE c.apiario_id = ? AND l.tipo_sensor = 'peso' " +
+                                       "GROUP BY DATE(timestamp_dispositivo) " +
+                                       "ORDER BY DATE(timestamp_dispositivo) DESC LIMIT 7";
+                        try (PreparedStatement stmtPeso = conn.prepareStatement(qPeso)) {
+                            stmtPeso.setInt(1, rs.getInt("id"));
+                            try (ResultSet rsPeso = stmtPeso.executeQuery()) {
+                                while(rsPeso.next()) {
+                                    pesoHistorial.insert(0, Math.round(rsPeso.getDouble("peso_promedio") * 10.0) / 10.0);
+                                }
+                            }
+                        }
+                        node.set("peso_historial", pesoHistorial);
+                        
                         apiarios.add(node);
                     }
                 }
@@ -66,7 +100,8 @@ public class GestionApiariosControlador {
             ctx.status(401).json("{\"mensaje\": \"No autorizado\"}");
             return;
         }
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+        try (Connection conn = com.sam.Conexion.conectar()) {
+            if (conn == null) throw new Exception("DB connection failed");
             ArrayNode microclimas = mapper.createArrayNode();
             try (PreparedStatement stmt = conn.prepareStatement("SELECT id, nombre FROM CATALAGO_MICROCLIMA")) {
                 try (ResultSet rs = stmt.executeQuery()) {
@@ -100,7 +135,8 @@ public class GestionApiariosControlador {
             String localidad = body.has("localidad") ? body.get("localidad").asText() : "";
             int microclimaId = body.has("microclimaId") ? body.get("microclimaId").asInt() : 1;
 
-            try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            try (Connection conn = com.sam.Conexion.conectar()) {
+                if (conn == null) throw new Exception("DB connection failed");
                 // Obtener ID del admin
                 int adminId = -1;
                 try (PreparedStatement s = conn.prepareStatement("SELECT id FROM USUARIO WHERE email = ?")) {
@@ -148,7 +184,8 @@ public class GestionApiariosControlador {
         int id = Integer.parseInt(ctx.pathParam("id"));
         try {
             JsonNode body = mapper.readTree(ctx.body());
-            try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            try (Connection conn = com.sam.Conexion.conectar()) {
+                if (conn == null) throw new Exception("DB connection failed");
                 String sql = "UPDATE APIARIO SET nombre=?, estado=?, municipio=?, localidad=?, microclima_id=? WHERE id=?";
                 try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                     stmt.setString(1, body.get("nombre").asText());
@@ -175,8 +212,9 @@ public class GestionApiariosControlador {
             return;
         }
         int id = Integer.parseInt(ctx.pathParam("id"));
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM APIARIO WHERE id = ?")) {
+        try (Connection conn = com.sam.Conexion.conectar()) {
+            if (conn == null) throw new Exception("DB connection failed");
+            try (PreparedStatement stmt = conn.prepareStatement("UPDATE APIARIO SET estatus='baja', nombre=CONCAT(nombre, '-baja-', id) WHERE id = ?")) {
                 stmt.setInt(1, id);
                 int rows = stmt.executeUpdate();
                 if (rows > 0) {

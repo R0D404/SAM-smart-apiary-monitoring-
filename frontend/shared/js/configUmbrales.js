@@ -8,8 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             inputs.forEach(input => {
                 const val = input.value.trim();
-                // Validate if it is a number (allow decimal/negatives)
-                if (val === "" || isNaN(Number(val))) {
+                // Validate if it is a number (allow decimal/negatives). Allow empty strings for NULLs.
+                if (val !== "" && isNaN(Number(val))) {
                     allValid = false;
                     input.style.borderColor = "#F44336"; // Mark red border
                 } else {
@@ -25,7 +25,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Build payload from inputs
                 const payload = {};
                 inputs.forEach(input => {
-                    payload[input.id] = parseFloat(input.value.trim());
+                    const val = input.value.trim();
+                    payload[input.id] = val === "" ? null : parseFloat(val);
                 });
 
                 fetch('/api/umbrales', {
@@ -55,9 +56,28 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 showErrorToast(
                     "Error de Validación", 
-                    "Por favor, introduce únicamente valores numéricos válidos en los campos de umbrales."
+                    "Por favor, introduce únicamente valores numéricos válidos o deja el campo vacío en los campos de umbrales."
                 );
             }
         });
     }
+
+    // Cargar umbrales actuales desde el backend
+    fetch('/api/umbrales')
+        .then(res => {
+            if (res.ok) return res.json();
+            throw new Error("No hay umbrales");
+        })
+        .then(data => {
+            if(data) {
+                for (const [key, value] of Object.entries(data)) {
+                    const input = document.getElementById(key);
+                    if (input) {
+                        input.value = (value === null || value === undefined) ? "" : value;
+                    }
+                }
+            }
+        })
+        .catch(err => console.log("Cargando umbrales predeterminados o sin guardar."));
+
 });

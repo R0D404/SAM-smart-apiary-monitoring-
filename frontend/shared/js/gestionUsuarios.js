@@ -1,34 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     
-    // ==========================================
-    // 1. LÓGICA DEL MODAL (FORMULARIO ASIGNACIÓN)
-    // ==========================================
-    const btnAbrir = document.getElementById('btn-abrir-formulario');
-    const btnCerrar = document.getElementById('btn-cerrar-formulario');
-    const btnCancelar = document.getElementById('btn-cancelar-formulario');
-    const modal = document.getElementById('modal-asignar');
 
-    // Abrir modal
-    btnAbrir.addEventListener('click', () => {
-        modal.classList.add('active');
-    });
-
-    // Cerrar modal
-    function cerrarModal() {
-        modal.classList.remove('active');
-    }
-
-    btnCerrar.addEventListener('click', cerrarModal);
-    if(btnCancelar) btnCancelar.addEventListener('click', cerrarModal);
-
-    window.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            cerrarModal();
-        }
-        if (e.target === modalCrear) {
-            cerrarModalCrear();
-        }
-    });
 
     // ==========================================
     // 1.5 LÓGICA DEL MODAL (CREAR APICULTOR)
@@ -51,51 +23,44 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnCerrarCrear) btnCerrarCrear.addEventListener('click', cerrarModalCrear);
     if (btnCancelarCrear) btnCancelarCrear.addEventListener('click', cerrarModalCrear);
 
-    // Toggle de las tarjetas de checkbox (Apiarios)
-    const checkboxCards = document.querySelectorAll('.checkbox-card');
-    checkboxCards.forEach(card => {
-        const checkbox = card.querySelector('input[type="checkbox"]');
-        
-        // Sincronizar estado visual inicial
-        if (checkbox.checked) {
-            card.classList.add('active');
-        } else {
-            card.classList.remove('active');
-        }
+    let apiariosGlobales = [];
 
-        // Cambiar estado al hacer click
-        checkbox.addEventListener('change', () => {
-            if (checkbox.checked) {
-                card.classList.add('active');
-            } else {
-                card.classList.remove('active');
-            }
-        });
-    });
+    // Cargar checkboxes de apiarios dinámicamente
+    function cargarApiariosCheckboxes() {
+        fetch('/api/gestion/apiarios')
+            .then(res => res.json())
+            .then(apiarios => {
+                apiariosGlobales = apiarios;
+                const container = document.getElementById('lista-apiarios-checkboxes');
+                if (!container) return;
+                container.innerHTML = '';
+                
+                apiarios.forEach(ap => {
+                    const label = document.createElement('label');
+                    label.className = 'checkbox-card';
+                    label.innerHTML = `
+                        <input type="checkbox" name="crear_apiarios" value="${ap.id}">
+                        ${ap.nombre}
+                        <span class="card-meta">${ap.municipio} · ${ap.colmenas} colmenas</span>
+                    `;
+                    container.appendChild(label);
 
-    // Custom Dropdown UI para el apicultor
-    const dropdownApicultor = document.getElementById("dropdown-apicultor");
-    const selectedDisplay = dropdownApicultor.querySelector(".dropdown-selected");
-    const optionsList = document.getElementById("apicultor-list").querySelectorAll("li");
-    const hiddenInput = document.getElementById("apicultor_id");
+                    const checkbox = label.querySelector('input');
+                    checkbox.addEventListener('change', () => {
+                        if (checkbox.checked) {
+                            label.classList.add('active');
+                        } else {
+                            label.classList.remove('active');
+                        }
+                    });
+                });
+            })
+            .catch(console.error);
+    }
+    
+    cargarApiariosCheckboxes();
 
-    selectedDisplay.addEventListener("click", () => {
-        dropdownApicultor.classList.toggle("active");
-    });
 
-    optionsList.forEach(li => {
-        li.addEventListener("click", () => {
-            hiddenInput.value = li.dataset.value;
-            selectedDisplay.textContent = li.textContent;
-            dropdownApicultor.classList.remove("active");
-        });
-    });
-
-    document.addEventListener("click", (e) => {
-        if (!dropdownApicultor.contains(e.target)) {
-            dropdownApicultor.classList.remove("active");
-        }
-    });
 
 
     // ==========================================
@@ -153,9 +118,139 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span class="dot-status ${estadoDot}" style="width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 8px;"></span>
                     <span style="color: var(--color-text-gray);">${estadoText}</span>
                 </td>
+                <td>
+                    <button class="btn-primary btn-editar" style="margin-right: 8px;" data-id="${user.id}">Editar</button>
+                    ${user.id !== 1 ? `<button class="btn-baja btn-eliminar" data-id="${user.id}">Dar de baja</button>` : ''}
+                </td>
             `;
             
             tbody.appendChild(tr);
+        });
+        
+        // Asignar eventos a los botones de editar y eliminar
+        document.querySelectorAll('.btn-editar').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const userId = parseInt(e.target.getAttribute('data-id'));
+                const user = usuarios.find(u => u.id === userId);
+                if (user) abrirModalEditar(user);
+            });
+        });
+
+        document.querySelectorAll('.btn-eliminar').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const userId = parseInt(e.target.getAttribute('data-id'));
+                if (confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
+                    eliminarUsuario(userId);
+                }
+            });
+        });
+    }
+
+    // Modal de edición
+    const modalEditar = document.getElementById('modal-editar-usuario');
+    const btnCerrarEditar = document.getElementById('btn-cerrar-editar');
+    const btnCancelarEditar = document.getElementById('btn-cancelar-editar');
+
+    function abrirModalEditar(user) {
+        document.getElementById('editar-id').value = user.id;
+        document.getElementById('editar-nombre').value = user.nombre;
+        document.getElementById('editar-email').value = user.email || '';
+        document.getElementById('editar-rol').value = user.rol.toLowerCase() === 'admin' ? '1' : '2';
+        document.getElementById('editar-estado').value = user.activo ? 'true' : 'false';
+        
+        const container = document.getElementById('editar-lista-apiarios-checkboxes');
+        if (container) {
+            container.innerHTML = '';
+            const userApiarios = user.apiario_ids || [];
+            
+            apiariosGlobales.forEach(ap => {
+                const isChecked = userApiarios.includes(ap.id);
+                const label = document.createElement('label');
+                label.className = 'checkbox-card' + (isChecked ? ' active' : '');
+                label.innerHTML = `
+                    <input type="checkbox" name="editar_apiarios" value="${ap.id}" ${isChecked ? 'checked' : ''}>
+                    ${ap.nombre}
+                    <span class="card-meta">${ap.municipio} · ${ap.colmenas} colmenas</span>
+                `;
+                container.appendChild(label);
+
+                const checkbox = label.querySelector('input');
+                checkbox.addEventListener('change', () => {
+                    if (checkbox.checked) {
+                        label.classList.add('active');
+                    } else {
+                        label.classList.remove('active');
+                    }
+                });
+            });
+        }
+        
+        modalEditar.classList.add('active');
+    }
+
+    function cerrarModalEditar() {
+        modalEditar.classList.remove('active');
+    }
+
+    if (btnCerrarEditar) btnCerrarEditar.addEventListener('click', cerrarModalEditar);
+    if (btnCancelarEditar) btnCancelarEditar.addEventListener('click', cerrarModalEditar);
+    
+    window.addEventListener('click', (e) => {
+        if (e.target === modalEditar) {
+            cerrarModalEditar();
+        }
+    });
+
+    const formEditar = document.getElementById('form-editar-usuario');
+    if (formEditar) {
+        formEditar.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const id = document.getElementById('editar-id').value;
+            const selectedApiarios = Array.from(document.querySelectorAll('input[name="editar_apiarios"]:checked'))
+                .map(cb => parseInt(cb.value));
+                
+            const payload = {
+                nombre: document.getElementById('editar-nombre').value,
+                email: document.getElementById('editar-email').value,
+                rol_id: parseInt(document.getElementById('editar-rol').value),
+                activo: document.getElementById('editar-estado').value === 'true',
+                apiarios: selectedApiarios
+            };
+            
+            fetch(`/api/gestion/usuarios/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(res => {
+                if (res.ok) return res.json();
+                throw new Error("No se pudo actualizar el usuario.");
+            })
+            .then(() => {
+                cerrarModalEditar();
+                cargarUsuarios();
+                showSuccessToast("¡Éxito!", "Usuario actualizado con éxito.");
+            })
+            .catch(err => {
+                showErrorToast("Error", err.message);
+            });
+        });
+    }
+
+    function eliminarUsuario(id) {
+        fetch(`/api/gestion/usuarios/${id}`, {
+            method: 'DELETE'
+        })
+        .then(res => {
+            if (res.ok) return res.json();
+            throw new Error("No se pudo eliminar el usuario.");
+        })
+        .then(() => {
+            cargarUsuarios();
+            showSuccessToast("¡Éxito!", "Usuario eliminado con éxito.");
+        })
+        .catch(err => {
+            showErrorToast("Error", err.message);
         });
     }
 
@@ -165,11 +260,15 @@ document.addEventListener('DOMContentLoaded', () => {
         formCrear.addEventListener('submit', (e) => {
             e.preventDefault();
             
+            const selectedApiarios = Array.from(document.querySelectorAll('input[name="crear_apiarios"]:checked'))
+                .map(cb => parseInt(cb.value));
+
             const payload = {
                 nombre: document.getElementById('crear-nombre').value,
                 email: document.getElementById('crear-email').value,
                 password: document.getElementById('crear-password').value,
-                rol_id: 2 // Apicultor
+                rol_id: 2, // Apicultor
+                apiarios: selectedApiarios
             };
             
             fetch('/api/gestion/usuarios', {
@@ -192,14 +291,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    const formAsignar = document.getElementById('form-asignar');
-    if (formAsignar) {
-        formAsignar.addEventListener('submit', (e) => {
-            e.preventDefault();
-            cerrarModal();
-            showSuccessToast("¡Éxito!", "Asignaciones guardadas correctamente.");
-        });
-    }
+
 
     cargarUsuarios();
 });

@@ -80,6 +80,11 @@ document.addEventListener('DOMContentLoaded', () => {
             ecotipo: document.getElementById("ecotipo").value,
             estado: "activa"
         };
+        
+        const tieneMonitoreo = document.getElementById("tiene-monitoreo").checked;
+        if (tieneMonitoreo) {
+            payload.id_monitoreo = document.getElementById("id-monitoreo").value;
+        }
 
         const url = currentEditId ? `/api/gestion/colmenas/${currentEditId}` : "/api/gestion/colmenas";
         const method = currentEditId ? "PUT" : "POST";

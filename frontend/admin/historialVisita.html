@@ -13,7 +13,7 @@
 </head>
 <body>
     <div class="app-shell">
-        <!-- ========== SIDEBAR ========== -->
+        <!-- SIDEBAR -->
         <aside class="sidebar">
             <div class="logo">
                 <div class="hexagon">
@@ -46,14 +46,13 @@
             </div>
         </aside>
 
-        <!-- ========== MAIN CONTENT ========== -->
+        <!-- MAIN CONTENT -->
         <main class="main-content">
             <header class="main-header" style="justify-content: space-between; align-items: flex-start;">
                 <div class="header-left">
-                    <h1>Historial de visitas</h1>
-                    <p class="subtitle" style="color: var(--color-text-gray); font-size: 14px; margin-top: 4px;">Apiario Norte · registros realizados por el apicultor</p>
+                    <h1 id="page-title">Historial de registros</h1>
+                    <p class="subtitle" style="color: var(--color-text-gray); font-size: 14px; margin-top: 4px;" id="page-subtitle">Visitas, cosechas y mantenimiento de hardware</p>
                 </div>
-
                 <div class="header-right">
                     <button class="user-account" type="button" aria-label="Abrir mi cuenta" onclick="window.location.href='miCuenta.html'">
                         <span class="user-account-dot"></span>
@@ -63,28 +62,54 @@
             </header>
 
             <section class="table-section" style="margin-top: 32px;">
-                <!-- Botones de filtros -->
-                <div class="filters-container">
-                    <button class="filter-btn active">Todas</button>
-                    <button class="filter-btn">Apiario Norte</button>
-                    <button class="filter-btn">Mayo</button>
+
+                <!-- FILA DE CONTROLES: Tipo + Apiario + Fecha -->
+                <div class="controls-bar">
+
+                    <!-- Selector de tipo -->
+                    <div class="tipo-tabs">
+                        <button class="tipo-tab active" data-tipo="visitas">Visitas</button>
+                        <button class="tipo-tab" data-tipo="cosechas">Cosechas</button>
+                        <button class="tipo-tab" data-tipo="mantenimiento">Mantenimiento hardware</button>
+                    </div>
+
+                    <div class="secondary-filters">
+                        <!-- Filtro por apiario (se carga dinámicamente) -->
+                        <div class="filter-group">
+                            <label class="filter-label">Apiario</label>
+                            <select id="filtro-apiario" class="filter-select">
+                                <option value="">Todos</option>
+                            </select>
+                        </div>
+
+                        <!-- Filtro por fecha -->
+                        <div class="filter-group">
+                            <label class="filter-label">Período</label>
+                            <div class="date-filter-wrapper">
+                                <select id="filtro-fecha-tipo" class="filter-select">
+                                    <option value="">Sin filtro</option>
+                                    <option value="anio">Por año</option>
+                                    <option value="mes">Por mes y año</option>
+                                    <option value="dia">Fecha exacta</option>
+                                </select>
+                                <input type="number" id="filtro-anio" class="filter-input" placeholder="2026" min="2020" max="2030" style="display:none; width: 80px;">
+                                <input type="month" id="filtro-mes" class="filter-input" style="display:none;">
+                                <input type="date" id="filtro-dia" class="filter-input" style="display:none;">
+                            </div>
+                        </div>
+
+                        <button id="btn-aplicar-filtros" class="btn-primary" style="height:36px; padding: 0 16px; font-size:13px;">Aplicar</button>
+                    </div>
                 </div>
 
-                <!-- Contenedor de la Tabla -->
-                <div class="table-container">
+                <!-- Tabla -->
+                <div class="table-container" style="margin-top: 24px;">
                     <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>FECHA</th>
-                                <th>COLMENA</th>
-                                <th>APICULTOR</th>
-                                <th>ESTADO COLONIA</th>
-                                <th>REINA</th>
-                                <th>NOTAS</th>
-                            </tr>
+                        <thead id="tabla-thead">
+                            <!-- JS fill -->
                         </thead>
                         <tbody id="tabla-visitas-body">
-                            <!-- Datos insertados por JS -->
+                            <!-- JS fill -->
                         </tbody>
                     </table>
                 </div>
@@ -92,7 +117,7 @@
         </main>
     </div>
 
-    <!-- Script -->
-    <script src="../shared/js/historialVisita.js"></script>
+    <script src="../shared/js/historialVisita.js?v=3"></script>
+    <script src="../shared/js/sidebar.js"></script>
 </body>
 </html>

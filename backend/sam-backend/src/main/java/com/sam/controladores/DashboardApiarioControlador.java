@@ -53,14 +53,30 @@ public class DashboardApiarioControlador {
             response.set("usuario", usuarioNode);
             // 1. Apiario Info
             ObjectNode apiarioNode = mapper.createObjectNode();
-            try (PreparedStatement stmt = conn.prepareStatement("SELECT nombre, localidad, municipio FROM APIARIO WHERE id = ?")) {
+            
+            int usuarioId = -1;
+            String rol = ctx.sessionAttribute("rol");
+            if ("apicultor".equals(rol)) {
+                try (PreparedStatement stmt = conn.prepareStatement("SELECT id FROM USUARIO WHERE email = ?")) {
+                    stmt.setString(1, usuarioActual);
+                    try (ResultSet rs = stmt.executeQuery()) {
+                        if (rs.next()) usuarioId = rs.getInt("id");
+                    }
+                }
+            }
+
+            String sqlApiario = "SELECT nombre, localidad, municipio FROM APIARIO a " + 
+                ("apicultor".equals(rol) ? "JOIN APIARIO_APICULTOR aa ON aa.apiario_id = a.id AND aa.usuario_id = " + usuarioId + " " : "") +
+                "WHERE a.id = ?";
+                
+            try (PreparedStatement stmt = conn.prepareStatement(sqlApiario)) {
                 stmt.setInt(1, apiarioId);
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (rs.next()) {
                         apiarioNode.put("nombre", rs.getString("nombre"));
                         apiarioNode.put("ubicacion", rs.getString("localidad") + ", " + rs.getString("municipio"));
                     } else {
-                        ctx.status(404).json("{\"mensaje\": \"Apiario no encontrado\"}");
+                        ctx.status(404).json("{\"mensaje\": \"Apiario no encontrado o acceso denegado\"}");
                         return;
                     }
                 }
@@ -76,9 +92,9 @@ public class DashboardApiarioControlador {
                 "(SELECT count(*) FROM ALERTA al WHERE al.colmena_id = c.id AND al.atendida = false AND al.nivel = 'critico') as criticas, " +
                 "(SELECT count(*) FROM ALERTA al WHERE al.colmena_id = c.id AND al.atendida = false AND al.nivel = 'aviso') as avisos, " +
                 "(SELECT ROUND(valor, 1) FROM LECTURA_SENSOR l JOIN MODULO_MONITOREO m ON l.modulo_id = m.id WHERE m.colmena_id = c.id AND l.tipo_sensor = 'peso' ORDER BY l.timestamp_dispositivo DESC LIMIT 1) as peso, " +
-                "(SELECT ROUND(valor, 1) FROM LECTURA_SENSOR l JOIN MODULO_MONITOREO m ON l.modulo_id = m.id WHERE m.colmena_id = c.id AND l.tipo_sensor = 'temp' ORDER BY l.timestamp_dispositivo DESC LIMIT 1) as temp, " +
-                "(SELECT ROUND(valor, 1) FROM LECTURA_SENSOR l JOIN MODULO_MONITOREO m ON l.modulo_id = m.id WHERE m.colmena_id = c.id AND l.tipo_sensor = 'humedad' ORDER BY l.timestamp_dispositivo DESC LIMIT 1) as humedad " +
-                "FROM COLMENA c WHERE c.apiario_id = ?")) {
+                "(SELECT ROUND(valor, 1) FROM LECTURA_SENSOR l JOIN MODULO_MONITOREO m ON l.modulo_id = m.id WHERE m.colmena_id = c.id AND l.tipo_sensor = 'temp' AND l.origen = 'interna' ORDER BY l.timestamp_dispositivo DESC LIMIT 1) as temp, " +
+                "(SELECT ROUND(valor, 1) FROM LECTURA_SENSOR l JOIN MODULO_MONITOREO m ON l.modulo_id = m.id WHERE m.colmena_id = c.id AND l.tipo_sensor = 'humedad' AND l.origen = 'interna' ORDER BY l.timestamp_dispositivo DESC LIMIT 1) as humedad " +
+                "FROM COLMENA c WHERE c.apiario_id = ? AND c.estado != 'baja'")) {
                 stmt.setInt(1, apiarioId);
                 try (ResultSet rs = stmt.executeQuery()) {
                     while (rs.next()) {
@@ -134,7 +150,7 @@ public class DashboardApiarioControlador {
             try (PreparedStatement stmt = conn.prepareStatement(
                 "SELECT AVG(ultima_lectura) as prom FROM (" +
                 "  SELECT (SELECT valor FROM LECTURA_SENSOR l JOIN MODULO_MONITOREO m ON l.modulo_id = m.id WHERE m.colmena_id = c.id AND l.tipo_sensor = 'peso' ORDER BY l.timestamp_dispositivo DESC LIMIT 1) as ultima_lectura " +
-                "  FROM COLMENA c WHERE c.apiario_id = ? " +
+                "  FROM COLMENA c WHERE c.apiario_id = ? AND c.estado != 'baja' " +
                 ") as sub WHERE ultima_lectura IS NOT NULL")) {
                 stmt.setInt(1, apiarioId);
                 try (ResultSet rs = stmt.executeQuery()) {

@@ -29,13 +29,30 @@ public class App
             });
         }).start(7070);
 
-        // Filtro de seguridad: Proteger todas las rutas de administrador
+        // Filtro de seguridad: Proteger rutas y verificar roles
         app.before(ctx -> {
             String path = ctx.path();
-            if (path.startsWith("/frontend/admin") || path.startsWith("/api/dashboard")) {
+            boolean isApi = path.startsWith("/api/") && !path.startsWith("/api/auth");
+            boolean isAdminFront = path.startsWith("/frontend/admin");
+            boolean isApicultorFront = path.startsWith("/frontend/apicultor");
+
+            if (isApi || isAdminFront || isApicultorFront) {
                 if (ctx.sessionAttribute("usuarioLogueado") == null) {
-                    ctx.redirect("/index.html");
+                    if (isApi) {
+                        ctx.status(401).json("{\"mensaje\": \"No autorizado\"}");
+                    } else {
+                        ctx.redirect("/index.html");
+                    }
+                    return;
                 }
+            }
+
+            String rol = ctx.sessionAttribute("rol");
+            if (isAdminFront && !"admin".equals(rol)) {
+                ctx.redirect("/frontend/apicultor/dashboardGlobal.html");
+            }
+            if (isApicultorFront && !"apicultor".equals(rol)) {
+                ctx.redirect("/frontend/admin/dashboardGlobal.html");
             }
         });
 
@@ -81,6 +98,9 @@ public class App
             });
             path("/visitas", () -> {
                 get(com.sam.controladores.VisitasControlador::listarVisitas);
+                get("/cosechas", com.sam.controladores.VisitasControlador::listarCosechasVisitas);
+                get("/mantenimiento", com.sam.controladores.VisitasControlador::listarMantenimientos);
+                get("/apiarios", com.sam.controladores.VisitasControlador::listarApiariosDisponibles);
                 post(com.sam.controladores.VisitasControlador::crearVisita);
                 put("/{id}", com.sam.controladores.VisitasControlador::actualizarVisita);
                 delete("/{id}", com.sam.controladores.VisitasControlador::eliminarVisita);
@@ -100,7 +120,13 @@ public class App
                 post("/foto", com.sam.controladores.PerfilControlador::subirFoto);
             });
 
+            path("/api/modulos", () -> {
+                get("/{colmenaId}", com.sam.controladores.ModuloControlador::obtenerModulo);
+                post("/{colmenaId}/mantenimiento", com.sam.controladores.ModuloControlador::registrarMantenimiento);
+            });
+
             path("/api/umbrales", () -> {
+                get(com.sam.controladores.UmbralesControlador::obtenerUmbrales);
                 post(com.sam.controladores.UmbralesControlador::guardarUmbrales);
             });
 

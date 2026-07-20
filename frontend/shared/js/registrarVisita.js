@@ -35,6 +35,36 @@ document.addEventListener('DOMContentLoaded', () => {
         // For now, we just leave this empty or minimal.
     }
 
+    // ==========================================
+    // LOAD COLMENAS DYNAMICALLY
+    // ==========================================
+    function cargarColmenas() {
+        fetch('/api/gestion/colmenas')
+            .then(res => {
+                if (!res.ok) throw new Error('Error fetching colmenas');
+                return res.json();
+            })
+            .then(data => {
+                // Clear existing options except the placeholder
+                if (selectColmena) {
+                    selectColmena.innerHTML = '<option value="" disabled selected hidden>Selecciona una colmena</option>';
+                    data.forEach(colmena => {
+                        const option = document.createElement('option');
+                        option.value = colmena.db_id;
+                        option.textContent = `${colmena.id} (${colmena.apiario})`;
+                        option.dataset.apiarioId = colmena.apiario_id; // in case we need it later
+                        selectColmena.appendChild(option);
+                    });
+                }
+            })
+            .catch(err => {
+                console.error('No se pudieron cargar las colmenas:', err);
+            });
+    }
+    
+    // Call on load
+    cargarColmenas();
+
     // Attach listeners
     const formInputs = [selectColmena, inputFecha, inputEstado, inputKg, inputCalidad, checkReina, inputNotas];
     formInputs.forEach(input => {
@@ -107,9 +137,14 @@ document.addEventListener('DOMContentLoaded', () => {
             btnGuardar.disabled = true;
 
             const payload = {
+                colmena_id: parseInt(selectColmena.value, 10),
+                apiario_id: parseInt(selectColmena.options[selectColmena.selectedIndex].dataset.apiarioId, 10),
                 fecha: inputFecha.value,
                 estado: inputEstado.value,
-                notas: document.getElementById('notas-adicionales')?.value || ''
+                kg_cosechados: inputKg && inputKg.value ? parseFloat(inputKg.value) : null,
+                calidad_miel: inputCalidad ? inputCalidad.value : null,
+                reina_vista: checkReina ? checkReina.checked : false,
+                notas: inputNotas ? inputNotas.value : ''
             };
 
             fetch('/visitas', {
@@ -119,8 +154,14 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .then(res => {
                 if (!res.ok) throw new Error('Error en el servidor');
+                return res.json();
+            })
+            .then(() => {
                 mostrarToast('Visita registrada con éxito', 'success');
                 // Reset form or redirect if needed
+                setTimeout(() => {
+                    window.location.href = 'historial.html';
+                }, 1500);
             })
             .catch(err => {
                 console.error(err);

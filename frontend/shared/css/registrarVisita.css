@@ -99,7 +99,7 @@
 .main-content {
     margin-left: clamp(240px, 20%, 300px);
     min-height: 100vh;
-    background-color: var(--fundo-ucuro);
+    background-color: var(--fondo-oscuro);
     padding: 2% 3%;
     overflow-y: auto;
 }
@@ -202,8 +202,8 @@
     align-items: center;
     justify-content: center;
     font-weight: 700;
-    font-size: 11px;
-    color: var(--fundo-ucuro);
+    font-size: 12px;
+    color: var(--fondo-oscuro);
 }
 
 /* ── BREADCRUMB ─────────────────────────────────────────────────────*/
@@ -229,6 +229,7 @@
     display: flex;
     gap: 2%;
     align-items: flex-start;
+    justify-content: center;
 }
 
 /* ── CARDS ──────────────────────────────────────────────────────────*/
@@ -241,7 +242,7 @@
 
 .formulario {
     width: 100%;
-    max-width: 800px;
+    max-width: 650px;
 }
 
 .card-header {
@@ -267,7 +268,7 @@
 
 .campo label {
     display: block;
-    font-size: clamp(9px, 0.7vw, 12px);
+    font-size: 13px;
     color: var(--texto-gris);
     letter-spacing: 0.05em;
     margin-bottom: 1.5%;
@@ -282,9 +283,9 @@
     background-color: var(--input-fondo);
     border: 1px solid var(--input-borde);
     border-radius: 8px;
-    padding: 3% 4%;
+    padding: 14px 16px;
     color: var(--texto-blanco);
-    font-size: clamp(12px, 0.9vw, 15px);
+    font-size: 15px;
     outline: none;
     transition: border-color 0.2s;
 }
@@ -347,7 +348,7 @@
 }
 
 .label-cosecha {
-    font-size: clamp(11px, 0.85vw, 14px);
+    font-size: 14px;
     color: var(--amarillo);
     font-weight: 600;
     margin-bottom: 3%;
@@ -381,7 +382,7 @@
 }
 
 .campo-checkbox label {
-    font-size: clamp(11px, 0.85vw, 14px);
+    font-size: 14px;
     color: var(--texto-blanco);
     cursor: pointer;
 }
@@ -420,7 +421,7 @@
     width: 100%;
     padding: 3%;
     background-color: var(--amarillo);
-    color: var(--fundo-ucuro);
+    color: var(--fondo-oscuro);
     border: none;
     border-radius: 8px;
     font-size: clamp(13px, 1vw, 16px);

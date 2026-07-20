@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SAM - Historial de visitas</title>
     <!-- Tu CSS global -->
-    <link rel="stylesheet" href="../shared/css/plantilla.css"> 
-    <!-- CSS específico de esta vista -->
-    <link rel="stylesheet" href="../shared/css/historialVisitaA.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../shared/css/dashboardGlobal.css">
+    <link rel="stylesheet" href="../shared/css/historialVisita.css">
     <link rel="stylesheet" href="../shared/css/sidebar.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,7 +26,7 @@
         </div>
         <div class="menu">
             <ul>
-                <li><a href="dashboardApiario.html"><img src="../assets/icons/dashboard.svg" alt="" class="menu-icon"> Dashboard</a></li>
+                <li><a href="dashboardGlobal.html"><img src="../assets/icons/dashboard.svg" alt="" class="menu-icon"> Dashboard</a></li>
                 <li><a href="misApiarios.html"><img src="../assets/icons/apiarios.svg" alt="" class="menu-icon"> Mis apiarios</a></li>
                 <li><a href="colmenas.html"><img src="../assets/icons/colmenas.svg" alt="" class="menu-icon"> Colmenas</a></li>
                 <li><a href="alertas.html"><img src="../assets/icons/alertas.svg" alt="" class="menu-icon"> Alertas</a></li>
@@ -45,62 +45,76 @@
     
     <section class="main-content">
         <!-- Cabecera principal -->
-        <header class="header-container">
-            <div class="page-title">
-                <h2>Historial de visitas</h2>
-                <p>Apiario Norte · registros realizados por el apicultor</p>
+        <header class="main-header" style="justify-content: space-between; align-items: flex-start;">
+            <div class="header-left">
+                <h1 id="page-title" style="font-size: 24px; font-weight: 600; color: #facc15; margin: 0;">Historial de visitas</h1>
+                <p class="subtitle" style="color: #a3a3a3; font-size: 14px; margin-top: 4px; margin-bottom: 0;" id="page-subtitle">Apiario Norte · registros realizados por el apicultor</p>
             </div>
             
-            <div class="header-actions">
-                <button class="btn-primary">Registrar visita</button>
-                <button class="btn-outline-dark">
-                    Ver cosechas 
-                    <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 6px; vertical-align: middle;"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            <div class="header-right" style="display: flex; gap: 16px; align-items: center;">
+                <button class="btn-primary" onclick="window.location.href='registrarVisita.html'" style="height: 36px; padding: 0 16px; font-size: 14px; font-weight: 500; border-radius: 8px;">Registrar visita</button>
+                <button class="user-account" type="button" aria-label="Abrir mi cuenta" onclick="window.location.href='miCuenta.html'">
+                    <span class="user-account-dot"></span>
+                    <span>Mi Cuenta</span>
                 </button>
-                <a href="miCuenta.html" class="user-info-btn" style="text-decoration: none; position: relative !important; top: auto !important; right: auto !important;">
-                    <div class="circle-avatar" id="header-user-avatar" style="display: flex; align-items: center; justify-content: center; font-weight: bold; color: #1e1e1e; font-size: 11px;">--</div>
-                    <p>Mi cuenta</p>
-                </a>
             </div>
         </header>
 
-        <!-- Banner informativo -->
-        <div class="info-banner">
-            <div class="banner-icon"></div>
-            <div class="banner-content">
-                <strong>Tu registro de campo</strong>
-                <p>Aquí registras tus visitas y mantenimientos. Al guardar una visita puedes añadir la cosecha del día.</p>
+        <section class="table-section" style="margin-top: 32px;">
+
+            <!-- FILA DE CONTROLES: Tipo + Apiario + Fecha -->
+            <div class="controls-bar">
+
+                <!-- Selector de tipo -->
+                <div class="tipo-tabs">
+                    <button class="tipo-tab active" data-tipo="visitas">Visitas</button>
+                    <button class="tipo-tab" data-tipo="cosechas">Cosechas</button>
+                </div>
+
+                <div class="secondary-filters">
+                    <!-- Filtro por apiario (se carga dinámicamente) -->
+                    <div class="filter-group">
+                        <label class="filter-label">Apiario</label>
+                        <select id="filtro-apiario" class="filter-select">
+                            <option value="">Todos</option>
+                        </select>
+                    </div>
+
+                    <!-- Filtro por fecha -->
+                    <div class="filter-group">
+                        <label class="filter-label">Período</label>
+                        <div class="date-filter-wrapper">
+                            <select id="filtro-fecha-tipo" class="filter-select">
+                                <option value="">Sin filtro</option>
+                                <option value="anio">Por año</option>
+                                <option value="mes">Por mes y año</option>
+                                <option value="dia">Fecha exacta</option>
+                            </select>
+                            <input type="number" id="filtro-anio" class="filter-input" placeholder="2026" min="2020" max="2030" style="display:none; width: 80px;">
+                            <input type="month" id="filtro-mes" class="filter-input" style="display:none;">
+                            <input type="date" id="filtro-dia" class="filter-input" style="display:none;">
+                        </div>
+                    </div>
+
+                    <button id="btn-aplicar-filtros" class="btn-primary" style="height:36px; padding: 0 16px; font-size:13px;">Aplicar</button>
+                </div>
             </div>
-        </div>
 
-        <!-- Filtros -->
-        <div class="filters-container">
-            <button class="filter-btn active">Todas</button>
-            <button class="filter-btn outline">Apiario Norte</button>
-            <button class="filter-btn outline">Mayo</button>
-        </div>
-
-        <!-- Contenedor de la Tabla -->
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>FECHA</th>
-                        <th>COLMENA</th>
-                        <th>APICULTOR</th>
-                        <th>ESTADO COLONIA</th>
-                        <th>REINA</th>
-                        <th>NOTAS</th>
-                    </tr>
-                </thead>
-                <!-- El tbody se llena dinámicamente con JS -->
-                <tbody id="tabla-visitas-body">
-                </tbody>
-            </table>
-        </div>
+            <!-- Tabla -->
+            <div class="table-container" style="margin-top: 24px;">
+                <table class="data-table">
+                    <thead id="tabla-thead">
+                        <!-- JS fill -->
+                    </thead>
+                    <tbody id="tabla-visitas-body">
+                        <!-- JS fill -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
     </section>
-
+    
     <script src="../shared/js/sidebar.js" defer></script>
-    <script src="../shared/js/historialVisitaA.js"></script>
+    <script src="../shared/js/historialVisita.js"></script>
 </body>
-</html>1
+</html>

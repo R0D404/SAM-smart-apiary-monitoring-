@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const apiariosList = document.getElementById("apiarios-list");
 
     // Función para dibujar una gráfica simple en Canvas
-    function dibujarMiniGrafica(canvasId) {
+    function dibujarMiniGrafica(canvasId, historico) {
         const canvas = document.getElementById(canvasId);
         if (!canvas) return;
         const ctx = canvas.getContext("2d");
@@ -15,10 +15,11 @@ document.addEventListener("DOMContentLoaded", () => {
         const width = canvas.width = 120;
         const height = canvas.height = 40;
 
-        // Puntos simulados de peso promedio
-        const datos = [32, 35, 34, 38, 41, 40, 42];
-        const maxVal = 50;
-        const minVal = 30;
+        let datos = historico && historico.length > 0 ? historico : [0];
+        if (datos.length === 1) datos = [datos[0], datos[0]];
+
+        const maxVal = Math.max(...datos) + 5;
+        const minVal = Math.max(0, Math.min(...datos) - 5);
 
         ctx.strokeStyle = "#eab308"; // Amarillo primario de SAM
         ctx.lineWidth = 2;
@@ -27,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
         datos.forEach((val, idx) => {
             const x = (idx / (datos.length - 1)) * width;
             // Invertimos Y para que valores altos estén arriba
-            const y = height - ((val - minVal) / (maxVal - minVal)) * height;
+            let y = height - ((val - minVal) / (maxVal - minVal || 1)) * height;
             if (idx === 0) {
                 ctx.moveTo(x, y);
             } else {
@@ -101,6 +102,21 @@ document.addEventListener("DOMContentLoaded", () => {
                 const card = document.createElement("article");
                 card.className = "apiario-card";
                 card.setAttribute("data-apiario-id", api.id);
+                let yMax = 50, yMid = 40, yMin = 30;
+                if ((api.colmenas || 0) > 0 && api.peso_historial && api.peso_historial.length > 0) {
+                    let pDatos = api.peso_historial;
+                    let pMax = Math.max(...pDatos) + 5;
+                    let pMin = Math.max(0, Math.min(...pDatos) - 5);
+                    yMax = Math.round(pMax);
+                    yMin = Math.round(pMin);
+                    yMid = Math.round((yMax + yMin) / 2);
+                }
+
+                const hoy = new Date();
+                const hace3 = new Date(hoy); hace3.setDate(hoy.getDate() - 3);
+                const hace7 = new Date(hoy); hace7.setDate(hoy.getDate() - 7);
+                const formatter = new Intl.DateTimeFormat('es', { day: '2-digit', month: 'short' });
+
                 card.innerHTML = `
                     <div class="apiario-card-header">
                         <span class="status-dot ${dotStatusClase}"></span>
@@ -122,16 +138,24 @@ document.addEventListener("DOMContentLoaded", () => {
                             </div>
                         </div>
 
+                        ${(api.colmenas || 0) > 0 ? `
                         <div class="chart-box">
                             <div class="chart-canvas-wrap">
-                                <div class="chart-axis-y"><span>50</span><span>40</span><span>30</span></div>
+                                <div class="chart-axis-y"><span>${yMax} kg</span><span>${yMid} kg</span><span>${yMin} kg</span></div>
                                 <canvas class="mini-chart" id="chart-apiario-${api.id}"></canvas>
                             </div>
                             <div class="chart-axis-x">
-                                <span>23 may</span><span>30 may</span><span>06 jun</span>
+                                <span style="text-transform: lowercase">${formatter.format(hace7)}</span>
+                                <span style="text-transform: lowercase">${formatter.format(hace3)}</span>
+                                <span style="text-transform: lowercase">${formatter.format(hoy)}</span>
                             </div>
-                            <p class="chart-caption">Peso promedio · 30 días</p>
+                            <p class="chart-caption">Peso promedio · últimos 7 días</p>
                         </div>
+                        ` : `
+                        <div class="chart-box" style="display: flex; align-items: center; justify-content: center; height: 100px; border: 1px dashed rgba(255,255,255,0.1); border-radius: 8px; margin: 20px 0;">
+                            <p class="chart-caption" style="margin: 0; text-align: center; color: var(--color-text-gray);">Sin colmenas registradas<br><span style="font-size: 0.8em; opacity: 0.7;">No hay historial de peso</span></p>
+                        </div>
+                        `}
 
                         <div class="alerta-box">
                             ${totalAlertasEsteApiario > 0 
@@ -144,8 +168,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 apiariosList.appendChild(card);
 
-                // Dibujar la gráfica lineal en el Canvas
-                dibujarMiniGrafica(`chart-apiario-${api.id}`);
+                // Dibujar la gráfica lineal en el Canvas si hay colmenas
+                if ((api.colmenas || 0) > 0) {
+                    dibujarMiniGrafica(`chart-apiario-${api.id}`, api.peso_historial);
+                }
             });
 
             // Actualizar estadísticas superiores

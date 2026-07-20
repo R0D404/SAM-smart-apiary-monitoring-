@@ -24,7 +24,7 @@
         </div>
         <nav class="menu" aria-label="Secciones del sistema">
             <ul>
-                <li><a href="dashboardApiario.html"><img src="../assets/icons/dashboard.svg" alt="" class="menu-icon"> Dashboard</a></li>
+                <li><a href="dashboardGlobal.html"><img src="../assets/icons/dashboard.svg" alt="" class="menu-icon"> Dashboard</a></li>
                 <li><a href="misApiarios.html"><img src="../assets/icons/apiarios.svg" alt="" class="menu-icon"> Mis apiarios</a></li>
                 <li><a aria-current="page" class="active" href="colmenas.html"><img src="../assets/icons/colmenas.svg" alt="" class="menu-icon"> Colmenas</a></li>
                 <li><a href="alertas.html"><img src="../assets/icons/alertas.svg" alt="" class="menu-icon"> Alertas</a></li>
@@ -48,7 +48,7 @@
         <header class="header-container">
             <div class="page-title">
                 <div class="breadcrumb">
-                    <span>Colmenas</span> / <span>C-03</span> / <span class="highlight">Módulo MOD-7A3F</span>
+                    <span>Colmenas</span> / <span id="bc-colmena">C-03</span> / <span class="highlight" id="bc-modulo">Módulo MOD-7A3F</span>
                 </div>
                 <h2>Mantenimiento del módulo</h2>
                 <p>Registra limpiezas, recalibraciones, reemplazos, revisiones o fallos del módulo de monitoreo.</p>
@@ -76,16 +76,6 @@
 
                 <form id="form-mantenimiento">
                     <!-- Fila 1: Selects -->
-                    <div class="form-row">
-                        <div class="form-group flex-1">
-                            <label class="form-label">MÓDULO</label>
-                            <div class="custom-select-wrapper">
-                                <select class="custom-select" name="modulo_id" id="modulo_id">
-                                    <option value="" disabled selected>Seleccione un módulo</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
 
                     <!-- Fila 2: Tipo de Evento (Pills) -->
                     <div class="form-group mt-3">
@@ -123,12 +113,7 @@
                             </div>
                         </div>
                         <div class="form-group flex-1">
-                            <label class="form-label">VINCULAR A VISITA (OPCIONAL)</label>
-                            <div class="custom-select-wrapper">
-                                <select class="custom-select" name="visita_id" id="visita_id">
-                                    <option value="" disabled selected>Seleccione una visita</option>
-                                </select>
-                            </div>
+                            <!-- VINCULAR A VISITA REMOVIDO COMO SOLICITADO -->
                         </div>
                     </div>
 
@@ -164,18 +149,12 @@
                             <span class="data-label">Identificador</span>
                             <span class="data-value text-white text-bold" id="modulo-id-text">---</span>
                         </div>
-                        <div class="data-row">
-                            <span class="data-label">Tipo</span>
-                            <span class="data-value text-white" id="modulo-tipo">---</span>
-                        </div>
+
                         <div class="data-row">
                             <span class="data-label">Estado</span>
                             <span class="status-pill status-activo" id="modulo-estado" style="display: none;">ACTIVO</span>
                         </div>
-                        <div class="data-row">
-                            <span class="data-label">Instalado</span>
-                            <span class="data-value text-white" id="modulo-instalado">---</span>
-                        </div>
+
                         <div class="data-row">
                             <span class="data-label">Última lectura</span>
                             <span class="data-value text-teal" id="modulo-ultima-lectura">---</span>
@@ -203,6 +182,6 @@
     </section>
 
     <script src="../shared/js/sidebar.js" defer></script>
-    <script src="../shared/js/mantenimientoModulo.js"></script>
+    <script src="../shared/js/mantenimientoModulo.js?v=2"></script>
 </body>
 </html>

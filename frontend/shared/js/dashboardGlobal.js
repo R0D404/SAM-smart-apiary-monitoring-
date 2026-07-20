@@ -342,16 +342,23 @@ function updateDashboard(data) {
  * Descomenta y ajusta la URL cuando el backend esté listo.
  */
 function fetchDashboardData() {
-    fetch('/api/dashboard')
+    fetch('/api/dashboard?t=' + new Date().getTime())
         .then(response => {
+            if (response.redirected || response.url.includes("index.html")) {
+                alert("Redirected by server or URL includes index.html. URL: " + response.url);
+                // window.location.href = "/index.html";
+                return;
+            }
             if (!response.ok) throw new Error('Error al cargar datos del dashboard');
             return response.json();
         })
         .then(data => {
+            if (!data) return;
             updateDashboard(data);
         })
         .catch(error => {
             console.error('Error cargando dashboard:', error);
+            alert("Error: " + error.message);
         });
 }
 
