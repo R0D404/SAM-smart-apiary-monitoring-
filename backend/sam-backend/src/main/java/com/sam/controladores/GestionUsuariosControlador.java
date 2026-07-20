@@ -31,7 +31,10 @@ public class GestionUsuariosControlador {
             String sql = "SELECT u.id, u.nombre, u.email, r.nombre as rol_nombre, u.activo, " +
                          "(SELECT GROUP_CONCAT(a.nombre SEPARATOR ', ') " +
                          " FROM APIARIO_APICULTOR aa JOIN APIARIO a ON aa.apiario_id = a.id " +
-                         " WHERE aa.usuario_id = u.id) as apiarios " +
+                         " WHERE aa.usuario_id = u.id) as apiarios, " +
+                         "(SELECT GROUP_CONCAT(a.id SEPARATOR ',') " +
+                         " FROM APIARIO_APICULTOR aa JOIN APIARIO a ON aa.apiario_id = a.id " +
+                         " WHERE aa.usuario_id = u.id) as apiario_ids " +
                          "FROM USUARIO u JOIN CATALAGO_ROL r ON u.rol_id = r.id " +
                          "ORDER BY u.id ASC";
                          
@@ -54,6 +57,15 @@ public class GestionUsuariosControlador {
                             apiariosAsignados = apiariosAsignados.replace("Apiario ", "");
                             node.put("apiariosAsignados", apiariosAsignados);
                         }
+                        
+                        ArrayNode apiarioIdsArray = mapper.createArrayNode();
+                        String apiarioIds = rs.getString("apiario_ids");
+                        if (apiarioIds != null && !apiarioIds.isEmpty()) {
+                            for (String aid : apiarioIds.split(",")) {
+                                apiarioIdsArray.add(Integer.parseInt(aid));
+                            }
+                        }
+                        node.set("apiario_ids", apiarioIdsArray);
                         
                         node.put("activo", rs.getBoolean("activo"));
                         usuariosNode.add(node);
@@ -132,18 +144,45 @@ public class GestionUsuariosControlador {
         try {
             com.fasterxml.jackson.databind.JsonNode body = mapper.readTree(ctx.body());
             try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-                String sql = "UPDATE USUARIO SET nombre = ?, email = ?, rol_id = ?, activo = ? WHERE id = ?";
-                try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-                    stmt.setString(1, body.get("nombre").asText());
-                    stmt.setString(2, body.get("email").asText());
-                    stmt.setInt(3, body.get("rol_id").asInt());
-                    stmt.setBoolean(4, body.has("activo") ? body.get("activo").asBoolean() : true);
-                    stmt.setInt(5, id);
-                    stmt.executeUpdate();
-                    
-                    ObjectNode res = mapper.createObjectNode();
-                    res.put("mensaje", "Usuario actualizado con éxito");
-                    ctx.status(200).json(res);
+                conn.setAutoCommit(false);
+                try {
+                    String sql = "UPDATE USUARIO SET nombre = ?, email = ?, rol_id = ?, activo = ? WHERE id = ?";
+                    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                        stmt.setString(1, body.get("nombre").asText());
+                        stmt.setString(2, body.get("email").asText());
+                        stmt.setInt(3, body.get("rol_id").asInt());
+                        stmt.setBoolean(4, body.has("activo") ? body.get("activo").asBoolean() : true);
+                        stmt.setInt(5, id);
+                        stmt.executeUpdate();
+
+                        if (body.has("apiarios")) {
+                            String sqlDelete = "DELETE FROM APIARIO_APICULTOR WHERE usuario_id = ?";
+                            try (PreparedStatement stmtDel = conn.prepareStatement(sqlDelete)) {
+                                stmtDel.setInt(1, id);
+                                stmtDel.executeUpdate();
+                            }
+
+                            if (body.get("apiarios").isArray()) {
+                                String sqlApiario = "INSERT INTO APIARIO_APICULTOR (usuario_id, apiario_id, asignado_en) VALUES (?, ?, CURDATE())";
+                                try (PreparedStatement stmtApiario = conn.prepareStatement(sqlApiario)) {
+                                    for (JsonNode apiarioIdNode : body.get("apiarios")) {
+                                        stmtApiario.setInt(1, id);
+                                        stmtApiario.setInt(2, apiarioIdNode.asInt());
+                                        stmtApiario.addBatch();
+                                    }
+                                    stmtApiario.executeBatch();
+                                }
+                            }
+                        }
+                        
+                        conn.commit();
+                        ObjectNode res = mapper.createObjectNode();
+                        res.put("mensaje", "Usuario actualizado con éxito");
+                        ctx.status(200).json(res);
+                    }
+                } catch (Exception e) {
+                    conn.rollback();
+                    throw e;
                 }
             }
         } catch (Exception e) {

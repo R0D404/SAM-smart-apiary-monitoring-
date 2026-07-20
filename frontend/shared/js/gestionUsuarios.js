@@ -23,11 +23,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnCerrarCrear) btnCerrarCrear.addEventListener('click', cerrarModalCrear);
     if (btnCancelarCrear) btnCancelarCrear.addEventListener('click', cerrarModalCrear);
 
+    let apiariosGlobales = [];
+
     // Cargar checkboxes de apiarios dinámicamente
     function cargarApiariosCheckboxes() {
         fetch('/api/gestion/apiarios')
             .then(res => res.json())
             .then(apiarios => {
+                apiariosGlobales = apiarios;
                 const container = document.getElementById('lista-apiarios-checkboxes');
                 if (!container) return;
                 container.innerHTML = '';
@@ -154,6 +157,34 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('editar-email').value = user.email || '';
         document.getElementById('editar-rol').value = user.rol.toLowerCase() === 'admin' ? '1' : '2';
         document.getElementById('editar-estado').value = user.activo ? 'true' : 'false';
+        
+        const container = document.getElementById('editar-lista-apiarios-checkboxes');
+        if (container) {
+            container.innerHTML = '';
+            const userApiarios = user.apiario_ids || [];
+            
+            apiariosGlobales.forEach(ap => {
+                const isChecked = userApiarios.includes(ap.id);
+                const label = document.createElement('label');
+                label.className = 'checkbox-card' + (isChecked ? ' active' : '');
+                label.innerHTML = `
+                    <input type="checkbox" name="editar_apiarios" value="${ap.id}" ${isChecked ? 'checked' : ''}>
+                    ${ap.nombre}
+                    <span class="card-meta">${ap.municipio} · ${ap.colmenas} colmenas</span>
+                `;
+                container.appendChild(label);
+
+                const checkbox = label.querySelector('input');
+                checkbox.addEventListener('change', () => {
+                    if (checkbox.checked) {
+                        label.classList.add('active');
+                    } else {
+                        label.classList.remove('active');
+                    }
+                });
+            });
+        }
+        
         modalEditar.classList.add('active');
     }
 
@@ -175,11 +206,15 @@ document.addEventListener('DOMContentLoaded', () => {
         formEditar.addEventListener('submit', (e) => {
             e.preventDefault();
             const id = document.getElementById('editar-id').value;
+            const selectedApiarios = Array.from(document.querySelectorAll('input[name="editar_apiarios"]:checked'))
+                .map(cb => parseInt(cb.value));
+                
             const payload = {
                 nombre: document.getElementById('editar-nombre').value,
                 email: document.getElementById('editar-email').value,
                 rol_id: parseInt(document.getElementById('editar-rol').value),
-                activo: document.getElementById('editar-estado').value === 'true'
+                activo: document.getElementById('editar-estado').value === 'true',
+                apiarios: selectedApiarios
             };
             
             fetch(`/api/gestion/usuarios/${id}`, {
