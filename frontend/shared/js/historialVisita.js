@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function cargarVisitas() {
-        fetch('/api/visitas')
+        fetch('/visitas')
             .then(res => {
                 if (!res.ok) throw new Error("Error fetching visitas");
                 return res.json();
