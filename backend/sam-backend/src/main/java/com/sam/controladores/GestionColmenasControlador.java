@@ -92,9 +92,21 @@ public class GestionColmenasControlador {
 
                     try (ResultSet keys = stmt.getGeneratedKeys()) {
                         if (keys.next()) {
+                            int newColmenaId = keys.getInt(1);
+                            
+                            // Guardar módulo de monitoreo si fue enviado
+                            if (body.has("id_monitoreo") && !body.get("id_monitoreo").asText().trim().isEmpty()) {
+                                String sqlModulo = "INSERT INTO MODULO_MONITOREO (colmena_id, identificador, tipo, estado, fecha_instalacion) VALUES (?, ?, 'interno', 'activo', CURRENT_DATE)";
+                                try (PreparedStatement stmtMod = conn.prepareStatement(sqlModulo)) {
+                                    stmtMod.setInt(1, newColmenaId);
+                                    stmtMod.setString(2, body.get("id_monitoreo").asText());
+                                    stmtMod.executeUpdate();
+                                }
+                            }
+                            
                             ObjectNode res = mapper.createObjectNode();
                             res.put("mensaje", "Colmena creada");
-                            res.put("id", keys.getInt(1));
+                            res.put("id", newColmenaId);
                             ctx.status(201).json(res);
                         }
                     }
