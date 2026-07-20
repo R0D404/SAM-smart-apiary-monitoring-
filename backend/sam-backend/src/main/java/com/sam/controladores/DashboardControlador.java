@@ -55,7 +55,7 @@ public class DashboardControlador {
 
             int colmenasTotal = 0;
             int colmenasActivas = 0;
-            try (PreparedStatement stmt = conn.prepareStatement("SELECT count(*) as total, sum(case when estado='activa' then 1 else 0 end) as activas FROM COLMENA")) {
+            try (PreparedStatement stmt = conn.prepareStatement("SELECT count(*) as total, sum(case when estado='activa' then 1 else 0 end) as activas FROM COLMENA WHERE estado != 'baja'")) {
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (rs.next()) {
                         colmenasTotal = rs.getInt("total");
@@ -65,7 +65,7 @@ public class DashboardControlador {
             }
 
             int alertasActivas = 0;
-            try (PreparedStatement stmt = conn.prepareStatement("SELECT count(*) as total FROM ALERTA WHERE atendida = false")) {
+            try (PreparedStatement stmt = conn.prepareStatement("SELECT count(*) as total FROM ALERTA al JOIN COLMENA c ON al.colmena_id = c.id WHERE al.atendida = false AND c.estado != 'baja'")) {
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (rs.next()) alertasActivas = rs.getInt("total");
                 }
@@ -89,9 +89,9 @@ public class DashboardControlador {
             ArrayNode apiariosArray = mapper.createArrayNode();
             try (PreparedStatement stmt = conn.prepareStatement(
                 "SELECT a.id, a.nombre, a.estado as ubicacion, " +
-                "(SELECT count(*) FROM COLMENA c WHERE c.apiario_id = a.id) as num_colmenas, " +
-                "(SELECT count(*) FROM ALERTA al JOIN COLMENA c ON al.colmena_id = c.id WHERE c.apiario_id = a.id AND al.atendida = false AND al.nivel = 'critico') as criticas, " +
-                "(SELECT count(*) FROM ALERTA al JOIN COLMENA c ON al.colmena_id = c.id WHERE c.apiario_id = a.id AND al.atendida = false AND al.nivel = 'aviso') as avisos " +
+                "(SELECT count(*) FROM COLMENA c WHERE c.apiario_id = a.id AND c.estado != 'baja') as num_colmenas, " +
+                "(SELECT count(*) FROM ALERTA al JOIN COLMENA c ON al.colmena_id = c.id WHERE c.apiario_id = a.id AND al.atendida = false AND al.nivel = 'critico' AND c.estado != 'baja') as criticas, " +
+                "(SELECT count(*) FROM ALERTA al JOIN COLMENA c ON al.colmena_id = c.id WHERE c.apiario_id = a.id AND al.atendida = false AND al.nivel = 'aviso' AND c.estado != 'baja') as avisos " +
                 "FROM APIARIO a")) {
                 try (ResultSet rs = stmt.executeQuery()) {
                     while (rs.next()) {
@@ -126,6 +126,7 @@ public class DashboardControlador {
             try (PreparedStatement stmt = conn.prepareStatement(
                 "SELECT c.codigo, sum(co.kg_miel) as total_miel FROM COLMENA c " +
                 "LEFT JOIN COSECHA co ON co.colmena_id = c.id " +
+                "WHERE c.estado != 'baja' " +
                 "GROUP BY c.id ORDER BY total_miel DESC LIMIT 5")) {
                 try (ResultSet rs = stmt.executeQuery()) {
                     while(rs.next()) {
