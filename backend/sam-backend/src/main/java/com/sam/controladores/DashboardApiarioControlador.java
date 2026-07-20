@@ -92,8 +92,8 @@ public class DashboardApiarioControlador {
                 "(SELECT count(*) FROM ALERTA al WHERE al.colmena_id = c.id AND al.atendida = false AND al.nivel = 'critico') as criticas, " +
                 "(SELECT count(*) FROM ALERTA al WHERE al.colmena_id = c.id AND al.atendida = false AND al.nivel = 'aviso') as avisos, " +
                 "(SELECT ROUND(valor, 1) FROM LECTURA_SENSOR l JOIN MODULO_MONITOREO m ON l.modulo_id = m.id WHERE m.colmena_id = c.id AND l.tipo_sensor = 'peso' ORDER BY l.timestamp_dispositivo DESC LIMIT 1) as peso, " +
-                "(SELECT ROUND(valor, 1) FROM LECTURA_SENSOR l JOIN MODULO_MONITOREO m ON l.modulo_id = m.id WHERE m.colmena_id = c.id AND l.tipo_sensor = 'temp' ORDER BY l.timestamp_dispositivo DESC LIMIT 1) as temp, " +
-                "(SELECT ROUND(valor, 1) FROM LECTURA_SENSOR l JOIN MODULO_MONITOREO m ON l.modulo_id = m.id WHERE m.colmena_id = c.id AND l.tipo_sensor = 'humedad' ORDER BY l.timestamp_dispositivo DESC LIMIT 1) as humedad " +
+                "(SELECT ROUND(valor, 1) FROM LECTURA_SENSOR l JOIN MODULO_MONITOREO m ON l.modulo_id = m.id WHERE m.colmena_id = c.id AND l.tipo_sensor = 'temp' AND l.origen = 'interna' ORDER BY l.timestamp_dispositivo DESC LIMIT 1) as temp, " +
+                "(SELECT ROUND(valor, 1) FROM LECTURA_SENSOR l JOIN MODULO_MONITOREO m ON l.modulo_id = m.id WHERE m.colmena_id = c.id AND l.tipo_sensor = 'humedad' AND l.origen = 'interna' ORDER BY l.timestamp_dispositivo DESC LIMIT 1) as humedad " +
                 "FROM COLMENA c WHERE c.apiario_id = ? AND c.estado != 'baja'")) {
                 stmt.setInt(1, apiarioId);
                 try (ResultSet rs = stmt.executeQuery()) {

@@ -1,0 +1,6 @@
+Los archivos frontend/apicultor/miCuenta.html y vercel/frontend/apicultor/miCuenta.html son distintos
+Los archivos frontend/shared/js/configUmbrales.js y vercel/frontend/shared/js/configUmbrales.js son distintos
+Los archivos frontend/shared/js/gestionApiarios.js y vercel/frontend/shared/js/gestionApiarios.js son distintos
+Los archivos frontend/shared/js/historial.js y vercel/frontend/shared/js/historial.js son distintos
+Los archivos frontend/shared/js/login.js y vercel/frontend/shared/js/login.js son distintos
+Los archivos frontend/shared/js/misApiarios.js y vercel/frontend/shared/js/misApiarios.js son distintos

@@ -92,20 +92,30 @@ public class DashboardColmenaControlador {
                         ObjectNode lecturaActual = mapper.createObjectNode();
                         
                         try (PreparedStatement stmtLecturaAct = conn.prepareStatement(
-                            "SELECT tipo_sensor, valor, DATE_FORMAT(timestamp_dispositivo, '%d %b') as fecha_fmt " +
+                            "SELECT tipo_sensor, origen, valor, DATE_FORMAT(timestamp_dispositivo, '%d %b') as fecha_fmt " +
                             "FROM LECTURA_SENSOR l " +
                             "JOIN MODULO_MONITOREO m ON l.modulo_id = m.id " +
                             "WHERE m.colmena_id = ? " +
-                            "ORDER BY timestamp_dispositivo DESC LIMIT 10")) {
+                            "ORDER BY timestamp_dispositivo DESC LIMIT 20")) {
                             stmtLecturaAct.setInt(1, colmenaId);
                             try (ResultSet rsLect = stmtLecturaAct.executeQuery()) {
                                 boolean fechaSet = false;
                                 while (rsLect.next()) {
                                     String tipo = rsLect.getString("tipo_sensor");
+                                    String origen = rsLect.getString("origen");
                                     double val = rsLect.getDouble("valor");
+                                    
                                     if ("peso".equals(tipo) && !lecturaActual.has("peso")) lecturaActual.put("peso", val);
-                                    if ("temp".equals(tipo) && !lecturaActual.has("temp_interna")) lecturaActual.put("temp_interna", val);
-                                    if ("humedad".equals(tipo) && !lecturaActual.has("hum_interna")) lecturaActual.put("hum_interna", val);
+                                    
+                                    if ("temp".equals(tipo)) {
+                                        if ("interna".equals(origen) && !lecturaActual.has("temp_interna")) lecturaActual.put("temp_interna", val);
+                                        else if ("externa".equals(origen) && !lecturaActual.has("temp_externa")) lecturaActual.put("temp_externa", val);
+                                    }
+                                    
+                                    if ("humedad".equals(tipo)) {
+                                        if ("interna".equals(origen) && !lecturaActual.has("hum_interna")) lecturaActual.put("hum_interna", val);
+                                        else if ("externa".equals(origen) && !lecturaActual.has("hum_externa")) lecturaActual.put("hum_externa", val);
+                                    }
                                     
                                     if (!fechaSet) {
                                         lecturaActual.put("fecha", rsLect.getString("fecha_fmt"));

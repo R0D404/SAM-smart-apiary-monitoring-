@@ -104,6 +104,12 @@
 .state-dots .dot.yellow {
     background-color: var(--color-primary);
 }
+.state-dots .dot.red {
+    background-color: var(--color-alert-red);
+}
+.state-dots .dot.green {
+    background-color: var(--color-alert-green);
+}
 
 .state-text h2 {
     margin: 0 0 4px 0;
@@ -113,6 +119,12 @@
 
 .text-aviso {
     color: var(--color-primary);
+}
+.text-saludable {
+    color: var(--color-alert-green);
+}
+.text-critico {
+    color: var(--color-alert-red);
 }
 
 .state-text p {
