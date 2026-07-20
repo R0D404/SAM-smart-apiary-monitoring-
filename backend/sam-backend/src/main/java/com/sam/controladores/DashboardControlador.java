@@ -138,7 +138,7 @@ public class DashboardControlador {
             }
             response.set("apiarios", apiariosArray);
 
-            // 4. Producción por colmena (mock por ahora o leer de DB real si hay)
+            // 4. Producción por colmena
             ObjectNode produccionColmena = mapper.createObjectNode();
             ArrayNode labelsColmena = mapper.createArrayNode();
             ArrayNode dataColmena = mapper.createArrayNode();

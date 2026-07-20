@@ -69,74 +69,127 @@ public class DashboardColmenaControlador {
                         response.put("ecotipo", rs.getString("ecotipo"));
                         int colmenaId = rs.getInt("c_id");
 
-                        // 2. Diagnóstico IA mock
+                        // 2. Diagnóstico IA mock o basado en alertas
                         ObjectNode iaDiag = mapper.createObjectNode();
-                        iaDiag.put("estado", "Aviso");
-                        iaDiag.put("mensaje", "Humedad interna elevada");
+                        try (PreparedStatement stmtIa = conn.prepareStatement(
+                            "SELECT nivel, mensaje FROM ALERTA WHERE colmena_id = ? AND atendida = false ORDER BY timestamp DESC LIMIT 1")) {
+                            stmtIa.setInt(1, colmenaId);
+                            try (ResultSet rsIa = stmtIa.executeQuery()) {
+                                if (rsIa.next()) {
+                                    iaDiag.put("estado", "critico".equals(rsIa.getString("nivel")) ? "Crítico" : "Aviso");
+                                    iaDiag.put("mensaje", rsIa.getString("mensaje"));
+                                } else {
+                                    iaDiag.put("estado", "Saludable");
+                                    iaDiag.put("mensaje", "Sin alertas activas");
+                                }
+                            }
+                        }
                         response.set("iaDiagnostico", iaDiag);
 
-                        // 3. Última lectura (Mockeada)
+                        // 3. Lecturas
                         ArrayNode lecturasArray = mapper.createArrayNode();
-                        ObjectNode lectura = mapper.createObjectNode();
-                        lectura.put("peso", 38.4);
-                        lectura.put("temp_interna", 34.6);
-                        lectura.put("hum_interna", 78.0);
+                        // 3a. Última lectura de todas las métricas
+                        ObjectNode lecturaActual = mapper.createObjectNode();
                         
-                        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM");
-                        lectura.put("fecha", sdf.format(new Date()));
-                        lecturasArray.add(lectura);
-                        
-                        // Fake history data for chart
-                        for(int i=1; i<30; i+=3) {
-                            ObjectNode hist = mapper.createObjectNode();
-                            hist.put("peso", 38.4 - (Math.random() * 5));
-                            hist.put("fecha", "Hace " + i + " d");
-                            lecturasArray.add(hist);
+                        try (PreparedStatement stmtLecturaAct = conn.prepareStatement(
+                            "SELECT tipo_sensor, valor, DATE_FORMAT(timestamp_dispositivo, '%d %b') as fecha_fmt " +
+                            "FROM LECTURA_SENSOR l " +
+                            "JOIN MODULO_MONITOREO m ON l.modulo_id = m.id " +
+                            "WHERE m.colmena_id = ? " +
+                            "ORDER BY timestamp_dispositivo DESC LIMIT 10")) {
+                            stmtLecturaAct.setInt(1, colmenaId);
+                            try (ResultSet rsLect = stmtLecturaAct.executeQuery()) {
+                                boolean fechaSet = false;
+                                while (rsLect.next()) {
+                                    String tipo = rsLect.getString("tipo_sensor");
+                                    double val = rsLect.getDouble("valor");
+                                    if ("peso".equals(tipo) && !lecturaActual.has("peso")) lecturaActual.put("peso", val);
+                                    if ("temp".equals(tipo) && !lecturaActual.has("temp_interna")) lecturaActual.put("temp_interna", val);
+                                    if ("humedad".equals(tipo) && !lecturaActual.has("hum_interna")) lecturaActual.put("hum_interna", val);
+                                    
+                                    if (!fechaSet) {
+                                        lecturaActual.put("fecha", rsLect.getString("fecha_fmt"));
+                                        fechaSet = true;
+                                    }
+                                }
+                            }
+                        }
+                        // Default values if empty
+                        if (!lecturaActual.has("fecha")) {
+                            SimpleDateFormat sdf = new SimpleDateFormat("dd MMM");
+                            lecturaActual.put("fecha", sdf.format(new Date()));
+                            lecturaActual.put("peso", 0.0);
+                            lecturaActual.put("temp_interna", 0.0);
+                            lecturaActual.put("hum_interna", 0.0);
+                        }
+                        lecturasArray.add(lecturaActual);
+
+                        // 3b. Historial de peso para el chart (ultimas 30 lecturas)
+                        try (PreparedStatement stmtPesoHist = conn.prepareStatement(
+                            "SELECT valor, DATE_FORMAT(timestamp_dispositivo, '%d %b %H:%i') as fecha_fmt " +
+                            "FROM LECTURA_SENSOR l " +
+                            "JOIN MODULO_MONITOREO m ON l.modulo_id = m.id " +
+                            "WHERE m.colmena_id = ? AND l.tipo_sensor = 'peso' " +
+                            "ORDER BY timestamp_dispositivo DESC LIMIT 30")) {
+                            stmtPesoHist.setInt(1, colmenaId);
+                            try (ResultSet rsPeso = stmtPesoHist.executeQuery()) {
+                                while (rsPeso.next()) {
+                                    ObjectNode hist = mapper.createObjectNode();
+                                    hist.put("peso", rsPeso.getDouble("valor"));
+                                    hist.put("fecha", rsPeso.getString("fecha_fmt"));
+                                    lecturasArray.add(hist);
+                                }
+                            }
                         }
                         response.set("lecturas", lecturasArray);
 
-                        // 4. Alertas Recientes (Mockeadas)
+                        // 4. Alertas Recientes
                         ArrayNode alertasArray = mapper.createArrayNode();
-                        ObjectNode a1 = mapper.createObjectNode();
-                        a1.put("nivel", "aviso");
-                        a1.put("mensaje", "Hum. interna 78%");
-                        a1.put("fecha", "hoy");
-                        
-                        ObjectNode a2 = mapper.createObjectNode();
-                        a2.put("nivel", "critico");
-                        a2.put("mensaje", "Peso -3kg en 2h");
-                        a2.put("fecha", "24 may");
-                        
-                        ObjectNode a3 = mapper.createObjectNode();
-                        a3.put("nivel", "normal");
-                        a3.put("mensaje", "Temp. estable");
-                        a3.put("fecha", "22 may");
-                        
-                        alertasArray.add(a1);
-                        alertasArray.add(a2);
-                        alertasArray.add(a3);
+                        try (PreparedStatement stmtAlertas = conn.prepareStatement(
+                            "SELECT nivel, mensaje, DATE_FORMAT(timestamp, '%d %b') as fecha_fmt " +
+                            "FROM ALERTA " +
+                            "WHERE colmena_id = ? " +
+                            "ORDER BY timestamp DESC LIMIT 5")) {
+                            stmtAlertas.setInt(1, colmenaId);
+                            try (ResultSet rsAlertas = stmtAlertas.executeQuery()) {
+                                while (rsAlertas.next()) {
+                                    ObjectNode a = mapper.createObjectNode();
+                                    a.put("nivel", rsAlertas.getString("nivel"));
+                                    a.put("mensaje", rsAlertas.getString("mensaje"));
+                                    a.put("fecha", rsAlertas.getString("fecha_fmt"));
+                                    alertasArray.add(a);
+                                }
+                            }
+                        }
                         response.set("alertas", alertasArray);
 
-                        // 5. Historial (Mockeado)
+                        // 5. Historial (Visitas y Cosechas)
                         ArrayNode historialArray = mapper.createArrayNode();
-                        ObjectNode h1 = mapper.createObjectNode();
-                        h1.put("tipo", "Cosecha");
-                        h1.put("fecha", "24 may");
-                        h1.put("resumen", "12 kg · validada con peso");
-                        
-                        ObjectNode h2 = mapper.createObjectNode();
-                        h2.put("tipo", "Visita");
-                        h2.put("fecha", "18 may");
-                        h2.put("resumen", "Reina vista, cría sana");
-                        
-                        ObjectNode h3 = mapper.createObjectNode();
-                        h3.put("tipo", "Cosecha");
-                        h3.put("fecha", "02 may");
-                        h3.put("resumen", "9 kg · validada");
-                        
-                        historialArray.add(h1);
-                        historialArray.add(h2);
-                        historialArray.add(h3);
+                        try (PreparedStatement stmtHist = conn.prepareStatement(
+                            "(SELECT 'Cosecha' as tipo, s.fecha, " +
+                            "CONCAT(c.kg_miel, ' kg · ', c.calidad, IF(c.validado_con_peso, ' · validada con peso', '')) as resumen " +
+                            "FROM COSECHA c JOIN SESION_VISITA s ON c.sesion_id = s.id WHERE c.colmena_id = ?) " +
+                            "UNION " +
+                            "(SELECT 'Visita' as tipo, s.fecha, " +
+                            "v.notas as resumen " +
+                            "FROM VISITA v JOIN SESION_VISITA s ON v.sesion_id = s.id WHERE v.colmena_id = ?) " +
+                            "ORDER BY fecha DESC LIMIT 5")) {
+                            stmtHist.setInt(1, colmenaId);
+                            stmtHist.setInt(2, colmenaId);
+                            try (ResultSet rsHist = stmtHist.executeQuery()) {
+                                while (rsHist.next()) {
+                                    ObjectNode h = mapper.createObjectNode();
+                                    h.put("tipo", rsHist.getString("tipo"));
+                                    
+                                    Date f = rsHist.getDate("fecha");
+                                    SimpleDateFormat sdf = new SimpleDateFormat("dd MMM");
+                                    h.put("fecha", f != null ? sdf.format(f) : "");
+                                    
+                                    h.put("resumen", rsHist.getString("resumen") != null ? rsHist.getString("resumen") : "");
+                                    historialArray.add(h);
+                                }
+                            }
+                        }
                         response.set("historial", historialArray);
                     } else {
                         ctx.status(404).json("{\"mensaje\": \"Colmena no encontrada\"}");
