@@ -23,49 +23,52 @@ document.addEventListener('DOMContentLoaded', () => {
                 const bcColmena = document.getElementById('bc-colmena');
                 const bcModulo = document.getElementById('bc-modulo');
                 if (bcColmena) bcColmena.textContent = colmenaId;
-                if (bcModulo) bcModulo.textContent = `Módulo ${data.identificador}`;
-                
-                // Populate summary list
+                if (bcModulo) bcModulo.textContent = 'Módulo ' + (data.identificador || '');
+
+                // Populate sidebar card — Datos del módulo
                 const elId = document.getElementById('modulo-id-text');
-                if(elId) elId.textContent = data.identificador || '---';
-                
+                if (elId) elId.textContent = data.identificador || '---';
+
                 const elTipo = document.getElementById('modulo-tipo');
-                if(elTipo) {
+                if (elTipo) {
                     elTipo.textContent = data.tipo || '---';
                     elTipo.style.textTransform = 'capitalize';
                 }
-                
+
                 const elEstado = document.getElementById('modulo-estado');
-                if(elEstado) {
+                if (elEstado) {
                     elEstado.style.display = 'inline-block';
                     elEstado.textContent = data.estado ? data.estado.toUpperCase() : '---';
                 }
-                
-                const elInstalado = document.getElementById('modulo-instalado');
-                if(elInstalado) elInstalado.textContent = data.instalado || '---';
-                
-                const elUltLectura = document.getElementById('modulo-ultima-lectura');
-                if(elUltLectura) elUltLectura.textContent = data.ultima_lectura && data.ultima_lectura !== '---' ? data.ultima_lectura.split(' ')[0] : '---';
-                
-                const elEventos = document.getElementById('modulo-eventos-count');
-                if(elEventos) elEventos.textContent = data.eventos || 0;
 
-                // Populate history list
+                const elInstalado = document.getElementById('modulo-instalado');
+                if (elInstalado) elInstalado.textContent = data.instalado || '---';
+
+                const elUltLectura = document.getElementById('modulo-ultima-lectura');
+                if (elUltLectura) {
+                    const ul = data.ultima_lectura;
+                    elUltLectura.textContent = (ul && ul !== '---') ? ul.split(' ')[0] : '---';
+                }
+
+                const elEventos = document.getElementById('modulo-eventos-count');
+                if (elEventos) elEventos.textContent = data.eventos !== undefined ? data.eventos : 0;
+
+                // Populate Historial reciente
                 const historyList = document.getElementById('timeline-historial');
                 if (historyList) {
                     if (data.historial && data.historial.length > 0) {
-                        historyList.innerHTML = data.historial.map(h => `
-                            <div style="margin-bottom: 12px; border-left: 2px solid var(--color-primary); padding-left: 12px;">
-                                <div style="font-size: 12px; color: var(--color-text-gray);">${h.fecha}</div>
-                                <div style="font-size: 14px; color: var(--color-text-white);">${h.detalle}</div>
-                            </div>
-                        `).join('');
+                        historyList.innerHTML = data.historial.map(h =>
+                            '<div style="margin-bottom: 12px; border-left: 2px solid var(--color-primary); padding-left: 12px;">' +
+                                '<div style="font-size: 12px; color: var(--color-text-gray);">' + h.fecha + '</div>' +
+                                '<div style="font-size: 14px; color: var(--color-text-white);">' + h.detalle + '</div>' +
+                            '</div>'
+                        ).join('');
                     } else {
-                        historyList.innerHTML = \`<p style="color: var(--color-text-gray); font-size: 14px; text-align: center; padding: 20px 0;">No hay historial reciente disponible.</p>\`;
+                        historyList.innerHTML = '<p style="color: var(--color-text-gray); font-size: 14px; text-align: center; padding: 20px 0;">No hay historial reciente disponible.</p>';
                     }
                 }
             })
-            .catch(console.error);
+            .catch(err => console.error('Error cargando módulo:', err));
     }
 
     // ==========================================
@@ -73,15 +76,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     const textareaDesc = document.getElementById('desc-mantenimiento');
     const charCounter = document.getElementById('char-count');
-    const maxLength = textareaDesc ? (textareaDesc.getAttribute('maxlength') || 500) : 500;
+    const maxLength = textareaDesc ? (parseInt(textareaDesc.getAttribute('maxlength')) || 500) : 500;
 
     function actualizarContador() {
         if (!textareaDesc || !charCounter) return;
         const currentLength = textareaDesc.value.length;
-        charCounter.textContent = `${currentLength} / ${maxLength}`;
+        charCounter.textContent = currentLength + ' / ' + maxLength;
     }
 
-    if(textareaDesc) {
+    if (textareaDesc) {
         textareaDesc.addEventListener('input', actualizarContador);
         actualizarContador();
     }
@@ -95,17 +98,18 @@ document.addEventListener('DOMContentLoaded', () => {
     if (formMantenimiento) {
         formMantenimiento.addEventListener('submit', (e) => {
             e.preventDefault();
-            
+
             const btnSubmit = formMantenimiento.querySelector('button[type="submit"]');
-            
+
             const tipoEventoSeleccionado = document.querySelector('input[name="tipo_evento"]:checked');
             if (!tipoEventoSeleccionado) {
                 alert("Seleccione un tipo de evento");
                 return;
             }
-            
-            const fechaEvento = document.querySelector('input[type="date"]').value;
-            const descripcion = textareaDesc.value.trim();
+
+            const inputFecha = document.querySelector('input[type="date"]');
+            const fechaEvento = inputFecha ? inputFecha.value : '';
+            const descripcion = textareaDesc ? textareaDesc.value.trim() : '';
 
             if (!fechaEvento || !descripcion) {
                 alert("Completa todos los campos");
@@ -115,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
             btnSubmit.disabled = true;
             btnSubmit.textContent = "Guardando...";
 
-            fetch(`/api/modulos/${colmenaId}/mantenimiento`, {
+            fetch('/api/modulos/' + colmenaId + '/mantenimiento', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -125,14 +129,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
             })
             .then(res => {
-                if(!res.ok) throw new Error("Error al guardar");
+                if (!res.ok) throw new Error("Error al guardar");
                 return res.json();
             })
             .then(() => {
                 alert('Mantenimiento guardado correctamente');
-                formMantenimiento.reset();
+                if (formMantenimiento) formMantenimiento.reset();
                 actualizarContador();
-                cargarDatos(); // Reload history and module data
+                cargarDatos();
             })
             .catch(err => {
                 console.error(err);
@@ -147,12 +151,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (btnCancelar) {
         btnCancelar.addEventListener('click', () => {
-            if(confirm('¿Estás seguro de que quieres cancelar y perder los cambios?')) {
+            if (confirm('¿Estás seguro de que quieres cancelar y perder los cambios?')) {
                 window.history.back();
             }
         });
     }
-    
-    // Call the function on load!
+
+    // Cargar datos al iniciar la página
     cargarDatos();
 });
