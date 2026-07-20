@@ -65,6 +65,25 @@ public class GestionApiariosControlador {
                         node.put("microclima", mc != null ? mc : "Desconocido");
                         node.put("microclima_id", rs.getInt("microclima_id"));
                         
+                        // Fetch peso_historial
+                        ArrayNode pesoHistorial = mapper.createArrayNode();
+                        String qPeso = "SELECT AVG(valor) as peso_promedio " +
+                                       "FROM LECTURA_SENSOR l " +
+                                       "JOIN MODULO_MONITOREO m ON l.modulo_id = m.id " +
+                                       "JOIN COLMENA c ON m.colmena_id = c.id " +
+                                       "WHERE c.apiario_id = ? AND l.tipo_sensor = 'peso' " +
+                                       "GROUP BY DATE(timestamp_dispositivo) " +
+                                       "ORDER BY DATE(timestamp_dispositivo) DESC LIMIT 7";
+                        try (PreparedStatement stmtPeso = conn.prepareStatement(qPeso)) {
+                            stmtPeso.setInt(1, rs.getInt("id"));
+                            try (ResultSet rsPeso = stmtPeso.executeQuery()) {
+                                while(rsPeso.next()) {
+                                    pesoHistorial.insert(0, Math.round(rsPeso.getDouble("peso_promedio") * 10.0) / 10.0);
+                                }
+                            }
+                        }
+                        node.set("peso_historial", pesoHistorial);
+                        
                         apiarios.add(node);
                     }
                 }

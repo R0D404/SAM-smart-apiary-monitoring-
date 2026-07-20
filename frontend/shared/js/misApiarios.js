@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const apiariosList = document.getElementById("apiarios-list");
 
     // Función para dibujar una gráfica simple en Canvas
-    function dibujarMiniGrafica(canvasId) {
+    function dibujarMiniGrafica(canvasId, historico) {
         const canvas = document.getElementById(canvasId);
         if (!canvas) return;
         const ctx = canvas.getContext("2d");
@@ -15,10 +15,11 @@ document.addEventListener("DOMContentLoaded", () => {
         const width = canvas.width = 120;
         const height = canvas.height = 40;
 
-        // Puntos simulados de peso promedio
-        const datos = [32, 35, 34, 38, 41, 40, 42];
-        const maxVal = 50;
-        const minVal = 30;
+        let datos = historico && historico.length > 0 ? historico : [0];
+        if (datos.length === 1) datos = [datos[0], datos[0]];
+
+        const maxVal = Math.max(...datos) + 5;
+        const minVal = Math.max(0, Math.min(...datos) - 5);
 
         ctx.strokeStyle = "#eab308"; // Amarillo primario de SAM
         ctx.lineWidth = 2;
@@ -27,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
         datos.forEach((val, idx) => {
             const x = (idx / (datos.length - 1)) * width;
             // Invertimos Y para que valores altos estén arriba
-            const y = height - ((val - minVal) / (maxVal - minVal)) * height;
+            let y = height - ((val - minVal) / (maxVal - minVal || 1)) * height;
             if (idx === 0) {
                 ctx.moveTo(x, y);
             } else {
@@ -152,7 +153,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 // Dibujar la gráfica lineal en el Canvas si hay colmenas
                 if ((api.colmenas || 0) > 0) {
-                    dibujarMiniGrafica(`chart-apiario-${api.id}`);
+                    dibujarMiniGrafica(`chart-apiario-${api.id}`, api.peso_historial);
                 }
             });
 
