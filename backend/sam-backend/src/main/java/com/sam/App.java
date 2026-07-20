@@ -101,6 +101,7 @@ public class App
             });
 
             path("/api/umbrales", () -> {
+                get(com.sam.controladores.UmbralesControlador::obtenerUmbrales);
                 post(com.sam.controladores.UmbralesControlador::guardarUmbrales);
             });
 
