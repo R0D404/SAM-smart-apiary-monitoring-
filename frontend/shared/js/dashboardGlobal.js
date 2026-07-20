@@ -342,7 +342,7 @@ function updateDashboard(data) {
  * Descomenta y ajusta la URL cuando el backend esté listo.
  */
 function fetchDashboardData() {
-    fetch('/api/dashboard')
+    fetch('/api/dashboard?t=' + new Date().getTime())
         .then(response => {
             if (!response.ok) throw new Error('Error al cargar datos del dashboard');
             return response.json();

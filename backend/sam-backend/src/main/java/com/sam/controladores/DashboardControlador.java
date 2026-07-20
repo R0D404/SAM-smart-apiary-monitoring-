@@ -129,7 +129,7 @@ public class DashboardControlador {
                 "SELECT c.codigo, sum(co.kg_miel) as total_miel FROM COLMENA c " +
                 "LEFT JOIN COSECHA co ON co.colmena_id = c.id " +
                 "WHERE c.estado != 'baja' " +
-                "GROUP BY c.id ORDER BY total_miel DESC LIMIT 5")) {
+                "GROUP BY c.id ORDER BY total_miel DESC")) {
                 try (ResultSet rs = stmt.executeQuery()) {
                     while(rs.next()) {
                         labelsColmena.add(rs.getString("codigo"));
@@ -138,6 +138,7 @@ public class DashboardControlador {
                     }
                 }
             }
+            System.out.println("DEBUG Dashboard: colmenas labels size = " + labelsColmena.size());
             produccionColmena.set("labels", labelsColmena);
             produccionColmena.set("data", dataColmena);
             response.set("produccionColmena", produccionColmena);
