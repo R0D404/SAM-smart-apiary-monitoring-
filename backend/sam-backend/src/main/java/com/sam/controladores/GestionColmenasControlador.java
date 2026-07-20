@@ -12,10 +12,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class GestionColmenasControlador {
-    private static final Dotenv dotenv = Dotenv.load();
-    private static final String DB_URL = dotenv.get("DB_URL");
-    private static final String DB_USER = dotenv.get("DB_USER");
-    private static final String DB_PASSWORD = dotenv.get("DB_PASSWORD");
     private static final ObjectMapper mapper = new ObjectMapper();
 
     public static void listarColmenas(Context ctx) {
@@ -24,12 +20,14 @@ public class GestionColmenasControlador {
             return;
         }
 
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+        try (Connection conn = com.sam.Conexion.conectar()) {
+            if (conn == null) throw new Exception("DB Connection failed");
             ArrayNode colmenas = mapper.createArrayNode();
             String sql = "SELECT c.id as db_id, c.codigo, a.nombre as apiario, c.ecotipo, c.estado, m.identificador as monitoreo " +
                          "FROM COLMENA c " +
                          "JOIN APIARIO a ON c.apiario_id = a.id " +
-                         "LEFT JOIN MODULO_MONITOREO m ON m.colmena_id = c.id";
+                         "LEFT JOIN MODULO_MONITOREO m ON m.colmena_id = c.id " +
+                         "WHERE c.estado != 'baja'";
                          
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                 try (ResultSet rs = stmt.executeQuery()) {
@@ -67,7 +65,8 @@ public class GestionColmenasControlador {
     public static void crearColmena(Context ctx) {
         try {
             com.fasterxml.jackson.databind.JsonNode body = mapper.readTree(ctx.body());
-            try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            try (Connection conn = com.sam.Conexion.conectar()) {
+                if (conn == null) throw new Exception("DB Connection failed");
                 String sql = "INSERT INTO COLMENA (apiario_id, codigo, ecotipo, estado, fecha_instalacion) VALUES (?, ?, ?, ?, CURRENT_DATE)";
                 try (PreparedStatement stmt = conn.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS)) {
                     stmt.setInt(1, body.get("apiario_id").asInt());
@@ -96,7 +95,8 @@ public class GestionColmenasControlador {
         int id = Integer.parseInt(ctx.pathParam("id"));
         try {
             com.fasterxml.jackson.databind.JsonNode body = mapper.readTree(ctx.body());
-            try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            try (Connection conn = com.sam.Conexion.conectar()) {
+                if (conn == null) throw new Exception("DB Connection failed");
                 String sql = "UPDATE COLMENA SET apiario_id=?, codigo=?, ecotipo=?, estado=? WHERE id=?";
                 try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                     stmt.setInt(1, body.get("apiario_id").asInt());
@@ -119,13 +119,16 @@ public class GestionColmenasControlador {
 
     public static void eliminarColmena(Context ctx) {
         int id = Integer.parseInt(ctx.pathParam("id"));
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String sql = "DELETE FROM COLMENA WHERE id=?";
+        try (Connection conn = com.sam.Conexion.conectar()) {
+            if (conn == null) throw new Exception("DB Connection failed");
+            // En lugar de borrar la fila y romper las llaves foráneas de sensores o visitas,
+            // hacemos un soft-delete (Baja lógica).
+            String sql = "UPDATE COLMENA SET estado='baja' WHERE id=?";
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.setInt(1, id);
                 stmt.executeUpdate();
                 ObjectNode res = mapper.createObjectNode();
-                res.put("mensaje", "Colmena eliminada");
+                res.put("mensaje", "Colmena dada de baja exitosamente");
                 ctx.status(200).json(res);
             }
         } catch (Exception e) {
