@@ -136,10 +136,12 @@
                 <!-- MIDDLE ROW -->
                 <div class="middle-row">
                     <section class="chart-section">
-                        <button class="chart-btn" style="width:100%" onclick="openModal('modal-peso-colmena')">
-                            <img src="../assets/icons/historial.svg" alt="" class="btn-icon">
-                            <span>Peso — últimos 30 días</span>
-                        </button>
+                        <div class="chart-header">
+                            <h3>Peso — últimos 30 días (kg)</h3>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="colmenaPesoChart"></canvas>
+                        </div>
                     </section>
 
                     <section class="alerts-section">
@@ -168,23 +170,7 @@
         </main>
     </div>
 
-    <!-- Modal -->
-    <div id="modal-peso-colmena" class="modal-overlay">
-        <div class="modal-content">
-            <header class="modal-header">
-                <div>
-                    <h2>Peso — últimos 30 días</h2>
-                    <p class="modal-subtitle">Evolución del peso de la colmena (kg)</p>
-                </div>
-                <button class="close-btn" onclick="closeModal('modal-peso-colmena')">&times;</button>
-            </header>
-            <div class="modal-body">
-                <div class="chart-wrapper-modal">
-                    <canvas id="colmenaPesoChart"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
+
 
     <script src="../shared/js/chartModals.js"></script>
     <script src="../shared/js/dashboardColmena.js"></script>
