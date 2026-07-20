@@ -17,6 +17,13 @@ import java.util.Locale;
 public class HistorialControlador {
 
     public static void obtenerHistorial(Context ctx) {
+        String usuarioActual = ctx.sessionAttribute("usuarioLogueado");
+        if (usuarioActual == null) {
+            ctx.status(401).json("{\"mensaje\": \"No autorizado\"}");
+            return;
+        }
+        String rol = ctx.sessionAttribute("rol");
+
         Dotenv dotenv = null;
         try {
             dotenv = Dotenv.load();
@@ -27,11 +34,25 @@ public class HistorialControlador {
         String dbPassword = (dotenv != null && dotenv.get("DB_PASSWORD") != null) ? dotenv.get("DB_PASSWORD") : "0981";
 
         try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword)) {
+            
+            int usuarioId = -1;
+            if ("apicultor".equals(rol)) {
+                try (PreparedStatement stmt = conn.prepareStatement("SELECT id FROM USUARIO WHERE email = ?")) {
+                    stmt.setString(1, usuarioActual);
+                    try (ResultSet rs = stmt.executeQuery()) {
+                        if (rs.next()) usuarioId = rs.getInt("id");
+                    }
+                }
+            }
+            boolean esApicultor = "apicultor".equals(rol);
+            String joinApicultor = esApicultor ? " JOIN COLMENA c ON co.colmena_id = c.id JOIN APIARIO_APICULTOR aa ON aa.apiario_id = c.apiario_id AND aa.usuario_id = " + usuarioId : "";
 
             Map<String, Object> response = new HashMap<>();
 
             // 1. Totales y promedios
-            String sqlTotales = "SELECT SUM(kg_miel) as total, COUNT(DISTINCT colmena_id) as colmenas FROM COSECHA";
+            String sqlTotales = esApicultor 
+                ? "SELECT SUM(co.kg_miel) as total, COUNT(DISTINCT co.colmena_id) as colmenas FROM COSECHA co" + joinApicultor
+                : "SELECT SUM(kg_miel) as total, COUNT(DISTINCT colmena_id) as colmenas FROM COSECHA";
             try (PreparedStatement stmt = conn.prepareStatement(sqlTotales);
                  ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -43,7 +64,9 @@ public class HistorialControlador {
             }
 
             // 2. Mejor colmena
-            String sqlMejor = "SELECT c.codigo, SUM(co.kg_miel) as total FROM COSECHA co JOIN COLMENA c ON co.colmena_id = c.id GROUP BY c.id, c.codigo ORDER BY total DESC LIMIT 1";
+            String sqlMejor = "SELECT c.codigo, SUM(co.kg_miel) as total FROM COSECHA co JOIN COLMENA c ON co.colmena_id = c.id " +
+                              (esApicultor ? "JOIN APIARIO_APICULTOR aa ON aa.apiario_id = c.apiario_id AND aa.usuario_id = " + usuarioId + " " : "") +
+                              "GROUP BY c.id, c.codigo ORDER BY total DESC LIMIT 1";
             try (PreparedStatement stmt = conn.prepareStatement(sqlMejor);
                  ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -54,7 +77,9 @@ public class HistorialControlador {
             }
 
             // 3. Visitas registradas
-            String sqlVisitas = "SELECT COUNT(*) as visitas FROM VISITA";
+            String sqlVisitas = esApicultor
+                ? "SELECT COUNT(DISTINCT v.id) as visitas FROM VISITA v JOIN SESION_VISITA s ON v.sesion_id = s.id JOIN APIARIO_APICULTOR aa ON aa.apiario_id = s.apiario_id WHERE aa.usuario_id = " + usuarioId
+                : "SELECT COUNT(*) as visitas FROM VISITA";
             try (PreparedStatement stmt = conn.prepareStatement(sqlVisitas);
                  ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -63,7 +88,9 @@ public class HistorialControlador {
             }
 
             // 4. Produccion Acumulada
-            String sqlAcum = "SELECT s.fecha, SUM(co.kg_miel) as total FROM COSECHA co JOIN SESION_VISITA s ON co.sesion_id = s.id GROUP BY s.fecha ORDER BY s.fecha ASC";
+            String sqlAcum = "SELECT s.fecha, SUM(co.kg_miel) as total FROM COSECHA co JOIN SESION_VISITA s ON co.sesion_id = s.id " +
+                             (esApicultor ? "JOIN APIARIO_APICULTOR aa ON aa.apiario_id = s.apiario_id AND aa.usuario_id = " + usuarioId + " " : "") +
+                             "GROUP BY s.fecha ORDER BY s.fecha ASC";
             List<String> labelsAcum = new ArrayList<>();
             List<Double> dataAcum = new ArrayList<>();
             double acumulado = 0;
@@ -84,7 +111,9 @@ public class HistorialControlador {
             response.put("produccionAcumulada", prodAcumulada);
 
             // 5. Produccion por Colmena (Bar chart)
-            String sqlPorColmena = "SELECT c.codigo, SUM(co.kg_miel) as total FROM COSECHA co JOIN COLMENA c ON co.colmena_id = c.id GROUP BY c.id, c.codigo ORDER BY c.codigo ASC";
+            String sqlPorColmena = "SELECT c.codigo, SUM(co.kg_miel) as total FROM COSECHA co JOIN COLMENA c ON co.colmena_id = c.id " +
+                                   (esApicultor ? "JOIN APIARIO_APICULTOR aa ON aa.apiario_id = c.apiario_id AND aa.usuario_id = " + usuarioId + " " : "") +
+                                   "GROUP BY c.id, c.codigo ORDER BY c.codigo ASC";
             List<String> labelsColmena = new ArrayList<>();
             List<Double> dataColmena = new ArrayList<>();
             try (PreparedStatement stmt = conn.prepareStatement(sqlPorColmena);
@@ -100,7 +129,9 @@ public class HistorialControlador {
             response.put("produccionPorColmena", prodColmena);
 
             // 6. Historial de Cosechas (Table)
-            String sqlHistorial = "SELECT s.fecha, c.codigo, co.kg_miel, co.calidad, co.validado_con_peso FROM COSECHA co JOIN COLMENA c ON co.colmena_id = c.id JOIN SESION_VISITA s ON co.sesion_id = s.id ORDER BY s.fecha DESC, co.id DESC";
+            String sqlHistorial = "SELECT s.fecha, c.codigo, co.kg_miel, co.calidad, co.validado_con_peso FROM COSECHA co JOIN COLMENA c ON co.colmena_id = c.id JOIN SESION_VISITA s ON co.sesion_id = s.id " +
+                                  (esApicultor ? "JOIN APIARIO_APICULTOR aa ON aa.apiario_id = c.apiario_id AND aa.usuario_id = " + usuarioId + " " : "") +
+                                  "ORDER BY s.fecha DESC, co.id DESC";
             List<Map<String, Object>> historial = new ArrayList<>();
             SimpleDateFormat sdfFull = new SimpleDateFormat("dd MMM yyyy", new Locale("es", "ES"));
             try (PreparedStatement stmt = conn.prepareStatement(sqlHistorial);

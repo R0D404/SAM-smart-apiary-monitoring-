@@ -17,18 +17,35 @@ public class GestionApiariosControlador {
     private static final ObjectMapper mapper = new ObjectMapper();
 
     public static void listarApiarios(Context ctx) {
-        if (ctx.sessionAttribute("usuarioLogueado") == null) {
+        String usuarioActual = ctx.sessionAttribute("usuarioLogueado");
+        if (usuarioActual == null) {
             ctx.status(401).json("{\"mensaje\": \"No autorizado\"}");
             return;
         }
+        
+        String rol = ctx.sessionAttribute("rol");
 
         try (Connection conn = com.sam.Conexion.conectar()) {
             if (conn == null) throw new Exception("DB connection failed");
+            
+            int usuarioId = -1;
+            if ("apicultor".equals(rol)) {
+                try (PreparedStatement stmt = conn.prepareStatement("SELECT id FROM USUARIO WHERE email = ?")) {
+                    stmt.setString(1, usuarioActual);
+                    try (ResultSet rs = stmt.executeQuery()) {
+                        if (rs.next()) usuarioId = rs.getInt("id");
+                    }
+                }
+            }
+
             ArrayNode apiarios = mapper.createArrayNode();
+            String filterApicultor = "apicultor".equals(rol) ? " JOIN APIARIO_APICULTOR aa ON aa.apiario_id = a.id AND aa.usuario_id = " + usuarioId : "";
+
             String sql = "SELECT a.id, a.nombre, a.estado, a.municipio, a.localidad, a.microclima_id, " +
                          "COUNT(c.id) as colmenas, cm.nombre as microclima " +
                          "FROM APIARIO a " +
-                         "LEFT JOIN COLMENA c ON a.id = c.apiario_id AND c.estado != 'baja' " +
+                         filterApicultor +
+                         " LEFT JOIN COLMENA c ON a.id = c.apiario_id AND c.estado != 'baja' " +
                          "LEFT JOIN CATALAGO_MICROCLIMA cm ON a.microclima_id = cm.id " +
                          "WHERE a.estatus != 'baja' " +
                          "GROUP BY a.id, a.nombre, a.estado, a.municipio, a.localidad, a.microclima_id, cm.nombre";

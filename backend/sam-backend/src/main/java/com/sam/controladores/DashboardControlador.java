@@ -31,26 +31,38 @@ public class DashboardControlador {
         ObjectNode response = mapper.createObjectNode();
 
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            // 1. Obtener nombre del usuario
+            // 1. Obtener nombre del usuario y rol
             String nombreUsuario = "Admin";
             String emailUsuario = usuarioActual;
-            try (PreparedStatement stmt = conn.prepareStatement("SELECT nombre, email FROM USUARIO WHERE email = ?")) {
+            int usuarioId = -1;
+            String rolNombre = "";
+            try (PreparedStatement stmt = conn.prepareStatement(
+                "SELECT u.id, u.nombre, u.email, r.nombre as rol FROM USUARIO u JOIN CATALAGO_ROL r ON u.rol_id = r.id WHERE u.email = ?")) {
                 stmt.setString(1, usuarioActual);
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (rs.next()) {
+                        usuarioId = rs.getInt("id");
                         nombreUsuario = rs.getString("nombre");
                         emailUsuario = rs.getString("email");
+                        rolNombre = rs.getString("rol");
                     }
                 }
             }
             ObjectNode usuarioNode = mapper.createObjectNode();
             usuarioNode.put("nombre", nombreUsuario);
             usuarioNode.put("email", emailUsuario);
+            usuarioNode.put("rol", rolNombre);
             response.set("usuario", usuarioNode);
+
+            boolean esApicultor = "apicultor".equals(rolNombre);
+            String apiarioFiltroStr = esApicultor ? (" AND c.apiario_id IN (SELECT apiario_id FROM APIARIO_APICULTOR WHERE usuario_id = " + usuarioId + ")") : "";
 
             // 2. Stats
             double produccionTotal = 0;
-            try (PreparedStatement stmt = conn.prepareStatement("SELECT SUM(kg_miel) as total FROM COSECHA")) {
+            String qCosecha = esApicultor 
+                ? "SELECT SUM(co.kg_miel) as total FROM COSECHA co JOIN COLMENA c ON co.colmena_id = c.id WHERE c.estado != 'baja'" + apiarioFiltroStr
+                : "SELECT SUM(kg_miel) as total FROM COSECHA";
+            try (PreparedStatement stmt = conn.prepareStatement(qCosecha)) {
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (rs.next()) produccionTotal = rs.getDouble("total");
                 }
@@ -60,7 +72,7 @@ public class DashboardControlador {
             int colmenasActivas = 0;
             try (PreparedStatement stmt = conn.prepareStatement(
                 "SELECT count(*) as total, sum(case when c.id NOT IN (SELECT colmena_id FROM ALERTA WHERE atendida = false) then 1 else 0 end) as activas " +
-                "FROM COLMENA c WHERE c.estado != 'baja'")) {
+                "FROM COLMENA c WHERE c.estado != 'baja'" + apiarioFiltroStr)) {
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (rs.next()) {
                         colmenasTotal = rs.getInt("total");
@@ -70,7 +82,8 @@ public class DashboardControlador {
             }
 
             int alertasActivas = 0;
-            try (PreparedStatement stmt = conn.prepareStatement("SELECT count(*) as total FROM ALERTA al JOIN COLMENA c ON al.colmena_id = c.id WHERE al.atendida = false AND c.estado != 'baja'")) {
+            try (PreparedStatement stmt = conn.prepareStatement(
+                "SELECT count(*) as total FROM ALERTA al JOIN COLMENA c ON al.colmena_id = c.id WHERE al.atendida = false AND c.estado != 'baja'" + apiarioFiltroStr)) {
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (rs.next()) alertasActivas = rs.getInt("total");
                 }
@@ -92,12 +105,13 @@ public class DashboardControlador {
 
             // 3. Apiarios
             ArrayNode apiariosArray = mapper.createArrayNode();
-            try (PreparedStatement stmt = conn.prepareStatement(
-                "SELECT a.id, a.nombre, a.estado as ubicacion, " +
+            String qApiarios = "SELECT a.id, a.nombre, a.estado as ubicacion, " +
                 "(SELECT count(*) FROM COLMENA c WHERE c.apiario_id = a.id AND c.estado != 'baja') as num_colmenas, " +
                 "(SELECT count(*) FROM ALERTA al JOIN COLMENA c ON al.colmena_id = c.id WHERE c.apiario_id = a.id AND al.atendida = false AND al.nivel = 'critico' AND c.estado != 'baja') as criticas, " +
                 "(SELECT count(*) FROM ALERTA al JOIN COLMENA c ON al.colmena_id = c.id WHERE c.apiario_id = a.id AND al.atendida = false AND al.nivel = 'aviso' AND c.estado != 'baja') as avisos " +
-                "FROM APIARIO a WHERE a.estatus != 'baja'")) {
+                "FROM APIARIO a " + (esApicultor ? "JOIN APIARIO_APICULTOR aa ON aa.apiario_id = a.id " : "") + 
+                "WHERE a.estatus != 'baja'" + (esApicultor ? " AND aa.usuario_id = " + usuarioId : "");
+            try (PreparedStatement stmt = conn.prepareStatement(qApiarios)) {
                 try (ResultSet rs = stmt.executeQuery()) {
                     while (rs.next()) {
                         ObjectNode apiario = mapper.createObjectNode();
@@ -128,11 +142,11 @@ public class DashboardControlador {
             ObjectNode produccionColmena = mapper.createObjectNode();
             ArrayNode labelsColmena = mapper.createArrayNode();
             ArrayNode dataColmena = mapper.createArrayNode();
-            try (PreparedStatement stmt = conn.prepareStatement(
-                "SELECT c.codigo, sum(co.kg_miel) as total_miel FROM COLMENA c " +
+            String qProdColmena = "SELECT c.codigo, sum(co.kg_miel) as total_miel FROM COLMENA c " +
                 "LEFT JOIN COSECHA co ON co.colmena_id = c.id " +
-                "WHERE c.estado != 'baja' " +
-                "GROUP BY c.id ORDER BY total_miel DESC")) {
+                "WHERE c.estado != 'baja'" + apiarioFiltroStr + " " +
+                "GROUP BY c.id ORDER BY total_miel DESC";
+            try (PreparedStatement stmt = conn.prepareStatement(qProdColmena)) {
                 try (ResultSet rs = stmt.executeQuery()) {
                     while(rs.next()) {
                         labelsColmena.add(rs.getString("codigo"));

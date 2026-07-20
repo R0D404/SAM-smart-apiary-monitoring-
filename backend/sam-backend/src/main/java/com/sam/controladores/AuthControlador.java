@@ -34,21 +34,20 @@ public class AuthControlador {
             }
 
             // Asumiendo que tu tabla se llama 'USUARIO' y las columnas 'email' y 'password_hash'
-            String sql = "SELECT password_hash FROM USUARIO WHERE email = ?";
+            String sql = "SELECT u.password_hash, r.nombre as rol FROM USUARIO u JOIN CATALAGO_ROL r ON u.rol_id = r.id WHERE u.email = ?";
             
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.setString(1, inputUsername);
                 
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (rs.next()) {
-                        // Obtener el hash de la base de datos
                         String hashGuardado = rs.getString("password_hash");
+                        String rol = rs.getString("rol");
                         
-                        // Verificar la contraseña usando BCrypt
                         if (BCrypt.checkpw(inputPassword, hashGuardado)) {
-                            // Crear la sesión del usuario
                             ctx.sessionAttribute("usuarioLogueado", inputUsername);
-                            ctx.status(200).json("{\"mensaje\": \"Login exitoso\"}");
+                            ctx.sessionAttribute("rol", rol);
+                            ctx.status(200).json("{\"mensaje\": \"Login exitoso\", \"rol\": \"" + rol + "\"}");
                             return;
                         }
                     }
