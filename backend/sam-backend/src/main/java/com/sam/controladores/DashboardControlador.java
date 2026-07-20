@@ -55,7 +55,9 @@ public class DashboardControlador {
 
             int colmenasTotal = 0;
             int colmenasActivas = 0;
-            try (PreparedStatement stmt = conn.prepareStatement("SELECT count(*) as total, sum(case when estado='activa' then 1 else 0 end) as activas FROM COLMENA WHERE estado != 'baja'")) {
+            try (PreparedStatement stmt = conn.prepareStatement(
+                "SELECT count(*) as total, sum(case when c.id NOT IN (SELECT colmena_id FROM ALERTA WHERE atendida = false) then 1 else 0 end) as activas " +
+                "FROM COLMENA c WHERE c.estado != 'baja'")) {
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (rs.next()) {
                         colmenasTotal = rs.getInt("total");
@@ -92,7 +94,7 @@ public class DashboardControlador {
                 "(SELECT count(*) FROM COLMENA c WHERE c.apiario_id = a.id AND c.estado != 'baja') as num_colmenas, " +
                 "(SELECT count(*) FROM ALERTA al JOIN COLMENA c ON al.colmena_id = c.id WHERE c.apiario_id = a.id AND al.atendida = false AND al.nivel = 'critico' AND c.estado != 'baja') as criticas, " +
                 "(SELECT count(*) FROM ALERTA al JOIN COLMENA c ON al.colmena_id = c.id WHERE c.apiario_id = a.id AND al.atendida = false AND al.nivel = 'aviso' AND c.estado != 'baja') as avisos " +
-                "FROM APIARIO a")) {
+                "FROM APIARIO a WHERE a.estatus != 'baja'")) {
                 try (ResultSet rs = stmt.executeQuery()) {
                     while (rs.next()) {
                         ObjectNode apiario = mapper.createObjectNode();
