@@ -22,9 +22,9 @@ public class UmbralesControlador {
                 while(rs.next()) {
                     String tipo = rs.getString("tipo_sensor");
                     int franja = rs.getInt("franja_hora");
-                    Double min = (Double) rs.getObject("valor_min");
-                    Double max = (Double) rs.getObject("valor_max");
-                    Double tasa = (Double) rs.getObject("tasa_max_hora");
+                    Double min = rs.getObject("valor_min") != null ? rs.getDouble("valor_min") : null;
+                    Double max = rs.getObject("valor_max") != null ? rs.getDouble("valor_max") : null;
+                    Double tasa = rs.getObject("tasa_max_hora") != null ? rs.getDouble("tasa_max_hora") : null;
 
                     if ("peso".equals(tipo)) {
                         payload.put("peso_min", min);
