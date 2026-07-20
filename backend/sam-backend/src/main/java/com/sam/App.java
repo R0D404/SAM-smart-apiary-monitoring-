@@ -100,6 +100,11 @@ public class App
                 post("/foto", com.sam.controladores.PerfilControlador::subirFoto);
             });
 
+            path("/api/modulos", () -> {
+                get("/{colmenaId}", com.sam.controladores.ModuloControlador::obtenerModulo);
+                post("/{colmenaId}/mantenimiento", com.sam.controladores.ModuloControlador::registrarMantenimiento);
+            });
+
             path("/api/umbrales", () -> {
                 get(com.sam.controladores.UmbralesControlador::obtenerUmbrales);
                 post(com.sam.controladores.UmbralesControlador::guardarUmbrales);

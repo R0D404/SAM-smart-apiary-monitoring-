@@ -1,24 +1,75 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+    const urlParams = new URLSearchParams(window.location.search);
+    const colmenaId = urlParams.get('id');
+
+    if (!colmenaId) {
+        alert("No se especificó la colmena");
+        window.history.back();
+        return;
+    }
+
+    // ==========================================
+    // 0. CARGAR DATOS DEL MÓDULO E HISTORIAL
+    // ==========================================
+    function cargarDatos() {
+        fetch(`/api/modulos/${colmenaId}`)
+            .then(res => res.json())
+            .then(data => {
+                // Populate input
+                document.getElementById('modulo_id').value = data.identificador;
+                
+                // Populate summary list
+                const listaModulo = document.querySelector('.data-list.module-data');
+                if (listaModulo) {
+                    listaModulo.innerHTML = `
+                        <li><span>Identificador</span> <span>${data.identificador}</span></li>
+                        <li><span>Tipo</span> <span style="text-transform: capitalize">${data.tipo}</span></li>
+                        <li><span>Estado</span> <span style="text-transform: capitalize">${data.estado}</span></li>
+                        <li><span>Instalado</span> <span>${data.instalado}</span></li>
+                        <li><span>Última lectura</span> <span>${data.ultima_lectura.split(' ')[0]}</span></li>
+                        <li><span>Eventos registrados</span> <span>${data.eventos || 0}</span></li>
+                    `;
+                }
+
+                // Populate history list
+                const historyList = document.querySelector('.history-list.module-history');
+                if (historyList) {
+                    if (data.historial && data.historial.length > 0) {
+                        historyList.innerHTML = data.historial.map(h => `
+                            <li>
+                                <div class="timeline-dot"></div>
+                                <div class="history-item-content">
+                                    <span class="history-date">${h.fecha}</span>
+                                    <span class="history-desc">${h.detalle}</span>
+                                </div>
+                            </li>
+                        `).join('');
+                    } else {
+                        historyList.innerHTML = `<li class="empty-state">No hay historial reciente disponible.</li>`;
+                    }
+                }
+            })
+            .catch(console.error);
+    }
+    cargarDatos();
+
     // ==========================================
     // 1. CONTADOR DE CARACTERES DEL TEXTAREA
     // ==========================================
     const textareaDesc = document.getElementById('desc-mantenimiento');
     const charCounter = document.getElementById('char-count');
-    const maxLength = textareaDesc.getAttribute('maxlength'); // Debe ser 500
+    const maxLength = textareaDesc.getAttribute('maxlength') || 500;
 
-    // Función para actualizar el texto del contador
     function actualizarContador() {
         const currentLength = textareaDesc.value.length;
-        charCounter.textContent = `${currentLength} / ${maxLength}`;
+        if(charCounter) charCounter.textContent = `${currentLength} / ${maxLength}`;
     }
 
-    // Escuchar el evento 'input' para que se actualice cada vez que se teclea
-    textareaDesc.addEventListener('input', actualizarContador);
-
-    // Llamar la función al inicio por si el textarea ya tiene texto (como en este caso)
-    actualizarContador();
-
+    if(textareaDesc) {
+        textareaDesc.addEventListener('input', actualizarContador);
+        actualizarContador();
+    }
 
     // ==========================================
     // 2. LÓGICA DE ENVÍO DE FORMULARIO
@@ -26,34 +77,64 @@ document.addEventListener('DOMContentLoaded', () => {
     const formMantenimiento = document.getElementById('form-mantenimiento');
     const btnCancelar = document.querySelector('.btn-outline-cancel');
 
-    // Manejar el submit
-    formMantenimiento.addEventListener('submit', (e) => {
-        e.preventDefault();
+    if (formMantenimiento) {
+        formMantenimiento.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const btnSubmit = formMantenimiento.querySelector('button[type="submit"]');
+            
+            const tipoEventoSeleccionado = document.querySelector('input[name="tipo_evento"]:checked');
+            if (!tipoEventoSeleccionado) {
+                alert("Seleccione un tipo de evento");
+                return;
+            }
+            
+            const fechaEvento = document.querySelector('input[type="date"]').value;
+            const descripcion = textareaDesc.value.trim();
 
-        // Para recolectar el radio button seleccionado:
-        const tipoEventoSeleccionado = document.querySelector('input[name="tipo_evento"]:checked').value;
-        const moduloSeleccionado = document.querySelector('select[name="modulo_id"]').value;
-        const fechaEvento = document.querySelector('input[type="date"]').value;
-        const descripcion = textareaDesc.value;
+            if (!fechaEvento || !descripcion) {
+                alert("Completa todos los campos");
+                return;
+            }
 
-        console.log("--- Datos del Evento de Mantenimiento ---");
-        console.log("Módulo:", moduloSeleccionado);
-        console.log("Tipo:", tipoEventoSeleccionado);
-        console.log("Fecha:", fechaEvento);
-        console.log("Descripción:", descripcion);
+            btnSubmit.disabled = true;
+            btnSubmit.textContent = "Guardando...";
 
-        alert('Evento de mantenimiento guardado correctamente. Revisa la consola para más detalles.');
-        
-        // Aquí agregarías tu código fetch para enviar al backend (Javalin)
-    });
+            fetch(`/api/modulos/${colmenaId}/mantenimiento`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    tipo_evento: tipoEventoSeleccionado.value,
+                    fecha: fechaEvento,
+                    descripcion: descripcion
+                })
+            })
+            .then(res => {
+                if(!res.ok) throw new Error("Error al guardar");
+                return res.json();
+            })
+            .then(() => {
+                alert('Mantenimiento guardado correctamente');
+                formMantenimiento.reset();
+                actualizarContador();
+                cargarDatos(); // Reload history and module data
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Hubo un error al guardar");
+            })
+            .finally(() => {
+                btnSubmit.disabled = false;
+                btnSubmit.textContent = "Guardar evento";
+            });
+        });
+    }
 
-    // Manejar el cancelar
-    btnCancelar.addEventListener('click', () => {
-        // Podrías redirigir a la vista de colmenas o simplemente resetear el formulario
-        if(confirm('¿Estás seguro de que quieres cancelar y perder los cambios?')) {
-            formMantenimiento.reset();
-            actualizarContador(); // Actualizar contador tras limpiar
-        }
-    });
-
+    if (btnCancelar) {
+        btnCancelar.addEventListener('click', () => {
+            if(confirm('¿Estás seguro de que quieres cancelar y perder los cambios?')) {
+                window.history.back();
+            }
+        });
+    }
 });
