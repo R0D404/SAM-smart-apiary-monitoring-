@@ -344,6 +344,10 @@ function updateDashboard(data) {
 function fetchDashboardData() {
     fetch('/api/dashboard?t=' + new Date().getTime())
         .then(response => {
+            if (response.redirected) {
+                window.location.href = response.url;
+                return;
+            }
             if (!response.ok) throw new Error('Error al cargar datos del dashboard');
             return response.json();
         })
