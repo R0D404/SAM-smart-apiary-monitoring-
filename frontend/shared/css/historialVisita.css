@@ -88,6 +88,13 @@
     outline: none;
     transition: border-color 0.2s;
     min-width: 130px;
+    color-scheme: dark;
+}
+
+.filter-select option {
+    background-color: var(--color-bg-sidebar);
+    color: var(--color-text-white);
+    padding: 10px;
 }
 
 .filter-select:focus,
