@@ -345,7 +345,8 @@ function fetchDashboardData() {
     fetch('/api/dashboard?t=' + new Date().getTime())
         .then(response => {
             if (response.redirected || response.url.includes("index.html")) {
-                window.location.href = "/index.html";
+                alert("Redirected by server or URL includes index.html. URL: " + response.url);
+                // window.location.href = "/index.html";
                 return;
             }
             if (!response.ok) throw new Error('Error al cargar datos del dashboard');
@@ -357,7 +358,7 @@ function fetchDashboardData() {
         })
         .catch(error => {
             console.error('Error cargando dashboard:', error);
-            // window.location.href = "/index.html";
+            alert("Error: " + error.message);
         });
 }
 
