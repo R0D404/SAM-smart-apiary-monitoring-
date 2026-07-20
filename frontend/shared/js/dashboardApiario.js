@@ -150,14 +150,14 @@ function renderChartEvolucionPeso() {
         return isNaN(val) ? 0.0 : val;
     });
 
-    chartEvolucionPesoInstance = new Chart(canvas, {
+        chartEvolucionPesoInstance = new Chart(canvas, {
         type: 'bar',
         data: {
             labels: labels,
             datasets: [{
                 label: 'Peso (kg)',
                 data: dataValues,
-                backgroundColor: '#F2A900',
+                backgroundColor: "#F2A900",
                 borderRadius: 4,
                 barPercentage: 0.6
             }]
@@ -228,11 +228,11 @@ function updateDashboard(data) {
 
 function fetchDashboardData() {
     const urlParams = new URLSearchParams(window.location.search);
-    const apiarioId = urlParams.get('id');
+    let apiarioId = urlParams.get('id');
 
     if (!apiarioId) {
-        console.error("No se proporcionó ID de apiario en la URL");
-        return;
+        console.warn("No se proporcionó ID de apiario en la URL. Usando 'A-1' por defecto.");
+        apiarioId = 'A-1';
     }
 
     fetch(`/api/dashboard/apiario/${apiarioId}`)
@@ -243,13 +243,6 @@ function fetchDashboardData() {
         .then(data => updateDashboard(data))
         .catch(error => {
             console.error('Error:', error);
-            const titleEl = document.getElementById("page-title");
-            const subtitleEl = document.getElementById("page-subtitle");
-            if (titleEl) titleEl.textContent = "---";
-            if (subtitleEl) subtitleEl.textContent = "---";
-            renderStats(apiarioStats);
-            renderColmenas(colmenasData);
-            renderUserProfile(userData);
         });
 }
 

@@ -1,0 +1,126 @@
+/* =========================================
+   ESTILOS ESPECÍFICOS PARA ALERTAS
+   ========================================= */
+
+/* Tarjetas de Resumen */
+.summary-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 24px;
+    margin-top: 24px;
+}
+
+/* Filtros */
+.filters-container {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.filter-btn {
+    background: transparent;
+    color: var(--color-text-gray);
+    border: 1px solid var(--color-border);
+    padding: 8px 24px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.filter-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--color-text-white);
+}
+
+.filter-btn.active {
+    background: var(--color-primary);
+    color: var(--color-text-dark);
+    border-color: var(--color-primary);
+}
+
+/* Tabla de Alertas */
+.table-section {
+    background-color: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 24px;
+    overflow-x: auto;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.data-table th {
+    color: var(--color-text-gray);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.data-table td {
+    padding: 16px 0;
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-text-white);
+    font-size: 14px;
+}
+
+.data-table tr:last-child td {
+    border-bottom: none;
+}
+
+.text-red { color: var(--color-alert-red); font-weight: 600; }
+.text-yellow { color: var(--color-alert-yellow); font-weight: 600; }
+.text-green { color: var(--color-alert-green); font-weight: 600; }
+
+.dot-status {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+.dot-status.verde { background-color: var(--color-alert-green); }
+.dot-status.amarillo { background-color: var(--color-alert-yellow); }
+.dot-status.rojo { background-color: var(--color-alert-red); }
+
+.badge {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+.badge.critico {
+    background: rgba(229, 57, 53, 0.1);
+    color: var(--color-alert-red);
+    border: 1px solid rgba(229, 57, 53, 0.3);
+}
+.badge.aviso {
+    background: rgba(242, 169, 0, 0.1);
+    color: var(--color-alert-yellow);
+    border: 1px solid rgba(242, 169, 0, 0.3);
+}
+
+.btn-atender {
+    background: transparent;
+    color: var(--color-primary);
+    border: 1px solid rgba(242, 169, 0, 0.3);
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.btn-atender:hover {
+    background: rgba(242, 169, 0, 0.1);
+    border-color: var(--color-primary);
+}

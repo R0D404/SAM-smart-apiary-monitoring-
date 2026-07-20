@@ -7,6 +7,10 @@
     <link rel="stylesheet" href="../shared/css/dashboardGlobal.css">
     <link rel="stylesheet" href="../shared/css/gestionUsuarios.css">
     <link rel="stylesheet" href="../shared/css/notifications.css">
+    <link rel="stylesheet" href="../shared/css/sidebar.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="app-shell">
@@ -18,7 +22,7 @@
                 </div>
                 <div class="logo-text">
                     <h1>SAM</h1>
-                    <p>Smart Apiary</p>
+                    <p>Smart Apiary Monitoring</p>
                 </div>
             </div>
             <nav class="menu">
@@ -37,7 +41,7 @@
                     <div class="avatar-initials" id="sidebar-user-avatar">--</div>
                 </div>
                 <div class="profile-text">
-                    <h2 id="sidebar-user-name">---</h2>
+                    <h2 id="sidebar-user-name">--</h2>
                     <p>Administrador</p>
                 </div>
             </div>
@@ -53,6 +57,10 @@
                 <div class="header-right">
                     <button id="btn-abrir-crear" class="btn-secondary">+ Crear apicultor</button>
                     <button id="btn-abrir-formulario" class="btn-primary">Asignar apicultor</button>
+                    <button class="user-account" type="button" aria-label="Abrir mi cuenta" onclick="window.location.href='miCuenta.html'">
+                        <span class="user-account-dot"></span>
+                        <span>Mi Cuenta</span>
+                    </button>
                 </div>
             </header>
 
@@ -210,5 +218,6 @@
     <!-- Script -->
     <script src="../shared/js/notifications.js"></script>
     <script src="../shared/js/gestionUsuarios.js"></script>
+    <script src="../shared/js/sidebar.js" defer></script>
 </body>
 </html>

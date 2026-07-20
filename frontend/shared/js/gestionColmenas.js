@@ -115,25 +115,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 renderizarColmenas(datos);
             })
             .catch(err => {
-                console.error("Servidor desconectado, cargando colmena de respaldo:", err);
-                const mockColmenas = [
-                    {
-                        id: "C-01",
-                        db_id: 1,
-                        apiario: "Apiario Norte",
-                        monitoreo: "Sí (Sensor Peso & Temp)",
-                        ecotipo: "Apis mellifera",
-                        estado: "activa",
-                        estadoTexto: "Activa"
-                    }
-                ];
-                renderizarColmenas(mockColmenas);
+                console.error("Servidor desconectado:", err);
+                if (tbody) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--color-text-dim);">No se pudieron cargar las colmenas.</td></tr>';
+                }
             });
     }
 
     function renderizarColmenas(datos) {
         if (!tbody) return;
         tbody.innerHTML = '';
+        
+        const isApicultor = window.location.pathname.includes('/apicultor/');
         
         datos.forEach(col => {
             const tr = document.createElement('tr');
@@ -144,19 +137,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.location.href = `dashboardColmena.html?id=${col.id}`;
             };
 
+            let accionesHTML = '';
+            if (!isApicultor) {
+                accionesHTML = `
+                <td>
+                    <button class="btn-primary" onclick="editarColmena(event, ${col.db_id}, '${col.id}', '${col.ecotipo}', '${col.estado}')" style="margin-right: 8px;">Editar</button>
+                    <button class="btn-baja" data-id="${col.db_id}">Dar de baja</button>
+                </td>`;
+            }
+
             tr.innerHTML = `
                 <td><strong>${col.id}</strong></td>
                 <td>${col.apiario}</td>
                 <td>${col.monitoreo}</td>
                 <td>${col.ecotipo}</td>
-                <td>
-                    <span class="dot-status ${col.estado}"></span>
-                    ${col.estadoTexto}
-                </td>
-                <td>
-                    <button class="btn-primary" onclick="editarColmena(event, ${col.db_id}, '${col.id}', '${col.ecotipo}', '${col.estado}')" style="margin-right: 8px;">Editar</button>
-                    <button class="btn-baja" data-id="${col.db_id}">Dar de baja</button>
-                </td>
+                ${accionesHTML}
             `;
             tbody.appendChild(tr);
         });

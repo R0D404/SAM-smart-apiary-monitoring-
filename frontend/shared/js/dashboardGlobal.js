@@ -17,45 +17,16 @@
  * El backend retornará un objeto con esta estructura.
  * Por defecto son nulos hasta que el backend responda.
  */
-let dashboardStats = {
-    produccionTotal: null,
-    colmenasActivas: null,
-    alertasActivas: null,
-    apicultores: null
-};
-
-/**
- * Datos para la gráfica de producción mensual (línea).
- * labels: meses a mostrar en el eje X.
- * data: producción en kg por cada mes.
- * null hasta que el backend envíe datos reales.
- */
-let produccionMensualData = null;
-
-/**
- * Datos para la gráfica de producción por colmena (barras).
- * labels: identificadores de cada colmena.
- * data: producción en kg por colmena.
- * null hasta que el backend envíe datos reales.
- */
-let produccionColmenaData = null;
+let dashboardStats = null;
+let produccionMensualData = { labels: [], data: [] };
+let produccionColmenaData = { labels: [], data: [] };
+let apiariosData = [];
+let userData = null;
 
 /**
  * Datos de los apiarios.
- * Cada apiario tiene: nombre, ubicación, número de colmenas y estado.
- * El estado puede ser: "verde", "amarillo" o "rojo".
- * Arreglo vacío hasta que el backend envíe datos.
  */
-let apiariosData = [];
-
-/**
- * Datos del usuario logueado.
- * El nombre y la foto dependen del backend.
- * null hasta que el backend responda.
- */
-let userData = {
-    nombre: null
-};
+// apiariosData and userData already defined above.
 
 // =========================================
 // 2. REFERENCIAS AL DOM
@@ -180,7 +151,7 @@ function renderChartProduccionMensual(data) {
         chartProduccionMensual.destroy();
     }
 
-    chartProduccionMensual = new Chart(ctx, {
+        chartProduccionMensual = new Chart(ctx, {
         type: "line",
         data: {
             labels: data.labels,
@@ -188,7 +159,7 @@ function renderChartProduccionMensual(data) {
                 label: "Producción (kg)",
                 data: data.data,
                 borderColor: "#F2A900",
-                backgroundColor: "rgba(242, 169, 0, 0.08)",
+                backgroundColor: "rgba(242, 169, 0, 0.05)",
                 borderWidth: 2.5,
                 pointBackgroundColor: "#F2A900",
                 pointBorderColor: "#F2A900",
@@ -263,7 +234,7 @@ function renderChartProduccionColmena(data) {
         wrapper.style.width = Math.max(1000, data.labels.length * 40) + 'px';
     }
 
-    chartProduccionColmena = new Chart(ctx, {
+        chartProduccionColmena = new Chart(ctx, {
         type: "bar",
         data: {
             labels: data.labels,
@@ -381,10 +352,6 @@ function fetchDashboardData() {
         })
         .catch(error => {
             console.error('Error cargando dashboard:', error);
-            // Fallback a los mock stats si falla
-            renderStats(dashboardStats);
-            renderApiarios(apiariosData);
-            renderUserProfile(userData);
         });
 }
 
@@ -416,10 +383,17 @@ document.addEventListener("DOMContentLoaded", () => {
             // Ocultar después de 4 segundos
             setTimeout(() => {
                 toast.classList.add('hidden');
+                // Limpiar URL
+                window.history.replaceState({}, document.title, window.location.pathname);
             }, 4000);
         }
-        
-        // Limpiar la URL para que no vuelva a salir si recargan la página
-        window.history.replaceState({}, document.title, window.location.pathname);
     }
+
+    // Event listeners para botones de "Mi Cuenta"
+    const botonesMiCuenta = document.querySelectorAll(".user-account, #btn-mi-cuenta, .user-info-btn");
+    botonesMiCuenta.forEach(btn => {
+        btn.addEventListener("click", () => {
+            window.location.href = "miCuenta.html";
+        });
+    });
 });

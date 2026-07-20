@@ -9,6 +9,10 @@
     <link rel="stylesheet" href="../shared/css/chartModals.css">
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="../shared/css/sidebar.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="app-shell">
@@ -20,7 +24,7 @@
                 </div>
                 <div class="logo-text">
                     <h1>SAM</h1>
-                    <p>Smart Apiary</p>
+                    <p>Smart Apiary Monitoring</p>
                 </div>
             </div>
             <nav class="menu" aria-label="Secciones del sistema">
@@ -39,7 +43,7 @@
                     <div class="avatar-initials" id="sidebar-user-avatar">--</div>
                 </div>
                 <div class="profile-text">
-                    <h2 id="sidebar-user-name">---</h2>
+                    <h2 id="sidebar-user-name">--</h2>
                     <p>Administrador</p>
                 </div>
             </div>
@@ -53,7 +57,7 @@
                     <p class="page-subtitle">Cosechas, visitas y rendimiento de cada colmena</p>
                 </div>
                 <div class="header-right">
-                    <button class="user-account" type="button" aria-label="Abrir mi cuenta">
+                    <button class="user-account" type="button" aria-label="Abrir mi cuenta" onclick="window.location.href='miCuenta.html'">
                         <span class="user-account-dot"></span>
                         <span>Mi Cuenta</span>
                     </button>

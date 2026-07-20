@@ -8,6 +8,10 @@
     <link rel="stylesheet" href="../shared/css/plantilla.css"> 
     <!-- CSS específico de esta vista -->
     <link rel="stylesheet" href="../shared/css/miCuenta.css">
+    <link rel="stylesheet" href="../shared/css/sidebar.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="app-shell">
@@ -36,7 +40,7 @@
                     <div class="avatar-initials" id="sidebar-user-avatar">--</div>
                 </div>
                 <div class="profile-text">
-                    <h2 id="sidebar-user-name">---</h2>
+                    <h2 id="sidebar-user-name">--</h2>
                     <p>Apicultor</p>
                 </div>
             </div>
@@ -131,9 +135,14 @@
                     <div class="alert-box-teal">
                         <div class="info-dot"></div>
                         <div class="info-content">
-                            <h4>Rol: Apicultor</h4>
-                            <p>Tu rol define lo que puedes ver y administrar en SAM.</p>
+                            <h4>Rol: Apicultor Invitado</h4>
+                            <p>Tu rol define lo que puedes ver y registrar en los apiarios asignados.</p>
                         </div>
+                    </div>
+
+                    <!-- Botón de Cerrar Sesión -->
+                    <div style="margin-top: 24px;">
+                        <button type="button" class="btn-outline-danger w-100" onclick="window.location.href='../../index.html'">Cerrar Sesión</button>
                     </div>
 
                 </aside>

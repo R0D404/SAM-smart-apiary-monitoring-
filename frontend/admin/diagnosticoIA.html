@@ -9,6 +9,7 @@
     <!-- Nuestro CSS -->
     <link rel="stylesheet" href="../shared/css/diagnosticoIA.css">
     <link rel="stylesheet" href="../shared/css/notifications.css">
+    <link rel="stylesheet" href="../shared/css/sidebar.css">
 </head>
 <body>
 
@@ -17,7 +18,7 @@
 
         <!-- Logo -->
         <div class="logo">
-            <div class="logo-hexagon">
+            <div class="hexagon">
                 <img src="../assets/img/logo/logoSam.png" alt="Logo SAM">
             </div>
             <div class="logo-text">
@@ -76,9 +77,9 @@
 
         <!-- Perfil del usuario abajo del sidebar -->
         <div class="user-profile">
-            <div class="user-avatar">EU</div>
+            <div class="user-avatar" id="sidebar-user-avatar" style="background-color: #f2a900;">AS</div>
             <div class="profile-text">
-                <h2 id="nombre-usuario">Emmanuel U.</h2>
+                <h2 id="sidebar-user-name">--</h2>
                 <p id="rol-usuario">Administrador</p>
             </div>
         </div>
@@ -95,10 +96,10 @@
                 <h1>Diagnóstico con IA — <span id="nombre-colmena">Colmena</span></h1>
                 <p>La IA integra todo el contexto de la colmena</p>
             </div>
-            <button class="btn-mi-cuenta">
-                <div class="cuenta-avatar">EU</div>
+            <a href="miCuenta.html" class="btn-mi-cuenta" style="text-decoration: none; display: inline-flex; align-items: center;">
+                <div class="cuenta-avatar" id="header-user-avatar">--</div>
                 <span>Mi cuenta</span>
-            </button>
+            </a>
         </div>
 
         <!-- Cuerpo principal: dos columnas -->
@@ -217,5 +218,6 @@
     <script src="../shared/js/notifications.js"></script>
     <script src="../shared/js/diagnosticoIA.js"></script>
 
+    <script src="../shared/js/sidebar.js" defer></script>
 </body>
 </html>

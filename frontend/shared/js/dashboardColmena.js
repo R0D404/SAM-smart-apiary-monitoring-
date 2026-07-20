@@ -29,17 +29,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // 3. Fetch Data from Backend
     function fetchDashboardData() {
         if (!colmenaId) {
-            console.warn("No se especificó la colmena. Cargando panel vacío.");
-            renderizarDashboard({
-                codigo: "C-Sin ID",
-                apiario: "No especificado",
-                ecotipo: "N/A",
-                iaDiagnostico: { estado: "Normal", mensaje: "Sin diagnóstico disponible" },
-                lecturas: [],
-                alertas: [],
-                historial: []
-            });
-            return;
+            console.warn("No se especificó la colmena. Usando 'C-01' por defecto.");
+            colmenaId = 'C-01';
         }
 
         fetch(`/api/dashboard/colmena?id=${colmenaId}`)
@@ -50,18 +41,9 @@ document.addEventListener("DOMContentLoaded", () => {
             .then(data => {
                 renderizarDashboard(data);
             })
-            .catch(err => {
-                console.error("Error al cargar el dashboard de la colmena:", err);
-                renderizarDashboard({
-                    codigo: colmenaId,
-                    apiario: "--",
-                    ecotipo: "--",
-                    iaDiagnostico: { estado: "--", mensaje: "Servidor local desconectado" },
-                    lecturas: [],
-                    alertas: [],
-                    historial: []
-                });
-            });
+        .catch(err => {
+            console.error("Error al cargar el dashboard de la colmena:", err);
+        });
     }
 
     // 4. Render Data
@@ -159,19 +141,19 @@ document.addEventListener("DOMContentLoaded", () => {
             pesoChart.destroy();
         }
 
-        pesoChart = new Chart(ctx, {
+                pesoChart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: labels,
                 datasets: [{
                     label: 'Peso (kg)',
                     data: pesos,
-                    borderColor: '#F2A900', // var(--color-primary)
+                    borderColor: "#F2A900",
                     backgroundColor: 'rgba(242, 169, 0, 0.1)',
                     borderWidth: 2,
                     fill: true,
                     tension: 0.4,
-                    pointBackgroundColor: '#F2A900',
+                    pointBackgroundColor: "#F2A900",
                     pointBorderColor: '#1E1E1E',
                     pointBorderWidth: 2,
                     pointRadius: 4,
@@ -211,7 +193,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnMantenimiento = document.getElementById("btn-mantenimiento");
     if (btnMantenimiento) {
         btnMantenimiento.addEventListener("click", () => {
-            alert("Funcionalidad de mantenimiento en construcción.");
+            if (colmenaId) {
+                window.location.href = `mantenimientoModulo.html?id=${colmenaId}`;
+            } else {
+                window.location.href = `mantenimientoModulo.html`;
+            }
         });
     }
 

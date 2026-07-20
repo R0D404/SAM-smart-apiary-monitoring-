@@ -1,0 +1,99 @@
+/* =========================================
+   ESTILOS ESPECÍFICOS PARA CONFIGURACIÓN DE UMBRALES
+   ========================================= */
+
+.btn-back {
+    background: transparent;
+    border: none;
+    color: var(--color-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border-radius: 50%;
+    transition: background 0.2s, color 0.2s;
+}
+
+.btn-back:hover {
+    background: rgba(242, 169, 0, 0.1);
+}
+
+.table-section {
+    background-color: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 24px;
+    overflow-x: auto;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.data-table th {
+    color: var(--color-text-gray);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.data-table td {
+    padding: 16px 0;
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-text-white);
+    font-size: 14px;
+    vertical-align: middle;
+}
+
+.data-table tr:last-child td {
+    border-bottom: none;
+}
+
+.text-variable {
+    font-weight: 600;
+    color: var(--color-primary);
+}
+
+/* Envoltura para el input y su unidad de medida */
+.input-wrapper {
+    display: inline-flex;
+    align-items: center;
+    background-color: var(--color-bg-dark);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 0 12px;
+    width: 120px;
+    transition: border-color 0.2s;
+}
+
+.input-wrapper:focus-within {
+    border-color: var(--color-primary);
+}
+
+.input-umbral {
+    background: transparent;
+    border: none;
+    color: var(--color-text-white);
+    font-size: 14px;
+    font-family: inherit;
+    width: 100%;
+    padding: 10px 0;
+    outline: none;
+}
+
+.input-umbral:disabled {
+    color: var(--color-text-gray);
+}
+
+.unit {
+    color: var(--color-text-gray);
+    font-size: 12px;
+    font-weight: 600;
+    margin-left: 8px;
+    user-select: none;
+}

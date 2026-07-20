@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAM - Mantenimiento del módulo</title>
+    <link rel="stylesheet" href="../shared/css/plantilla.css"> 
+    <link rel="stylesheet" href="../shared/css/mantenimientoModulo.css">
+    <link rel="stylesheet" href="../shared/css/sidebar.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <aside class="sidebar" aria-label="Navegación principal">
+        <div class="logo">
+            <div class="hexagon">
+                <img src="../assets/img/logo/logoSam.png" alt="">
+            </div>
+            <div class="logo-text">
+                <h1>SAM</h1>
+                <p>Smart Apiary Monitoring</p>
+            </div>
+        </div>
+        <nav class="menu" aria-label="Secciones del sistema">
+            <ul>
+                <li><a href="dashboardApiario.html"><img src="../assets/icons/dashboard.svg" alt="" class="menu-icon"> Dashboard</a></li>
+                <li><a href="misApiarios.html"><img src="../assets/icons/apiarios.svg" alt="" class="menu-icon"> Mis apiarios</a></li>
+                <li><a aria-current="page" class="active" href="colmenas.html"><img src="../assets/icons/colmenas.svg" alt="" class="menu-icon"> Colmenas</a></li>
+                <li><a href="alertas.html"><img src="../assets/icons/alertas.svg" alt="" class="menu-icon"> Alertas</a></li>
+                <li><a href="registrarVisita.html"><img src="../assets/icons/visitas.svg" alt="" class="menu-icon"> Registrar visita</a></li>
+                <li><a href="historial.html"><img src="../assets/icons/historial.svg" alt="" class="menu-icon"> Historial</a></li>
+            </ul>
+        </nav>
+        <div class="user-profile">
+            <div class="user-avatar-indicator">
+                <div class="avatar-initials" id="sidebar-user-avatar">--</div>
+            </div>
+            <div class="profile-text">
+                <h2 id="sidebar-user-name">---</h2>
+                <p>Apicultor</p>
+            </div>
+        </div>
+    </aside>
+    
+    <section class="main-content">
+        <!-- Cabecera principal -->
+        <header class="header-container">
+            <div class="page-title">
+                <div class="breadcrumb">
+                    <span>Colmenas</span> / <span>C-03</span> / <span class="highlight">Módulo MOD-7A3F</span>
+                </div>
+                <h2>Mantenimiento del módulo</h2>
+                <p>Registra limpiezas, recalibraciones, reemplazos, revisiones o fallos del módulo de monitoreo.</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn-outline-dark" onclick="window.location.href='colmenas.html'">
+                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="#F2A900" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: middle;"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                    Colmenas
+                </button>
+                <a href="miCuenta.html" class="user-info-btn" style="text-decoration: none; position: relative !important; top: auto !important; right: auto !important;">
+                    <div class="circle-avatar" id="header-user-avatar" style="display: flex; align-items: center; justify-content: center; font-weight: bold; color: #1e1e1e; font-size: 11px;">--</div>
+                    <p>Mi cuenta</p>
+                </a>
+            </div>
+        </header>
+
+        <!-- Contenedor Grid a dos columnas -->
+        <div class="maintenance-grid">
+            
+            <!-- COLUMNA IZQUIERDA: Formulario -->
+            <div class="main-card form-section">
+                <div class="card-header">
+                    <h3>Nuevo evento de mantenimiento</h3>
+                </div>
+
+                <form id="form-mantenimiento">
+                    <!-- Fila 1: Selects -->
+                    <div class="form-row">
+                        <div class="form-group flex-1">
+                            <label class="form-label">MÓDULO</label>
+                            <div class="custom-select-wrapper">
+                                <select class="custom-select" name="modulo_id" id="modulo_id">
+                                    <option value="" disabled selected>Seleccione un módulo</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fila 2: Tipo de Evento (Pills) -->
+                    <div class="form-group mt-3">
+                        <label class="form-label">TIPO DE EVENTO</label>
+                        <div class="pill-group">
+                            <label class="pill-label">
+                                <input type="radio" name="tipo_evento" value="limpieza">
+                                <span>Limpieza</span>
+                            </label>
+                            <label class="pill-label">
+                                <input type="radio" name="tipo_evento" value="recalibracion">
+                                <span>Recalibración</span>
+                            </label>
+                            <label class="pill-label">
+                                <input type="radio" name="tipo_evento" value="reemplazo">
+                                <span>Reemplazo</span>
+                            </label>
+                            <label class="pill-label">
+                                <input type="radio" name="tipo_evento" value="revision">
+                                <span>Revisión</span>
+                            </label>
+                            <label class="pill-label">
+                                <input type="radio" name="tipo_evento" value="fallo">
+                                <span>Fallo</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Fila 3: Fechas y Visitas -->
+                    <div class="form-row mt-3">
+                        <div class="form-group flex-1">
+                            <label class="form-label">FECHA DEL EVENTO</label>
+                            <div class="input-with-icon">
+                                <input type="date" class="input-field" required>
+                            </div>
+                        </div>
+                        <div class="form-group flex-1">
+                            <label class="form-label">VINCULAR A VISITA (OPCIONAL)</label>
+                            <div class="custom-select-wrapper">
+                                <select class="custom-select" name="visita_id" id="visita_id">
+                                    <option value="" disabled selected>Seleccione una visita</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fila 4: Descripción -->
+                    <div class="form-group mt-3 position-relative">
+                        <label class="form-label">DESCRIPCIÓN</label>
+                        <textarea id="desc-mantenimiento" class="input-field textarea-field" rows="4" maxlength="500" placeholder="Describe los detalles del mantenimiento..." required></textarea>
+                        <span id="char-count" class="char-counter">0 / 500</span>
+                    </div>
+
+                    <!-- Info Alert -->
+                    <div class="alert-box-teal mt-4">
+                        <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="alert-icon"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                        <p>Si el evento ocurre durante una visita activa, las alertas del apiario ya están enmascaradas.</p>
+                    </div>
+
+                    <!-- Acciones -->
+                    <div class="form-actions mt-4">
+                        <button type="submit" class="btn-primary">Guardar evento</button>
+                        <button type="button" class="btn-outline-cancel">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- COLUMNA DERECHA: Tarjetas de info -->
+            <aside class="info-sidebar">
+                
+                <!-- Tarjeta 1: Datos del módulo -->
+                <div class="main-card mb-4">
+                    <h3 class="card-title-sm">Datos del módulo</h3>
+                    <div class="data-list mt-3">
+                        <div class="data-row">
+                            <span class="data-label">Identificador</span>
+                            <span class="data-value text-white text-bold" id="modulo-id-text">---</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Tipo</span>
+                            <span class="data-value text-white" id="modulo-tipo">---</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Estado</span>
+                            <span class="status-pill status-activo" id="modulo-estado" style="display: none;">ACTIVO</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Instalado</span>
+                            <span class="data-value text-white" id="modulo-instalado">---</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Última lectura</span>
+                            <span class="data-value text-teal" id="modulo-ultima-lectura">---</span>
+                        </div>
+                        <div class="data-row border-none">
+                            <span class="data-label">Eventos registrados</span>
+                            <span class="data-value text-white text-bold" id="modulo-eventos-count">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tarjeta 2: Historial reciente -->
+                <div class="main-card">
+                    <h3 class="card-title-sm mb-4">Historial reciente</h3>
+                    
+                    <div class="timeline" id="timeline-historial">
+                        <p style="color: var(--color-text-gray); font-size: 14px; text-align: center; padding: 20px 0;">No hay historial reciente disponible.</p>
+                    </div>
+
+                    <a href="#" class="link-yellow mt-4 block">Ver todo el historial <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a>
+                </div>
+
+            </aside>
+        </div>
+    </section>
+
+    <script src="../shared/js/sidebar.js" defer></script>
+    <script src="../shared/js/mantenimientoModulo.js"></script>
+</body>
+</html>

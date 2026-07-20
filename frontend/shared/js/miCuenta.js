@@ -51,11 +51,14 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
 
         toastContainer.innerHTML = toastHTML;
+        
+        // Scroll to top to ensure the user sees the notification
+        window.scrollTo({top: 0, behavior: 'smooth'});
 
         // Opcional: Ocultar el toast después de 4 segundos
         setTimeout(() => {
-            if(toastContainer.firstChild) {
-                toastContainer.firstChild.style.opacity = '0';
+            if(toastContainer.firstElementChild) {
+                toastContainer.firstElementChild.style.opacity = '0';
                 setTimeout(() => toastContainer.innerHTML = '', 300);
             }
         }, 4000);
@@ -72,32 +75,43 @@ document.addEventListener('DOMContentLoaded', () => {
         const pActual = pwdActual.value;
         const pNueva = pwdNueva.value;
 
-        // Caso 1: Faltan campos (Simulando error 15 · Mi cuenta-1.png)
+        // Caso 1: Faltan campos
         if (!nombre || !correo || !pActual || !pNueva) {
             mostrarToast('error', 'Faltan campos obligatorios', 'Completa los campos marcados para continuar');
             return;
         }
 
-        // Caso 2: Contraseña incorrecta simulada o Igual a la anterior (Simulando 15 · Mi cuenta-4.png / 5.png)
-        // (En tu app real esto lo validará Javalin, aquí es solo frontend)
         if (pActual === pNueva) {
             mostrarToast('error', 'La contraseña es la misma', 'Las contraseñas deben ser diferentes');
             return;
         }
 
-        if (pActual === "error") { // Solo un ejemplo para disparar el otro error
-            mostrarToast('error', 'Contraseña incorrecta', 'Ingrese la contraseña correcta');
-            return;
-        }
+        const btnSubmit = e.target.querySelector('button[type="submit"]');
+        const originalText = btnSubmit.textContent;
+        btnSubmit.textContent = 'Guardando...';
+        btnSubmit.disabled = true;
 
-        // Caso Éxito: Todo bien (Simulando 15 · Mi cuenta.png)
-        mostrarToast('success', 'Cambios guardados', 'Se actualizaron correctamente sus datos');
-        
-        // Aquí iría tu fetch al servidor
+        fetch('/api/perfil', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ nombre, correo, pActual, pNueva })
+        })
+        .then(res => {
+            if (!res.ok) throw new Error("Error en servidor");
+            mostrarToast('success', 'Cambios guardados', 'Se actualizaron correctamente sus datos');
+        })
+        .catch(err => {
+            console.error(err);
+            mostrarToast('error', 'Error al guardar', 'No se pudieron actualizar los datos');
+        })
+        .finally(() => {
+            btnSubmit.textContent = originalText;
+            btnSubmit.disabled = false;
+        });
     });
 
     // ==========================================
-    // 3. SIMULAR CAMBIO DE FOTO DE PERFIL (OPCIONAL)
+    // 3. CAMBIO DE FOTO DE PERFIL
     // ==========================================
     if (btnCambiarFoto) {
         btnCambiarFoto.addEventListener('click', () => {
@@ -108,12 +122,25 @@ document.addEventListener('DOMContentLoaded', () => {
     if (fileUpload) {
         fileUpload.addEventListener('change', (e) => {
             if (e.target.files.length > 0) {
-                mostrarToast('success', 'Foto de perfil actualizada', 'La fotografía de perfil ha sido actualizada exitosamente');
+                const formData = new FormData();
+                formData.append('foto', e.target.files[0]);
+
+                fetch('/api/perfil/foto', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(res => {
+                    if (!res.ok) throw new Error("Error subiendo foto");
+                    mostrarToast('success', 'Foto de perfil actualizada', 'La fotografía de perfil ha sido actualizada exitosamente');
+                })
+                .catch(err => {
+                    console.error(err);
+                    mostrarToast('error', 'Error al subir foto', 'No se pudo actualizar la imagen');
+                });
             }
         });
     }
 
-    // ==========================================
     // 4. CARGAR PERFIL DINÁMICO DESDE EL SERVIDOR
     // ==========================================
     const summaryAvatar = document.getElementById('summary-avatar');
@@ -129,7 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (data.usuario) {
                 const u = data.usuario;
                 if (inputNombre) inputNombre.value = u.nombre || '';
-                if (inputCorreo) inputCorreo.value = u.email || 'rodrigo@sam.com';
+                if (inputCorreo) inputCorreo.value = u.email || '';
 
                 if (summaryName) summaryName.textContent = u.nombre || '---';
                 if (summaryEmail) summaryEmail.textContent = u.email || '---';
@@ -147,12 +174,6 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(err => {
             console.warn("No se pudo cargar el perfil del usuario (servidor apagado):", err);
-            // Si está apagado, dejar inputs vacíos/placeholders
-            if (inputNombre) inputNombre.value = '';
-            if (inputCorreo) inputCorreo.value = '';
-            if (summaryName) summaryName.textContent = '---';
-            if (summaryEmail) summaryEmail.textContent = '---';
-            if (summaryAvatar) summaryAvatar.textContent = '--';
         });
 
 });

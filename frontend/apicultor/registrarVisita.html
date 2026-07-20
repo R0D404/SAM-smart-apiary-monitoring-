@@ -7,15 +7,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="../shared/css/registrarVisita.css">
+    <link rel="stylesheet" href="../shared/css/sidebar.css">
+    <link rel="stylesheet" href="../shared/css/notifications.css">
 </head>
 <body>
 
     
     <section class="sidebar">
         <div class="logo">
-            <hexagon>
+            <div class="hexagon">
                 <img src="../assets/img/logo/logoSam.png" alt="">
-            </hexagon>
+            </div>
             <div class="logo-text">
                 <h1>SAM</h1>
                 <p>Smart Apiary Monitoring</p>
@@ -34,7 +36,7 @@
         <div class="user-profile">
             <div class="user-avatar-indicator" style="background-color: #ffbb00; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: #1e1e1e; font-weight: bold; width: 41px; height: 41px;" id="sidebar-user-avatar">--</div>
             <div class="profile-text">
-                <h2 id="sidebar-user-name">---</h2>
+                <h2 id="sidebar-user-name">--</h2>
                 <p>Apicultor</p>
             </div>
         </div>
@@ -42,7 +44,7 @@
 
    
     <section class="main-content">
-
+        <div id="toast-container" style="position: fixed; top: 20px; right: 20px; z-index: 1000; display: flex; flex-direction: column; gap: 10px;"></div>
         
         <div class="encabezado">
             <div class="encabezado-texto">
@@ -58,7 +60,6 @@
             </div>
         </div>
 
-        
         <div class="breadcrumb">
             <span>Visitas</span>
             <span class="breadcrumb-sep">›</span>
@@ -79,9 +80,10 @@
                 
                 <div class="campo">
                     <label for="colmena">COLMENA</label>
-                    <select id="colmena" name="colmena">
-                        <option value="">Selecciona una colmena</option>
-                        <!-- JS llenará estas opciones dinámicamente desde la API -->
+                    <select id="colmena" name="colmena" required>
+                        <option value="" disabled selected hidden>Selecciona una colmena</option>
+                        <option value="C-01">C-01</option>
+                        <option value="C-02">C-02</option>
                     </select>
                 </div>
 
@@ -156,59 +158,12 @@
 
             </div>
 
-            <!-- ── COLUMNA DERECHA: Resumen ── -->
-            <div class="card resumen">
 
-                <div class="card-header">
-                    <h2>Resumen</h2>
-                    <p>Revisa antes de guardar</p>
-                </div>
-
-                <!-- Item 1: Colmena seleccionada -->
-                <div class="resumen-item resumen-item-activo">
-                    <input type="checkbox" checked disabled>
-                    <div class="resumen-texto">
-                        <!-- JS llenará esto cuando el usuario seleccione la colmena -->
-                        <strong id="resumen-colmena">Colmena —</strong>
-                        <span id="resumen-apiario">Apiario —</span>
-                    </div>
-                </div>
-
-                <!-- Item 2: Estado de la colonia -->
-                <div class="resumen-item">
-                    <input type="checkbox" id="check-estado" disabled>
-                    <div class="resumen-texto">
-                        <strong id="resumen-estado">Estado: —</strong>
-                        <span id="resumen-reina">—</span>
-                    </div>
-                </div>
-
-                <!-- Item 3: Cosecha -->
-                <div class="resumen-item">
-                    <input type="checkbox" id="check-cosecha" disabled>
-                    <div class="resumen-texto">
-                        <strong id="resumen-cosecha-kg">Cosecha: — kg</strong>
-                        <span id="resumen-cosecha-calidad">—</span>
-                    </div>
-                </div>
-
-                <!-- Tip -->
-                <div class="tip-box">
-                    <p class="tip-titulo">Tip</p>
-                    <p class="tip-texto">Registra la cosecha el mismo día para que cuadre con el peso del sensor.</p>
-                </div>
-
-                <!-- Estado final -->
-                <div class="estado-final">
-                    <p class="estado-label">ESTADO</p>
-                    <p class="estado-valor" id="estado-formulario">Completa los datos</p>
-                </div>
-
-            </div>
 
         </div>
 
     </section>
     <script src="../shared/js/sidebar.js" defer></script>
+    <script src="../shared/js/registrarVisita.js" defer></script>
 </body>
 </html>

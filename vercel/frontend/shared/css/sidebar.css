@@ -1,0 +1,287 @@
+/* =========================================
+   SIDEBAR GLOBAL STYLES
+   (Standardized sizes and colors for both Apicultor and Admin)
+   ========================================= */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: clamp(240px, 20%, 300px);
+    height: 100vh;
+    background-color: var(--color-bg-sidebar, var(--fondo-sidebar, #241A0B));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: clamp(18px, 1.25vw, 30px);
+    z-index: 100;
+}
+
+/* =========================================
+   LOGO
+   ========================================= */
+.sidebar .logo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: clamp(18px, 1.25vw, 30px);
+    gap: clamp(7px, 0.5vw, 12px);
+    width: 100%;
+    justify-content: center;
+}
+
+.sidebar .logo hexagon,
+.sidebar .logo .hexagon,
+.sidebar .logo .logo-hexagon {
+    width: clamp(58px, 4.0vw, 96px);
+    min-width: clamp(58px, 4.0vw, 96px);
+    height: clamp(56px, 3.94vw, 95px);
+    background-color: var(--color-primary, var(--amarillo, #F2A900));
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.sidebar .logo img {
+    width: clamp(49px, 3.43vw, 83px);
+    height: auto;
+    object-fit: contain;
+}
+
+.sidebar .logo-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    transform: translateY(-4px);
+}
+
+.sidebar .logo-text h1 {
+    font-family: var(--font-main, 'Inter', sans-serif);
+    color: var(--color-primary, var(--amarillo, #F2A900));
+    font-size: clamp(18px, 1.25vw, 30px);
+    font-weight: bold;
+    margin: 0;
+    line-height: 1;
+}
+
+.sidebar .logo-text p {
+    font-family: var(--font-main, 'Inter', sans-serif);
+    color: var(--color-text-gray, var(--texto-gris, #9c9993));
+    font-size: clamp(12px, 0.88vw, 22px);
+    margin: 0;
+    margin-top: 2px;
+    white-space: nowrap;
+}
+
+/* =========================================
+   MENÚ DE NAVEGACIÓN
+   ========================================= */
+.sidebar .menu {
+    width: 100%;
+}
+
+.sidebar .menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar .menu ul li {
+    width: 100%;
+}
+
+.sidebar .menu ul li a {
+    font-family: var(--font-main, 'Inter', sans-serif);
+    font-size: clamp(12px, 0.88vw, 22px);
+    display: flex;
+    align-items: center;
+    gap: clamp(13px, 0.94vw, 23px);
+    width: auto;
+    margin: 0 clamp(10px, 0.7vw, 16px);
+    padding: clamp(10px, 0.62vw, 14px) clamp(18px, 1.25vw, 30px);
+    color: var(--color-text-white, var(--texto-blanco, #F5F5F5));
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.sidebar .menu ul li a .menu-icon {
+    width: clamp(18px, 1.25vw, 30px);
+    height: clamp(18px, 1.25vw, 30px);
+    filter: brightness(0) invert(1);
+    transition: filter 0.2s ease;
+}
+
+/* Estado hover del menú */
+.sidebar .menu ul li a:hover {
+    background-color: var(--color-primary, var(--amarillo, #F2A900));
+    color: var(--color-text-dark, var(--fondo-oscuro, #1A1206));
+    border: none;
+    outline: none;
+    border-radius: var(--radius-md, clamp(10px, 0.62vw, 14px));
+}
+
+.sidebar .menu ul li a:hover .menu-icon {
+    filter: brightness(0);
+}
+
+/* Estado activo del menú (página actual) */
+.sidebar .menu ul li a.active {
+    background-color: var(--color-primary, var(--amarillo, #F2A900));
+    color: var(--color-text-dark, var(--fondo-oscuro, #1A1206));
+    border-radius: var(--radius-md, clamp(10px, 0.62vw, 14px));
+    font-weight: 600;
+}
+
+.sidebar .menu ul li a.active .menu-icon {
+    filter: brightness(0);
+}
+
+/* =========================================
+   PERFIL DE USUARIO EN SIDEBAR
+   ========================================= */
+.sidebar .user-profile {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: clamp(13px, 0.94vw, 23px);
+    padding: clamp(18px, 1.25vw, 30px);
+    margin-top: auto;
+    margin-bottom: clamp(18px, 1.25vw, 30px);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.sidebar .user-avatar-indicator {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.sidebar .user-profile .avatar-photo {
+    width: clamp(41px, 2.81vw, 67px);
+    height: clamp(41px, 2.81vw, 67px);
+    border-radius: 50%;
+    object-fit: cover;
+    display: none;
+}
+
+.sidebar .user-profile .avatar-photo.loaded {
+    display: block;
+}
+
+.sidebar .user-profile .avatar-photo.loaded + .avatar-initials {
+    display: none;
+}
+
+.sidebar .user-profile .avatar-initials,
+.sidebar .user-profile .user-avatar {
+    width: clamp(41px, 2.81vw, 67px);
+    height: clamp(41px, 2.81vw, 67px);
+    border-radius: 50%;
+    background-color: var(--color-primary, var(--amarillo, #F2A900));
+    color: var(--color-text-dark, var(--fondo-oscuro, #1A1206));
+    font-family: var(--font-main, 'Inter', sans-serif);
+    font-size: clamp(16px, 1.1vw, 24px);
+    font-weight: 700;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    letter-spacing: 1px;
+    flex-shrink: 0;
+}
+
+.sidebar .status-dot {
+    position: absolute;
+    bottom: 2px;
+    left: 0;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid var(--color-bg-sidebar, var(--fondo-sidebar, #241A0B));
+}
+
+.sidebar .status-dot.online {
+    background-color: var(--color-alert-green, var(--verde, #4CAF50));
+}
+
+.sidebar .user-profile .profile-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar .user-profile h2 {
+    font-family: var(--font-main, 'Inter', sans-serif);
+    color: var(--color-text-white, var(--texto-blanco, #F5F5F5));
+    font-size: clamp(14px, 1.0vw, 24px);
+    font-weight: bold;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.sidebar .user-profile p {
+    font-family: var(--font-main, 'Inter', sans-serif);
+    color: var(--color-text-gray, var(--texto-gris, #9c9993));
+    font-size: clamp(12px, 0.82vw, 19px);
+    margin: 0;
+}
+
+/* =========================================
+   RESPONSIVE (MOBILE)
+   ========================================= */
+@media (max-width: 768px) {
+    .sidebar {
+        top: auto;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 75px;
+        padding: 0;
+        flex-direction: row;
+        z-index: 1000;
+        border-right: none;
+        border-top: 1px solid var(--color-border, #3B3222);
+    }
+    
+    .sidebar .logo, .sidebar .user-profile {
+        display: none;
+    }
+    
+    .sidebar .menu {
+        width: 100%;
+        margin: 0;
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+    
+    .sidebar .menu ul {
+        display: flex;
+        flex-direction: row;
+        gap: 5px;
+        padding: 5px 10px;
+        margin: 0;
+        width: max-content;
+    }
+    
+    .sidebar .menu ul li a {
+        flex-direction: column;
+        padding: 8px 12px;
+        font-size: 11px;
+        border-radius: 8px;
+    }
+    
+    .sidebar .menu ul li a .menu-icon {
+        margin: 0 0 4px 0;
+        width: 20px;
+        height: 20px;
+    }
+    
+    .main-content {
+        left: 0 !important;
+        width: 100% !important;
+        margin-left: 0 !important;
+        padding-bottom: 90px !important;
+        position: relative !important;
+        height: auto !important;
+        min-height: 100vh;
+    }
+}

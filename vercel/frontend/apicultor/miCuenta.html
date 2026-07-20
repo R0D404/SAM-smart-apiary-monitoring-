@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAM - Mi cuenta</title>
+    <!-- CSS global (App Shell) -->
+    <link rel="stylesheet" href="../shared/css/plantilla.css"> 
+    <!-- CSS específico de esta vista -->
+    <link rel="stylesheet" href="../shared/css/miCuenta.css">
+    <link rel="stylesheet" href="../shared/css/sidebar.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-shell">
+        <section class="sidebar">
+            <div class="logo">
+                <div class="hexagon">
+                    <img src="../assets/img/logo/logoSam.png" alt="SAM Logo">
+                </div>
+                <div class="logo-text">
+                    <h1>SAM</h1>
+                    <p>Smart Apiary Monitoring</p>
+                </div>
+            </div>
+            <div class="menu">
+                <ul>
+                    <li><a href="dashboardApiario.html"><img src="../assets/icons/dashboard.svg" alt="" class="menu-icon"> Dashboard</a></li>
+                    <li><a href="misApiarios.html"><img src="../assets/icons/apiarios.svg" alt="" class="menu-icon"> Mis apiarios</a></li>
+                    <li><a href="colmenas.html"><img src="../assets/icons/colmenas.svg" alt="" class="menu-icon"> Colmenas</a></li>
+                    <li><a href="alertas.html"><img src="../assets/icons/alertas.svg" alt="" class="menu-icon"> Alertas</a></li>
+                    <li><a href="registrarVisita.html"><img src="../assets/icons/visitas.svg" alt="" class="menu-icon"> Registrar visita</a></li>
+                    <li><a href="historial.html"><img src="../assets/icons/historial.svg" alt="" class="menu-icon"> Historial</a></li>
+                </ul>
+            </div>
+            <div class="user-profile">
+                <div class="user-avatar-indicator">
+                    <div class="avatar-initials" id="sidebar-user-avatar">--</div>
+                </div>
+                <div class="profile-text">
+                    <h2 id="sidebar-user-name">---</h2>
+                    <p>Apicultor</p>
+                </div>
+            </div>
+        </section>
+        
+        <section class="main-content">
+            <!-- Cabecera principal y Contenedor de Notificaciones (Toasts) -->
+            <header class="header-container">
+                <div class="page-title">
+                    <h2>Mi cuenta</h2>
+                    <p>Administra tu perfil, tu correo y tu contraseña</p>
+                </div>
+                
+                <!-- Aquí se inyectarán las notificaciones desde JS -->
+                <div id="toast-container" class="header-actions">
+                    <!-- Ejemplo de Toast (Estará oculto por defecto) -->
+                </div>
+            </header>
+
+            <!-- Contenedor Grid a dos columnas -->
+            <div class="account-grid">
+                
+                <!-- COLUMNA IZQUIERDA: Formulario Principal -->
+                <div class="main-card form-section">
+                    <div class="card-header">
+                        <h3>Información personal</h3>
+                        <p>Tu nombre y datos de contacto</p>
+                    </div>
+
+                    <form id="form-mi-cuenta">
+                        <div class="form-group">
+                            <label class="form-label">NOMBRE COMPLETO</label>
+                            <input type="text" id="input-nombre" class="input-field" value="">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">CORREO ELECTRÓNICO</label>
+                            <input type="email" id="input-correo" class="input-field" value="">
+                        </div>
+
+
+
+                        <h4 class="section-subtitle mt-4">Seguridad · Contraseña</h4>
+
+                        <div class="password-grid">
+                            <div class="form-group">
+                                <label class="form-label">CONTRASEÑA ACTUAL</label>
+                                <input type="password" id="pwd-actual" class="input-field" value="">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">NUEVA CONTRASEÑA</label>
+                                <input type="password" id="pwd-nueva" class="input-field" value="">
+                            </div>
+                        </div>
+
+                        <div class="form-group checkbox-group">
+                            <label class="custom-checkbox">
+                                <input type="checkbox" checked>
+                                <span class="checkmark"></span>
+                                Cerrar sesión en los demás dispositivos al cambiar la contraseña
+                            </label>
+                        </div>
+
+                        <button type="submit" class="btn-primary w-100 mt-2">Guardar cambios</button>
+                    </form>
+                </div>
+
+                <!-- COLUMNA DERECHA: Resumen de Perfil (Solo Lectura) -->
+                <aside class="profile-summary-section">
+                    
+                    <div class="section-header">
+                        <h3>Resumen de la cuenta</h3>
+                        <p>Tu información actual en SAM</p>
+                    </div>
+                    
+                    <!-- Tarjeta de Perfil consolidada -->
+                    <div class="bordered-box mb-4" style="flex-direction: column; align-items: flex-start; gap: 16px;">
+                        
+                        <!-- Header con Iniciales y Nombre -->
+                        <div style="display: flex; align-items: center; gap: 16px;">
+                            <div class="avatar-lg bg-teal" style="width: 48px; height: 48px; font-size: 16px;" id="summary-avatar">--</div>
+                            <div class="box-text">
+                                <span class="box-title" style="font-size: 16px;" id="summary-name">---</span>
+                                <span class="box-subtitle" style="font-size: 12px;" id="summary-email">---</span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Sección: Rol -->
+                    <div class="alert-box-teal">
+                        <div class="info-dot"></div>
+                        <div class="info-content">
+                            <h4>Rol: Apicultor Invitado</h4>
+                            <p>Tu rol define lo que puedes ver y registrar en los apiarios asignados.</p>
+                        </div>
+                    </div>
+
+                    <!-- Botón de Cerrar Sesión -->
+                    <div style="margin-top: 24px;">
+                        <button type="button" class="btn-outline-danger w-100" onclick="window.location.href='../../index.html'">Cerrar Sesión</button>
+                    </div>
+
+                </aside>
+            </div>
+        </section>
+    </div>
+
+    <script src="../shared/js/sidebar.js" defer></script>
+    <script src="../shared/js/miCuenta.js"></script>
+</body>
+</html>

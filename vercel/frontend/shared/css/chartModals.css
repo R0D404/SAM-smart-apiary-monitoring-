@@ -1,0 +1,206 @@
+/* =========================================
+   CHART MODALS (Shared across all dashboards)
+   ========================================= */
+
+/* Buttons Row */
+.chart-buttons-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 8px;
+}
+
+.chart-btn {
+    flex: 1;
+    background-color: var(--color-bg-card);
+    border: 1px solid var(--color-primary);
+    border-radius: var(--radius-md);
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: var(--color-primary);
+    font-size: 16px;
+    font-weight: 600;
+    font-family: var(--font-main);
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s, transform 0.15s;
+}
+
+.chart-btn:hover {
+    background-color: var(--color-primary);
+    color: var(--color-bg-dark);
+    transform: translateY(-2px);
+}
+
+.chart-btn:hover .btn-icon {
+    filter: brightness(0);
+}
+
+.chart-btn .btn-icon {
+    width: 24px;
+    height: 24px;
+    transition: filter 0.2s;
+}
+
+/* Modal Overlay */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.2s ease;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Modal Content */
+.modal-content {
+    background: var(--color-bg-dark);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    width: 90vw;
+    max-width: 1200px;
+    max-height: 90vh;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    animation: slideUp 0.25s ease;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h2 {
+    font-size: 20px;
+    color: var(--color-text-white);
+    font-weight: 600;
+}
+
+.modal-header .modal-subtitle {
+    font-size: 13px;
+    color: var(--color-text-gray);
+    margin-top: 2px;
+}
+
+.close-btn {
+    background: transparent;
+    border: none;
+    color: var(--color-text-gray);
+    font-size: 28px;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.close-btn:hover {
+    color: var(--color-primary);
+    background-color: rgba(242, 169, 0, 0.1);
+}
+
+.modal-body {
+    background: var(--color-bg-card);
+    border-radius: var(--radius-md);
+    padding: 24px;
+    flex: 1;
+    min-height: 0;
+}
+
+.modal-body.scrollable-x {
+    overflow-x: auto;
+}
+
+/* Scrollbar styling */
+.modal-body.scrollable-x::-webkit-scrollbar {
+    height: 8px;
+}
+
+.modal-body.scrollable-x::-webkit-scrollbar-track {
+    background: var(--color-bg-dark);
+    border-radius: 4px;
+}
+
+.modal-body.scrollable-x::-webkit-scrollbar-thumb {
+    background: var(--color-primary);
+    border-radius: 4px;
+}
+
+.chart-wrapper-modal {
+    position: relative;
+    height: 60vh;
+    min-height: 400px;
+    width: 100%;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .chart-buttons-row {
+        flex-direction: column;
+    }
+    
+    .chart-btn {
+        padding: 18px;
+        font-size: 14px;
+    }
+
+    .modal-content {
+        width: 95vw;
+        padding: 16px;
+        max-height: 95vh;
+    }
+
+    .chart-wrapper-modal {
+        height: 50vh;
+        min-height: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    .chart-btn {
+        padding: 14px;
+        font-size: 13px;
+        gap: 8px;
+    }
+
+    .chart-btn .btn-icon {
+        width: 20px;
+        height: 20px;
+    }
+
+    .modal-content {
+        width: 98vw;
+        padding: 12px;
+    }
+
+    .modal-header h2 {
+        font-size: 16px;
+    }
+}

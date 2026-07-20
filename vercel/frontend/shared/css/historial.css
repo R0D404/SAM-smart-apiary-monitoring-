@@ -1,0 +1,230 @@
+/* =========================================
+   HISTORIAL Y PRODUCTIVIDAD CSS
+   ========================================= */
+
+/* Grid principal */
+.dashboard-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 0;
+    max-width: 1200px;
+}
+
+/* =========================================
+   KPI CARDS
+   ========================================= */
+.kpi-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+.kpi-card {
+    background-color: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.kpi-card h3 {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--color-text-gray);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+}
+
+.kpi-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--color-primary);
+}
+
+.kpi-value#kpi-mejor {
+    color: #4CAF50; /* Green tint to match 'Mejor colmena' highlight in image, or keep primary */
+}
+
+/* =========================================
+   CHART BUTTONS
+   ========================================= */
+.chart-buttons-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 8px;
+}
+
+.chart-btn {
+    flex: 1;
+    background-color: var(--color-bg-card);
+    border: 1px solid var(--color-primary);
+    border-radius: var(--radius-md);
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: var(--color-primary);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.chart-btn:hover {
+    background-color: var(--color-primary);
+    color: var(--color-bg-dark);
+}
+
+.chart-btn:hover .btn-icon {
+    filter: brightness(0);
+}
+
+/* =========================================
+   MODALS
+   ========================================= */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal-content {
+    background: var(--color-bg-dark);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    width: 90vw;
+    max-width: 1200px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h2 {
+    font-size: 20px;
+    color: var(--color-text-white);
+}
+
+.close-btn {
+    background: transparent;
+    border: none;
+    color: var(--color-text-gray);
+    font-size: 28px;
+    cursor: pointer;
+}
+
+.close-btn:hover {
+    color: var(--color-primary);
+}
+
+.modal-body {
+    background: var(--color-bg-card);
+    border-radius: var(--radius-md);
+    padding: 24px;
+}
+
+.modal-body.scrollable-x {
+    overflow-x: auto;
+}
+
+.chart-wrapper.large {
+    height: 60vh;
+    min-height: 400px;
+}
+
+/* =========================================
+   TABLE SECTION
+   ========================================= */
+.table-container {
+    background-color: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 24px;
+    overflow-x: auto;
+}
+
+.table-container h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text-white);
+    margin-bottom: 20px;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-table th {
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--color-text-gray);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.data-table td {
+    padding: 16px 0;
+    font-size: 13px;
+    color: var(--color-text-white);
+    border-bottom: 1px solid var(--color-border-light);
+}
+
+.data-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Styling for specific columns */
+.data-table td.col-colmena {
+    font-weight: 600;
+    color: var(--color-primary);
+}
+
+.data-table td.col-validada.si {
+    color: #4CAF50;
+}
+
+.data-table td.col-validada.no {
+    color: var(--color-text-gray);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .kpi-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .charts-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .kpi-cards {
+        grid-template-columns: 1fr;
+    }
+}
