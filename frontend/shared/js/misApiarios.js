@@ -102,6 +102,21 @@ document.addEventListener("DOMContentLoaded", () => {
                 const card = document.createElement("article");
                 card.className = "apiario-card";
                 card.setAttribute("data-apiario-id", api.id);
+                let yMax = 50, yMid = 40, yMin = 30;
+                if ((api.colmenas || 0) > 0 && api.peso_historial && api.peso_historial.length > 0) {
+                    let pDatos = api.peso_historial;
+                    let pMax = Math.max(...pDatos) + 5;
+                    let pMin = Math.max(0, Math.min(...pDatos) - 5);
+                    yMax = Math.round(pMax);
+                    yMin = Math.round(pMin);
+                    yMid = Math.round((yMax + yMin) / 2);
+                }
+
+                const hoy = new Date();
+                const hace3 = new Date(hoy); hace3.setDate(hoy.getDate() - 3);
+                const hace7 = new Date(hoy); hace7.setDate(hoy.getDate() - 7);
+                const formatter = new Intl.DateTimeFormat('es', { day: '2-digit', month: 'short' });
+
                 card.innerHTML = `
                     <div class="apiario-card-header">
                         <span class="status-dot ${dotStatusClase}"></span>
@@ -126,13 +141,15 @@ document.addEventListener("DOMContentLoaded", () => {
                         ${(api.colmenas || 0) > 0 ? `
                         <div class="chart-box">
                             <div class="chart-canvas-wrap">
-                                <div class="chart-axis-y"><span>50</span><span>40</span><span>30</span></div>
+                                <div class="chart-axis-y"><span>${yMax} kg</span><span>${yMid} kg</span><span>${yMin} kg</span></div>
                                 <canvas class="mini-chart" id="chart-apiario-${api.id}"></canvas>
                             </div>
                             <div class="chart-axis-x">
-                                <span>23 may</span><span>30 may</span><span>06 jun</span>
+                                <span style="text-transform: lowercase">${formatter.format(hace7)}</span>
+                                <span style="text-transform: lowercase">${formatter.format(hace3)}</span>
+                                <span style="text-transform: lowercase">${formatter.format(hoy)}</span>
                             </div>
-                            <p class="chart-caption">Peso promedio · 30 días</p>
+                            <p class="chart-caption">Peso promedio · últimos 7 días</p>
                         </div>
                         ` : `
                         <div class="chart-box" style="display: flex; align-items: center; justify-content: center; height: 100px; border: 1px dashed rgba(255,255,255,0.1); border-radius: 8px; margin: 20px 0;">
