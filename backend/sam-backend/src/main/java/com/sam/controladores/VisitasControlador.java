@@ -27,16 +27,14 @@ public class VisitasControlador {
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             ArrayNode visitas = mapper.createArrayNode();
             
-            // In the real schema we have SESION_VISITA and VISITA (which might be missing data).
-            // Let's create a query that attempts to fetch visits or harvests.
-            // Since dummy_data.sql inserted into SESION_VISITA and COSECHA, let's just return those as visits.
+            // Fetch real data from VISITA and SESION_VISITA
             String sql = "SELECT sv.fecha, c.codigo as colmena, u.nombre as apicultor, " +
-                         "'Excelente' as estado_colonia, 'Reina joven' as reina, 'Sesión de ' as notas, sv.tipo " +
-                         "FROM SESION_VISITA sv " +
+                         "v.estado_colonia, IF(v.reina_vista=1, 'Sí', 'No') as reina, v.notas " +
+                         "FROM VISITA v " +
+                         "JOIN COLMENA c ON v.colmena_id = c.id " +
+                         "JOIN SESION_VISITA sv ON v.sesion_id = sv.id " +
                          "JOIN USUARIO u ON sv.usuario_id = u.id " +
-                         "JOIN APIARIO a ON sv.apiario_id = a.id " +
-                         "JOIN COLMENA c ON c.apiario_id = a.id " +
-                         "LIMIT 10";
+                         "ORDER BY sv.fecha DESC, v.id DESC LIMIT 50";
                          
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                 try (ResultSet rs = stmt.executeQuery()) {
@@ -47,7 +45,7 @@ public class VisitasControlador {
                         node.put("apicultor", rs.getString("apicultor"));
                         node.put("estado_colonia", rs.getString("estado_colonia"));
                         node.put("reina", rs.getString("reina"));
-                        node.put("notas", rs.getString("notas") + rs.getString("tipo"));
+                        node.put("notas", rs.getString("notas"));
                         visitas.add(node);
                     }
                 }
