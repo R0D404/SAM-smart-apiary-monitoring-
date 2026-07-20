@@ -116,8 +116,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span style="color: var(--color-text-gray);">${estadoText}</span>
                 </td>
                 <td>
-                    <button class="btn-editar" style="background:none; border:none; color:#F2A900; cursor:pointer; margin-right:10px; font-weight:600;" data-id="${user.id}">Editar</button>
-                    ${user.id !== 1 ? `<button class="btn-eliminar" style="background:none; border:none; color:#F44336; cursor:pointer; font-weight:600;" data-id="${user.id}">Eliminar</button>` : ''}
+                    <button class="btn-primary btn-editar" style="margin-right: 8px;" data-id="${user.id}">Editar</button>
+                    ${user.id !== 1 ? `<button class="btn-baja btn-eliminar" data-id="${user.id}">Dar de baja</button>` : ''}
                 </td>
             `;
             
