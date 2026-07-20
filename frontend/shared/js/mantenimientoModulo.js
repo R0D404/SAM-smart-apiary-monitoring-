@@ -152,4 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+    
+    // Call the function on load!
+    cargarDatos();
 });
