@@ -310,30 +310,95 @@ public class VisitasControlador {
     }
 
     public static void crearVisita(Context ctx) {
+        if (ctx.sessionAttribute("usuarioLogueado") == null) {
+            ctx.status(401).json("{\"mensaje\": \"No autorizado\"}");
+            return;
+        }
+        
+        String usuarioActual = ctx.sessionAttribute("usuarioLogueado");
+        
         try {
             com.fasterxml.jackson.databind.JsonNode body = mapper.readTree(ctx.body());
-            try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-                String sql = "INSERT INTO SESION_VISITA (apiario_id, usuario_id, tipo, fecha, hora_inicio) VALUES (?, ?, ?, ?, ?)";
-                try (PreparedStatement stmt = conn.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS)) {
-                    stmt.setInt(1, body.get("apiario_id").asInt());
-                    stmt.setInt(2, body.get("usuario_id").asInt());
-                    stmt.setString(3, body.has("tipo") ? body.get("tipo").asText() : "visita");
-                    stmt.setString(4, body.has("fecha") ? body.get("fecha").asText() : "2026-01-01");
-                    stmt.setString(5, body.has("hora_inicio") ? body.get("hora_inicio").asText() : "12:00:00");
-                    stmt.executeUpdate();
-                    try (ResultSet keys = stmt.getGeneratedKeys()) {
-                        if (keys.next()) {
-                            ObjectNode res = mapper.createObjectNode();
-                            res.put("mensaje", "Visita creada");
-                            res.put("id", keys.getInt(1));
-                            ctx.status(201).json(res);
+            try (Connection conn = com.sam.Conexion.conectar()) {
+                
+                int usuarioId = -1;
+                try (PreparedStatement stmt = conn.prepareStatement("SELECT id FROM USUARIO WHERE email = ?")) {
+                    stmt.setString(1, usuarioActual);
+                    try (ResultSet rs = stmt.executeQuery()) {
+                        if (rs.next()) usuarioId = rs.getInt("id");
+                    }
+                }
+                
+                if (usuarioId == -1) {
+                    ctx.status(403).json("{\"mensaje\": \"Usuario no válido\"}");
+                    return;
+                }
+
+                conn.setAutoCommit(false); // Transactions for multi-table inserts
+                
+                try {
+                    // 1. Insert SESION_VISITA
+                    int sesionId = -1;
+                    String sqlSesion = "INSERT INTO SESION_VISITA (apiario_id, usuario_id, tipo, fecha, hora_inicio) VALUES (?, ?, ?, ?, CURRENT_TIME)";
+                    try (PreparedStatement stmt = conn.prepareStatement(sqlSesion, java.sql.Statement.RETURN_GENERATED_KEYS)) {
+                        stmt.setInt(1, body.get("apiario_id").asInt());
+                        stmt.setInt(2, usuarioId);
+                        stmt.setString(3, "visita"); // by default we use visita
+                        stmt.setString(4, body.has("fecha") ? body.get("fecha").asText() : java.time.LocalDate.now().toString());
+                        stmt.executeUpdate();
+                        try (ResultSet keys = stmt.getGeneratedKeys()) {
+                            if (keys.next()) sesionId = keys.getInt(1);
                         }
                     }
+                    
+                    if (sesionId == -1) throw new Exception("Failed to insert SESION_VISITA");
+
+                    // 2. Insert VISITA
+                    int visitaId = -1;
+                    String sqlVisita = "INSERT INTO VISITA (colmena_id, sesion_id, estado_colonia, reina_vista, notas) VALUES (?, ?, ?, ?, ?)";
+                    try (PreparedStatement stmt = conn.prepareStatement(sqlVisita, java.sql.Statement.RETURN_GENERATED_KEYS)) {
+                        stmt.setInt(1, body.get("colmena_id").asInt());
+                        stmt.setInt(2, sesionId);
+                        stmt.setString(3, body.has("estado") ? body.get("estado").asText() : "OK");
+                        stmt.setInt(4, body.has("reina_vista") && body.get("reina_vista").asBoolean() ? 1 : 0);
+                        stmt.setString(5, body.has("notas") ? body.get("notas").asText() : "");
+                        stmt.executeUpdate();
+                        try (ResultSet keys = stmt.getGeneratedKeys()) {
+                            if (keys.next()) visitaId = keys.getInt(1);
+                        }
+                    }
+
+                    // 3. Insert COSECHA if kg_cosechados exists and is > 0
+                    if (body.has("kg_cosechados") && !body.get("kg_cosechados").isNull()) {
+                        double kg = body.get("kg_cosechados").asDouble();
+                        if (kg > 0) {
+                            String sqlCosecha = "INSERT INTO COSECHA (sesion_id, colmena_id, cantidad_kg, calidad_miel) VALUES (?, ?, ?, ?)";
+                            try (PreparedStatement stmt = conn.prepareStatement(sqlCosecha)) {
+                                stmt.setInt(1, sesionId);
+                                stmt.setInt(2, body.get("colmena_id").asInt());
+                                stmt.setDouble(3, kg);
+                                stmt.setString(4, body.has("calidad_miel") && !body.get("calidad_miel").isNull() ? body.get("calidad_miel").asText() : "");
+                                stmt.executeUpdate();
+                            }
+                        }
+                    }
+
+                    conn.commit();
+
+                    ObjectNode res = mapper.createObjectNode();
+                    res.put("mensaje", "Visita registrada con éxito");
+                    res.put("sesion_id", sesionId);
+                    res.put("visita_id", visitaId);
+                    ctx.status(201).json(res);
+
+                } catch (Exception e) {
+                    conn.rollback();
+                    throw e;
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
-            ctx.status(500).json("{\"mensaje\": \"Error interno\"}");
+            ctx.status(500).json("{\"mensaje\": \"Error interno: " + e.getMessage() + "\"}");
         }
     }
 

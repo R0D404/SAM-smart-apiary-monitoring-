@@ -36,7 +36,7 @@ public class GestionColmenasControlador {
             }
 
             ArrayNode colmenas = mapper.createArrayNode();
-            String sql = "SELECT c.id as db_id, c.codigo, a.nombre as apiario, c.ecotipo, c.estado, m.identificador as monitoreo " +
+            String sql = "SELECT c.id as db_id, c.codigo, a.id as apiario_id, a.nombre as apiario, c.ecotipo, c.estado, m.identificador as monitoreo " +
                          "FROM COLMENA c " +
                          "JOIN APIARIO a ON c.apiario_id = a.id " +
                          ("apicultor".equals(rol) ? "JOIN APIARIO_APICULTOR aa ON aa.apiario_id = a.id AND aa.usuario_id = " + usuarioId + " " : "") +
@@ -50,6 +50,7 @@ public class GestionColmenasControlador {
                         node.put("db_id", rs.getInt("db_id"));
                         node.put("id", rs.getString("codigo"));
                         node.put("apiario", rs.getString("apiario"));
+                        node.put("apiario_id", rs.getInt("apiario_id"));
                         
                         String monitoreo = rs.getString("monitoreo");
                         node.put("monitoreo", monitoreo != null ? monitoreo : "Sin asignar");
