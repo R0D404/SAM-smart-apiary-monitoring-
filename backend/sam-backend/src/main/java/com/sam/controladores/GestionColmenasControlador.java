@@ -121,9 +121,10 @@ public class GestionColmenasControlador {
         int id = Integer.parseInt(ctx.pathParam("id"));
         try (Connection conn = com.sam.Conexion.conectar()) {
             if (conn == null) throw new Exception("DB Connection failed");
-            // En lugar de borrar la fila y romper las llaves foráneas de sensores o visitas,
-            // hacemos un soft-delete (Baja lógica).
-            String sql = "UPDATE COLMENA SET estado='baja' WHERE id=?";
+            // En lugar de borrar la fila, hacemos un soft-delete.
+            // Para liberar el 'codigo' (y que no choque con la llave única si el usuario crea
+            // otra colmena con el mismo nombre), le concatenamos '-baja-' y su propio id.
+            String sql = "UPDATE COLMENA SET estado='baja', codigo=CONCAT(codigo, '-baja-', id) WHERE id=?";
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.setInt(1, id);
                 stmt.executeUpdate();
