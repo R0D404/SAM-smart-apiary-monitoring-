@@ -14,10 +14,6 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 public class GestionApiariosControlador {
-    private static final Dotenv dotenv = Dotenv.load();
-    private static final String DB_URL = dotenv.get("DB_URL");
-    private static final String DB_USER = dotenv.get("DB_USER");
-    private static final String DB_PASSWORD = dotenv.get("DB_PASSWORD");
     private static final ObjectMapper mapper = new ObjectMapper();
 
     public static void listarApiarios(Context ctx) {
@@ -26,13 +22,15 @@ public class GestionApiariosControlador {
             return;
         }
 
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+        try (Connection conn = com.sam.Conexion.conectar()) {
+            if (conn == null) throw new Exception("DB connection failed");
             ArrayNode apiarios = mapper.createArrayNode();
             String sql = "SELECT a.id, a.nombre, a.estado, a.municipio, a.localidad, a.microclima_id, " +
                          "COUNT(c.id) as colmenas, cm.nombre as microclima " +
                          "FROM APIARIO a " +
-                         "LEFT JOIN COLMENA c ON a.id = c.apiario_id " +
+                         "LEFT JOIN COLMENA c ON a.id = c.apiario_id AND c.estado != 'baja' " +
                          "LEFT JOIN CATALAGO_MICROCLIMA cm ON a.microclima_id = cm.id " +
+                         "WHERE a.estatus != 'baja' " +
                          "GROUP BY a.id, a.nombre, a.estado, a.municipio, a.localidad, a.microclima_id, cm.nombre";
                          
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -66,7 +64,8 @@ public class GestionApiariosControlador {
             ctx.status(401).json("{\"mensaje\": \"No autorizado\"}");
             return;
         }
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+        try (Connection conn = com.sam.Conexion.conectar()) {
+            if (conn == null) throw new Exception("DB connection failed");
             ArrayNode microclimas = mapper.createArrayNode();
             try (PreparedStatement stmt = conn.prepareStatement("SELECT id, nombre FROM CATALAGO_MICROCLIMA")) {
                 try (ResultSet rs = stmt.executeQuery()) {
@@ -100,7 +99,8 @@ public class GestionApiariosControlador {
             String localidad = body.has("localidad") ? body.get("localidad").asText() : "";
             int microclimaId = body.has("microclimaId") ? body.get("microclimaId").asInt() : 1;
 
-            try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            try (Connection conn = com.sam.Conexion.conectar()) {
+                if (conn == null) throw new Exception("DB connection failed");
                 // Obtener ID del admin
                 int adminId = -1;
                 try (PreparedStatement s = conn.prepareStatement("SELECT id FROM USUARIO WHERE email = ?")) {
@@ -148,7 +148,8 @@ public class GestionApiariosControlador {
         int id = Integer.parseInt(ctx.pathParam("id"));
         try {
             JsonNode body = mapper.readTree(ctx.body());
-            try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            try (Connection conn = com.sam.Conexion.conectar()) {
+                if (conn == null) throw new Exception("DB connection failed");
                 String sql = "UPDATE APIARIO SET nombre=?, estado=?, municipio=?, localidad=?, microclima_id=? WHERE id=?";
                 try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                     stmt.setString(1, body.get("nombre").asText());
@@ -175,8 +176,9 @@ public class GestionApiariosControlador {
             return;
         }
         int id = Integer.parseInt(ctx.pathParam("id"));
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM APIARIO WHERE id = ?")) {
+        try (Connection conn = com.sam.Conexion.conectar()) {
+            if (conn == null) throw new Exception("DB connection failed");
+            try (PreparedStatement stmt = conn.prepareStatement("UPDATE APIARIO SET estatus='baja', nombre=CONCAT(nombre, '-baja-', id) WHERE id = ?")) {
                 stmt.setInt(1, id);
                 int rows = stmt.executeUpdate();
                 if (rows > 0) {
