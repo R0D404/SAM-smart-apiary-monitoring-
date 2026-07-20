@@ -47,13 +47,19 @@ body {
    ELEMENTOS GLOBALES DE FORMULARIO
    ========================================= */
 select, input[type="date"] {
-    background-color: var(--color-bg-sidebar);
-    color: var(--color-text-white);
+    background-color: var(--color-bg-sidebar); /* Fondo café oscuro */
+    color: var(--color-primary); /* Texto amarillo */
     border: 1px solid var(--color-border);
     border-radius: var(--radius-sm);
     padding: 8px 12px;
     font-family: var(--font-main);
-    color-scheme: dark; /* Fuerza calendario oscuro e icono blanco nativo */
+    color-scheme: dark;
+}
+
+/* Cambiar el ícono nativo del calendario a tono amarillo (aprox) */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(68%) sepia(61%) saturate(1831%) hue-rotate(1deg) brightness(101%) contrast(106%);
+    cursor: pointer;
 }
 
 select:focus, input[type="date"]:focus {
@@ -62,8 +68,8 @@ select:focus, input[type="date"]:focus {
 }
 
 select option {
-    background-color: var(--color-bg-sidebar);
-    color: var(--color-text-white);
+    background-color: var(--color-bg-sidebar); /* Fondo café oscuro */
+    color: var(--color-primary); /* Texto amarillo */
     font-family: var(--font-main);
 }
 
