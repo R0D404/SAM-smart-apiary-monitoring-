@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     selectColmena.innerHTML = '<option value="" disabled selected hidden>Selecciona una colmena</option>';
                     data.forEach(colmena => {
                         const option = document.createElement('option');
-                        option.value = colmena.id;
+                        option.value = colmena.db_id;
                         option.textContent = `${colmena.id} (${colmena.apiario})`;
                         option.dataset.apiarioId = colmena.apiario_id; // in case we need it later
                         selectColmena.appendChild(option);
@@ -137,9 +137,14 @@ document.addEventListener('DOMContentLoaded', () => {
             btnGuardar.disabled = true;
 
             const payload = {
+                colmena_id: parseInt(selectColmena.value, 10),
+                apiario_id: parseInt(selectColmena.options[selectColmena.selectedIndex].dataset.apiarioId, 10),
                 fecha: inputFecha.value,
                 estado: inputEstado.value,
-                notas: document.getElementById('notas-adicionales')?.value || ''
+                kg_cosechados: inputKg && inputKg.value ? parseFloat(inputKg.value) : null,
+                calidad_miel: inputCalidad ? inputCalidad.value : null,
+                reina_vista: checkReina ? checkReina.checked : false,
+                notas: inputNotas ? inputNotas.value : ''
             };
 
             fetch('/visitas', {
@@ -149,8 +154,14 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .then(res => {
                 if (!res.ok) throw new Error('Error en el servidor');
+                return res.json();
+            })
+            .then(() => {
                 mostrarToast('Visita registrada con éxito', 'success');
                 // Reset form or redirect if needed
+                setTimeout(() => {
+                    window.location.href = 'historial.html';
+                }, 1500);
             })
             .catch(err => {
                 console.error(err);
