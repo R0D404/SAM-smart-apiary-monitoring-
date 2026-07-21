@@ -39,7 +39,7 @@ public class AlertasControlador {
             }
             
             ArrayNode alertas = mapper.createArrayNode();
-            String sql = "SELECT c.codigo as colmena, a.mensaje, a.nivel, a.atendida " +
+            String sql = "SELECT a.id, c.codigo as colmena, a.mensaje, a.nivel, a.atendida " +
                          "FROM ALERTA a " +
                          "JOIN COLMENA c ON a.colmena_id = c.id " +
                          ("apicultor".equals(rol) ? "JOIN APIARIO_APICULTOR aa ON aa.apiario_id = c.apiario_id AND aa.usuario_id = " + usuarioId + " " : "") +
@@ -49,6 +49,7 @@ public class AlertasControlador {
                 try (ResultSet rs = stmt.executeQuery()) {
                     while (rs.next()) {
                         ObjectNode node = mapper.createObjectNode();
+                        node.put("id", rs.getInt("id"));
                         node.put("colmena", rs.getString("colmena"));
                         node.put("mensaje", rs.getString("mensaje"));
                         
