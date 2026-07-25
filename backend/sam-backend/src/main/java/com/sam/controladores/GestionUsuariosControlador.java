@@ -36,6 +36,7 @@ public class GestionUsuariosControlador {
                          " FROM APIARIO_APICULTOR aa JOIN APIARIO a ON aa.apiario_id = a.id " +
                          " WHERE aa.usuario_id = u.id) as apiario_ids " +
                          "FROM USUARIO u JOIN CATALAGO_ROL r ON u.rol_id = r.id " +
+                         "WHERE u.activo = 1 " +
                          "ORDER BY u.id ASC";
                          
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -195,12 +196,12 @@ public class GestionUsuariosControlador {
     public static void eliminarUsuario(Context ctx) {
         int id = Integer.parseInt(ctx.pathParam("id"));
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String sql = "DELETE FROM USUARIO WHERE id = ?";
+            String sql = "UPDATE USUARIO SET activo = 0 WHERE id = ?";
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.setInt(1, id);
                 stmt.executeUpdate();
                 ObjectNode res = mapper.createObjectNode();
-                res.put("mensaje", "Usuario eliminado con éxito");
+                res.put("mensaje", "Usuario dado de baja con éxito");
                 ctx.status(200).json(res);
             }
         } catch (Exception e) {

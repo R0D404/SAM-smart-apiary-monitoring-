@@ -23,11 +23,17 @@ public class App
                                   : System.getProperty("user.dir");
 
         var app = Javalin.create(config -> {
+            config.plugins.enableCors(cors -> {
+                cors.add(it -> {
+                    it.allowHost("http://34.236.114.253");
+                    it.allowCredentials = true;
+                });
+            });
             config.staticFiles.add(staticFiles -> {
                 staticFiles.directory = staticDir;
                 staticFiles.location = io.javalin.http.staticfiles.Location.EXTERNAL;
             });
-        }).start(7070);
+        }).start(8080);
 
         // Filtro de seguridad: Proteger rutas y verificar roles
         app.before(ctx -> {
@@ -90,13 +96,13 @@ public class App
                 put("/colmenas/{id}", com.sam.controladores.GestionColmenasControlador::actualizarColmena);
                 delete("/colmenas/{id}", com.sam.controladores.GestionColmenasControlador::eliminarColmena);
             });
-            path("/alertas", () -> {
+            path("/api/alertas", () -> {
                 get(com.sam.controladores.AlertasControlador::listarAlertas);
                 post(com.sam.controladores.AlertasControlador::crearAlerta);
                 put("/{id}", com.sam.controladores.AlertasControlador::actualizarAlerta);
                 delete("/{id}", com.sam.controladores.AlertasControlador::eliminarAlerta);
             });
-            path("/visitas", () -> {
+            path("/api/visitas", () -> {
                 get(com.sam.controladores.VisitasControlador::listarVisitas);
                 get("/cosechas", com.sam.controladores.VisitasControlador::listarCosechasVisitas);
                 get("/mantenimiento", com.sam.controladores.VisitasControlador::listarMantenimientos);
@@ -105,7 +111,7 @@ public class App
                 put("/{id}", com.sam.controladores.VisitasControlador::actualizarVisita);
                 delete("/{id}", com.sam.controladores.VisitasControlador::eliminarVisita);
             });
-            path("/cosechas", () -> {
+            path("/api/cosechas", () -> {
                 get("/resumen", com.sam.controladores.CosechasControlador::obtenerResumen);
                 get("/grafica", com.sam.controladores.CosechasControlador::graficaProduccion);
                 get(com.sam.controladores.CosechasControlador::listarCosechas);

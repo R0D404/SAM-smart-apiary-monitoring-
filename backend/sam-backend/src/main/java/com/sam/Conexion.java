@@ -6,24 +6,14 @@ import io.github.cdimascio.dotenv.Dotenv;
 
 public class Conexion {
 
-    private static String URL = "jdbc:mariadb://localhost:3306/SAM";
-    private static String USUARIO = "root";
-    private static String PASSWORD = "0981";
-
-    static {
-        try {
-            Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
-            if (dotenv.get("DB_URL") != null) URL = dotenv.get("DB_URL");
-            if (dotenv.get("DB_USER") != null) USUARIO = dotenv.get("DB_USER");
-            if (dotenv.get("DB_PASSWORD") != null) PASSWORD = dotenv.get("DB_PASSWORD");
-        } catch (Exception e) {
-            System.out.println("No se pudo cargar .env en Conexion, usando defaults.");
-        }
-    }
+    private static final Dotenv dotenv = Dotenv.load();
+    private static final String DB_URL = dotenv.get("DB_URL");
+    private static final String DB_USER = dotenv.get("DB_USER");
+    private static final String DB_PASSWORD = dotenv.get("DB_PASSWORD");
 
     public static Connection conectar() {
         try {
-            Connection conn = DriverManager.getConnection(URL, USUARIO, PASSWORD);
+            Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
             System.out.println("Conexión exitosa a la BD");
             return conn;
         } catch (Exception e) {

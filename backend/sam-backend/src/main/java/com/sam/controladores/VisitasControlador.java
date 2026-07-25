@@ -372,7 +372,7 @@ public class VisitasControlador {
                     if (body.has("kg_cosechados") && !body.get("kg_cosechados").isNull()) {
                         double kg = body.get("kg_cosechados").asDouble();
                         if (kg > 0) {
-                            String sqlCosecha = "INSERT INTO COSECHA (sesion_id, colmena_id, cantidad_kg, calidad_miel) VALUES (?, ?, ?, ?)";
+                            String sqlCosecha = "INSERT INTO COSECHA (sesion_id, colmena_id, kg_miel, calidad) VALUES (?, ?, ?, ?)";
                             try (PreparedStatement stmt = conn.prepareStatement(sqlCosecha)) {
                                 stmt.setInt(1, sesionId);
                                 stmt.setInt(2, body.get("colmena_id").asInt());
