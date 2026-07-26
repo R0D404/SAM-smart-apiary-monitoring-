@@ -1,0 +1,178 @@
+CREATE DATABASE  `SAM` 
+
+USE `SAM`;
+
+CREATE TABLE `ALERTA` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `colmena_id` int(11) NOT NULL,
+  `tipo` enum('umbral','tasa_cambio') NOT NULL,
+  `nivel` enum('aviso','critico') NOT NULL,
+  `mensaje` varchar(255) DEFAULT NULL,
+  `enmascarada` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'TRUE si surgió durante una sesión activa',
+  `atendida` tinyint(1) NOT NULL DEFAULT 0,
+  `timestamp` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `colmena_id` (`colmena_id`,`atendida`),
+  CONSTRAINT `1` FOREIGN KEY (`colmena_id`) REFERENCES `COLMENA` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `APIARIO` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `admin_id` int(11) NOT NULL COMMENT 'dueño que lo registró',
+  `microclima_id` int(11) DEFAULT NULL,
+  `nombre` varchar(100) NOT NULL,
+  `estado` varchar(60) DEFAULT NULL COMMENT 'ej. Chiapas',
+  `municipio` varchar(80) DEFAULT NULL COMMENT 'ej. Tapachula',
+  `localidad` varchar(120) DEFAULT NULL COMMENT 'ej. Ejido Raymundo Enríquez',
+  `referencia` varchar(200) DEFAULT NULL COMMENT 'calle / punto de referencia opcional',
+  `latitud` decimal(9,6) DEFAULT NULL COMMENT 'para generar el link al mapa',
+  `longitud` decimal(9,6) DEFAULT NULL COMMENT 'para generar el link al mapa',
+  `creado_en` date NOT NULL COMMENT 'fecha de creación; tipo DATE',
+  `estatus` varchar(20) NOT NULL DEFAULT 'activo',
+  PRIMARY KEY (`id`),
+  KEY `admin_id` (`admin_id`),
+  KEY `microclima_id` (`microclima_id`),
+  CONSTRAINT `1` FOREIGN KEY (`admin_id`) REFERENCES `USUARIO` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `2` FOREIGN KEY (`microclima_id`) REFERENCES `CATALAGO_MICROCLIMA` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `APIARIO_APICULTOR` (
+  `apiario_id` int(11) NOT NULL,
+  `usuario_id` int(11) NOT NULL,
+  `asignado_en` date NOT NULL,
+  PRIMARY KEY (`apiario_id`,`usuario_id`),
+  KEY `usuario_id` (`usuario_id`),
+  CONSTRAINT `1` FOREIGN KEY (`apiario_id`) REFERENCES `APIARIO` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `2` FOREIGN KEY (`usuario_id`) REFERENCES `USUARIO` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `CATALAGO_MICROCLIMA` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(60) NOT NULL COMMENT 'templado | húmedo | caluroso | frío de montaña ...',
+  `descripcion` varchar(150) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `nombre` (`nombre`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `CATALAGO_ROL` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(50) NOT NULL COMMENT 'admin | apicultor',
+  `descripcion` varchar(150) DEFAULT NULL COMMENT 'Descripción de los permisos del rol',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `nombre` (`nombre`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `COLMENA` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `apiario_id` int(11) NOT NULL,
+  `codigo` varchar(40) NOT NULL COMMENT 'etiqueta legible: C-01, HIBRIDA-A...',
+  `ecotipo` varchar(80) DEFAULT NULL COMMENT 'raza/subpoblación; opcional',
+  `estado` varchar(30) NOT NULL DEFAULT 'activa',
+  `fecha_instalacion` date DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `apiario_id` (`apiario_id`,`codigo`),
+  CONSTRAINT `1` FOREIGN KEY (`apiario_id`) REFERENCES `APIARIO` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=411 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `COSECHA` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `colmena_id` int(11) NOT NULL,
+  `sesion_id` int(11) NOT NULL,
+  `kg_miel` decimal(6,2) NOT NULL,
+  `calidad` varchar(40) DEFAULT NULL,
+  `validado_con_peso` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'TRUE si el sensor confirmó la caída de peso',
+  PRIMARY KEY (`id`),
+  KEY `colmena_id` (`colmena_id`),
+  KEY `sesion_id` (`sesion_id`),
+  CONSTRAINT `1` FOREIGN KEY (`colmena_id`) REFERENCES `COLMENA` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `2` FOREIGN KEY (`sesion_id`) REFERENCES `SESION_VISITA` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=254 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `LECTURA_SENSOR` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `modulo_id` int(11) NOT NULL,
+  `tipo_sensor` varchar(30) NOT NULL COMMENT 'peso | temp | humedad',
+  `origen` enum('interna','externa') NOT NULL COMMENT 'externa = ambiente del apiario',
+  `valor` decimal(10,3) NOT NULL,
+  `tasa_cambio` decimal(8,4) DEFAULT NULL COMMENT 'Δvalor / Δt_horas; NULL en la primera lectura',
+  `nivel_alerta` enum('normal','aviso','critico') NOT NULL DEFAULT 'normal',
+  `timestamp_dispositivo` timestamp NOT NULL COMMENT 'hora real de medición (UTC)',
+  `timestamp_servidor` timestamp NOT NULL DEFAULT current_timestamp() COMMENT 'hora de recepción (UTC)',
+  PRIMARY KEY (`id`),
+  KEY `modulo_id` (`modulo_id`,`timestamp_dispositivo`),
+  CONSTRAINT `1` FOREIGN KEY (`modulo_id`) REFERENCES `MODULO_MONITOREO` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2333 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `MODULO_MONITOREO` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `colmena_id` int(11) NOT NULL COMMENT 'colmena donde está instalado el ESP32',
+  `identificador` varchar(60) DEFAULT NULL COMMENT 'ID físico del dispositivo (MAC/serie)',
+  `tipo` enum('interno','interno_ambiental') NOT NULL,
+  `estado` enum('activo','fallo','retirado') NOT NULL DEFAULT 'activo',
+  `fecha_instalacion` date DEFAULT NULL,
+  `ultimo_fallo` varchar(150) DEFAULT NULL COMMENT 'descripción del último fallo, si hubo',
+  `fecha_fallo` date DEFAULT NULL COMMENT 'cuándo se detectó el fallo',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `colmena_id` (`colmena_id`),
+  UNIQUE KEY `identificador` (`identificador`),
+  CONSTRAINT `1` FOREIGN KEY (`colmena_id`) REFERENCES `COLMENA` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=106 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `SESION_VISITA` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `apiario_id` int(11) NOT NULL,
+  `usuario_id` int(11) NOT NULL COMMENT 'apicultor que la abre',
+  `tipo` enum('visita','cosecha') NOT NULL,
+  `fecha` date NOT NULL COMMENT 'día de la sesión',
+  `hora_inicio` time NOT NULL,
+  `hora_fin` time DEFAULT NULL COMMENT 'NULL mientras la sesión sigue abierta',
+  `cierre_automatico` tinyint(1) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`),
+  KEY `apiario_id` (`apiario_id`),
+  KEY `usuario_id` (`usuario_id`),
+  CONSTRAINT `1` FOREIGN KEY (`apiario_id`) REFERENCES `APIARIO` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `2` FOREIGN KEY (`usuario_id`) REFERENCES `USUARIO` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `UMBRAL_CONFIG` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `apiario_id` int(11) DEFAULT NULL COMMENT 'NULL = umbral global de respaldo',
+  `tipo_sensor` varchar(30) NOT NULL,
+  `franja_hora` tinyint(4) DEFAULT NULL COMMENT '0-23; NULL = aplica todo el día',
+  `valor_min` decimal(10,3) DEFAULT NULL,
+  `valor_max` decimal(10,3) DEFAULT NULL,
+  `tasa_max_hora` decimal(8,4) DEFAULT NULL COMMENT 'tope de tasa de cambio antes de alertar',
+  PRIMARY KEY (`id`),
+  KEY `apiario_id` (`apiario_id`),
+  CONSTRAINT `1` FOREIGN KEY (`apiario_id`) REFERENCES `APIARIO` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `USUARIO` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `rol_id` int(11) NOT NULL,
+  `nombre` varchar(100) NOT NULL,
+  `email` varchar(150) NOT NULL,
+  `password_hash` varchar(255) NOT NULL,
+  `activo` tinyint(1) NOT NULL DEFAULT 1,
+  `creado_en` date NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email` (`email`),
+  KEY `rol_id` (`rol_id`),
+  CONSTRAINT `1` FOREIGN KEY (`rol_id`) REFERENCES `CATALAGO_ROL` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `VISITA` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `colmena_id` int(11) NOT NULL,
+  `sesion_id` int(11) NOT NULL,
+  `hora_inicio` time DEFAULT NULL COMMENT 'momento en que empezó la revisión',
+  `hora_fin` time DEFAULT NULL COMMENT 'momento en que terminó',
+  `estado_colonia` varchar(60) DEFAULT NULL,
+  `reina_vista` tinyint(1) DEFAULT NULL,
+  `notas` text DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `colmena_id` (`colmena_id`),
+  KEY `sesion_id` (`sesion_id`),
+  CONSTRAINT `1` FOREIGN KEY (`colmena_id`) REFERENCES `COLMENA` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `2` FOREIGN KEY (`sesion_id`) REFERENCES `SESION_VISITA` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
