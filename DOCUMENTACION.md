@@ -1,108 +1,108 @@
-# Documentación del Proyecto SAM (Smart Apiary Monitoring)
+# SAM (Smart Apiary Monitoring) Project Documentation
 
-Bienvenido a la documentación técnica oficial del sistema **SAM**. Este documento sirve como guía para comprender la arquitectura de software, la estructura del proyecto, el código Backend (Java) y Frontend (HTML/CSS/JS).
-
----
-
-## 🏗️ 1. Arquitectura del Sistema
-
-SAM es una aplicación web full-stack diseñada bajo el patrón de arquitectura **Cliente-Servidor**.
-
-* **Base de Datos:** MariaDB (Relacional). Almacena usuarios, colmenas, apiarios, datos climáticos y registros de monitoreo.
-* **Backend:** Escrito en **Java 26** utilizando el framework ligero **Javalin** y **JDBC** puro para la conexión a la base de datos (sin ORMs pesados). Proporciona una **API RESTful**.
-* **Frontend:** Desarrollado sin frameworks complejos (Vanilla HTML5, CSS3, JS ES6). Se comunica asíncronamente con el Backend vía la API nativa de `fetch()`.
-* **Autenticación:** Basada en sesiones nativas manejadas por Javalin (`JSESSIONID`) almacenadas en cookies.
+Welcome to the official technical documentation of the **SAM** system. This document serves as a guide to understand the software architecture, the project structure, the Backend code (Java) and Frontend (HTML/CSS/JS).
 
 ---
 
-## 📂 2. Estructura de Carpetas (Vista General)
+## 1. System Architecture
+
+SAM is a full-stack web application designed under the **Client-Server** architecture pattern.
+
+* **Database:** MariaDB (Relational). Stores users, hives, apiaries, climate data, and monitoring logs.
+* **Backend:** Written in **Java 26** using the lightweight framework **Javalin** and pure **JDBC** for the database connection (without heavy ORMs). Provides a **RESTful API**.
+* **Frontend:** Developed without complex frameworks (Vanilla HTML5, CSS3, JS ES6). It communicates asynchronously with the Backend via the native `fetch()` API.
+* **Authentication:** Based on native sessions handled by Javalin (`JSESSIONID`) stored in cookies.
+
+---
+
+## 2. Folder Structure (Overview)
 
 ```text
 /home/emma/SAM/
 ├── backend/
-│   └── sam-backend/               # Servidor de Java (Proyecto Maven)
-│       ├── pom.xml                # Dependencias (Javalin, MariaDB, Jackson, Dotenv)
-│       ├── .env                   # Variables de entorno (Credenciales de BD)
+│   └── sam-backend/               # Java Server (Maven Project)
+│       ├── pom.xml                # Dependencies (Javalin, MariaDB, Jackson, Dotenv)
+│       ├── .env                   # Environment variables (DB Credentials)
 │       └── src/main/java/com/sam/
-│           ├── App.java           # Punto de entrada principal y enrutador central
-│           └── controladores/     # Controladores RESTful (Lógica de negocio)
+│           ├── App.java           # Main entry point and central router
+│           └── controladores/     # RESTful Controllers (Business Logic)
 │
-├── frontend/                      # Aplicación Cliente
-│   ├── admin/                     # Vistas HTML principales
-│   └── shared/                    # Recursos compartidos
-│       ├── css/                   # Estilos por módulo (Módulos separados)
-│       ├── js/                    # Lógica de cliente por vista
-│       └── assets/                # Imágenes y logos
+├── frontend/                      # Client Application
+│   ├── admin/                     # Main HTML views
+│   └── shared/                    # Shared resources
+│       ├── css/                   # Styles by module (Separated modules)
+│       ├── js/                    # Client logic per view
+│       └── assets/                # Images and logos
 │
-├── index.html                     # Pantalla de Login (Raíz)
-├── README.md                      # Instrucciones de API / Postman
-└── DOCUMENTACION.md               # Este archivo
+├── index.html                     # Login Screen (Root)
+├── README.md                      # API / Postman Instructions
+└── DOCUMENTACION.md               # This file
 ```
 
 ---
 
-## ⚙️ 3. Backend (Java Javalin)
+## 3. Backend (Java Javalin)
 
-El backend de SAM actúa como puente entre la vista del usuario y la Base de Datos. Todas las clases clave residen en `com.sam.controladores`.
+The SAM backend acts as a bridge between the user view and the Database. All key classes reside in `com.sam.controladores`.
 
 ### 3.1 `App.java` (Core)
-Es el archivo principal que inicializa el servidor en el puerto `7070`.
-* **Configura archivos estáticos:** Apunta a la carpeta `/home/emma/SAM` para servir los HTML, CSS y JS.
-* **Filtro de Seguridad (`app.before`):** Un *middleware* que intercepta todas las peticiones a URLs protegidas (`/frontend/admin/*` y `/api/*`) para asegurar que el usuario tenga una sesión válida (`usuarioLogueado`).
-* **Router Central:** Define todas las rutas y delega las operaciones a la clase `Controlador` correspondiente.
+It is the main file that initializes the server on port `7070`.
+* **Configures static files:** Points to the `/home/emma/SAM` folder to serve HTML, CSS, and JS.
+* **Security Filter (`app.before`):** A *middleware* that intercepts all requests to protected URLs (`/frontend/admin/*` and `/api/*`) to ensure the user has a valid session (`usuarioLogueado`).
+* **Central Router:** Defines all routes and delegates operations to the corresponding `Controlador` class.
 
-### 3.2 Controladores de Lógica (CRUD y Dashboards)
-Todos los controladores leen el `.env` para extraer credenciales, se conectan a MariaDB mediante `DriverManager` de Java y devuelven respuestas en formato `application/json` procesadas por la librería `Jackson` (`ObjectMapper`, `ObjectNode`, `ArrayNode`).
+### 3.2 Logic Controllers (CRUD and Dashboards)
+All controllers read the `.env` to extract credentials, connect to MariaDB using Java's `DriverManager` and return responses in `application/json` format processed by the `Jackson` library (`ObjectMapper`, `ObjectNode`, `ArrayNode`).
 
-1. **`AuthControlador.java`**: Maneja el inicio de sesión (`/api/auth/login`), verifica el hash o contraseña, inicializa la sesión en Jetty y redirige al dashboard global.
-2. **`DashboardControlador.java`**: Calcula estadísticas globales (rendimiento total, alertas activas, etc.) consultando a múltiples tablas (`APIARIO`, `COLMENA`, `ALERTA`).
-3. **`DashboardApiarioControlador.java` / `DashboardColmenaControlador.java`**: Filtran información y sensores estadísticos de elementos particulares mediante sus IDs.
-4. **Módulos CRUD (Create, Read, Update, Delete)**:
-   * **`GestionUsuariosControlador.java`**: Administra cuentas (Apicultores/Admin).
-   * **`GestionApiariosControlador.java`**: Administra ubicaciones (Soporta edición y creación).
-   * **`GestionColmenasControlador.java`**: Administra cajas individuales y módulos ESP-32 vinculados (Soporta edición y creación).
-   * **`AlertasControlador.java`**: Historial de avisos y marcas de atención.
-   * **`VisitasControlador.java`**: Bitácora de operaciones manuales y visitas.
-   * **`CosechasControlador.java`**: API que agrupa los rendimientos de miel y genera datos para gráficas cruzando visitas y colmenas.
-
----
-
-## 🎨 4. Frontend (HTML, CSS y JavaScript Vanilla)
-
-El Frontend está diseñado para ser moderno, oscuro ("dark mode"), modular y fluido.
-
-### 4.1 Diseño Visual (CSS)
-* El archivo **`base.css`** contiene variables CSS globales (colores dorados, grises, tipografía) y componentes base como botones y menús.
-* En **`layout.css`** se encuentra la arquitectura principal (la caja contenedora `app-shell`, la barra lateral `sidebar`, el encabezado `topbar`).
-* Archivos individuales como **`gestionUsuarios.css`** o **`historialVisita.css`** añaden reglas visuales específicas para sus tablas o ventanas flotantes (Modales).
-
-### 4.2 Lógica Dinámica (JavaScript)
-Todos los archivos JS del frontend funcionan conectándose al backend. Siguen este flujo de ejecución básico:
-1. `document.addEventListener('DOMContentLoaded', ...)`: Espera a que el HTML cargue.
-2. Hace un **`fetch()`** asíncrono a una URL (`/api/gestion/...`).
-3. Procesa el `res.json()`.
-4. Utiliza **`document.createElement`** o **`innerHTML`** para generar las filas de tablas dinámicas (`<tr>`, `<td>`), calcular colores de avatares (por nombre) o badges según estados (Crítico, Excelente).
-5. Escucha eventos click de ventanas Modales para mostrar/ocultar los formularios de "Crear Nuevo", e inteligentemente cambia a modo "Editar" enviando peticiones `PUT` cuando es necesario.
-
-### 4.3 Vistas HTML (`/frontend/admin`)
-1. **`dashboard.html`**: Resumen general de todos los apiarios de la empresa.
-2. **`dashboardApiario.html`**: Vista detallada de un apiario en concreto (clima, salud general de ese recinto).
-3. **`dashboardColmena.html`**: Lo más profundo; la estadística interna de temperatura/humedad/peso en tiempo real de una sola colmena enviada por un ESP-32.
-4. **Vistas de Gestión** (`gestionUsuarios.html`, `gestionColmenas.html`, `gestionApiarios.html`): Interfaces donde se administran y operan los CRUD a nivel usuario a través de modales visuales oscuros sobrepuestos.
-5. **Vistas de Registros** (`alertas.html`, `historialVisita.html`, `historialCosechas.html`): Bitácoras interactivas. `historialCosechas.html` destaca por incluir analíticas y gráficas de barras automáticas.
+1. **`AuthControlador.java`**: Handles login (`/api/auth/login`), verifies the hash or password, initializes the Jetty session and redirects to the global dashboard.
+2. **`DashboardControlador.java`**: Calculates global statistics (total yield, active alerts, etc.) querying multiple tables (`APIARIO`, `COLMENA`, `ALERTA`).
+3. **`DashboardApiarioControlador.java` / `DashboardColmenaControlador.java`**: Filter information and statistical sensors of particular items through their IDs.
+4. **CRUD Modules (Create, Read, Update, Delete)**:
+   * **`GestionUsuariosControlador.java`**: Manages accounts (Beekeepers/Admin).
+   * **`GestionApiariosControlador.java`**: Manages locations (Supports editing and creation).
+   * **`GestionColmenasControlador.java`**: Manages individual boxes and linked ESP-32 modules (Supports editing and creation).
+   * **`AlertasControlador.java`**: Alert history and attention flags.
+   * **`VisitasControlador.java`**: Log of manual operations and visits.
+   * **`CosechasControlador.java`**: API that groups honey yields and generates data for graphs crossing visits and hives.
 
 ---
 
-## 🛠️ 5. Flujo Completo de un Requerimiento (Ejemplo: Ver Usuarios)
-Para entender cómo todo el código colabora, aquí el flujo que ocurre cuando abres "Gestión de Usuarios":
+## 4. Frontend (HTML, CSS and Vanilla JavaScript)
 
-1. El usuario entra a `gestionUsuarios.html` en su navegador.
-2. El navegador descarga `gestionUsuarios.html`, `base.css`, `layout.css`, y `gestionUsuarios.js`.
-3. Al terminar de cargar la vista visualmente, el JS (`gestionUsuarios.js`) dispara `cargarUsuarios()`, que internamente ejecuta un `fetch('/api/gestion/usuarios')`.
-4. La petición llega al Javalin Server en `App.java`, interceptada por la línea `get("/usuarios", com.sam.controladores.GestionUsuariosControlador::listarUsuarios);`.
-5. `GestionUsuariosControlador.java` verifica si el usuario tiene sesión abierta. De ser así, se conecta a MariaDB.
-6. Ejecuta un `SELECT` en SQL usando múltiples `JOIN` para obtener los nombres, roles y apiarios (separados por coma `GROUP_CONCAT`).
-7. El Java transforma los resultados a un árbol JSON de tipo array con Jackson (`ArrayNode`) y responde `200 OK` mandando el JSON.
-8. En el lado del cliente (JS), la promesa de `fetch` se resuelve, iteramos cada usuario usando `datos.forEach` y generamos dinámicamente cada fila de la tabla (y un avatar con sus iniciales). La tabla se pinta sola frente a los ojos del usuario.
+The Frontend is designed to be modern, dark ("dark mode"), modular and fluid.
 
-¡Y así de robusto y veloz es el sistema SAM!
+### 4.1 Visual Design (CSS)
+* The **`base.css`** file contains global CSS variables (gold colors, grays, typography) and base components like buttons and menus.
+* In **`layout.css`** resides the main architecture (the container box `app-shell`, the sidebar `sidebar`, the header `topbar`).
+* Individual files like **`gestionUsuarios.css`** or **`historialVisita.css`** add specific visual rules for their tables or floating windows (Modals).
+
+### 4.2 Dynamic Logic (JavaScript)
+All frontend JS files work by connecting to the backend. They follow this basic execution flow:
+1. `document.addEventListener('DOMContentLoaded', ...)`: Waits for the HTML to load.
+2. Makes an asynchronous **`fetch()`** to a URL (`/api/gestion/...`).
+3. Processes the `res.json()`.
+4. Uses **`document.createElement`** or **`innerHTML`** to generate dynamic table rows (`<tr>`, `<td>`), calculate avatar colors (by name) or badges according to states (Critical, Excellent).
+5. Listens to click events from Modal windows to show/hide the "Create New" forms, and intelligently switches to "Edit" mode by sending `PUT` requests when necessary.
+
+### 4.3 HTML Views (`/frontend/admin`)
+1. **`dashboard.html`**: General summary of all the company's apiaries.
+2. **`dashboardApiario.html`**: Detailed view of a specific apiary (climate, general health of that enclosure).
+3. **`dashboardColmena.html`**: The deepest level; the real-time internal statistics of temperature/humidity/weight of a single hive sent by an ESP-32.
+4. **Management Views** (`gestionUsuarios.html`, `gestionColmenas.html`, `gestionApiarios.html`): Interfaces where user-level CRUDs are managed and operated through dark superimposed visual modals.
+5. **Log Views** (`alertas.html`, `historialVisita.html`, `historialCosechas.html`): Interactive logs. `historialCosechas.html` stands out by including analytics and automatic bar charts.
+
+---
+
+## 5. Complete Flow of a Requirement (Example: View Users)
+To understand how all the code collaborates, here is the flow that occurs when you open "User Management":
+
+1. The user enters `gestionUsuarios.html` in their browser.
+2. The browser downloads `gestionUsuarios.html`, `base.css`, `layout.css`, and `gestionUsuarios.js`.
+3. Upon finishing loading the view visually, the JS (`gestionUsuarios.js`) triggers `cargarUsuarios()`, which internally executes a `fetch('/api/gestion/usuarios')`.
+4. The request arrives at the Javalin Server in `App.java`, intercepted by the line `get("/usuarios", com.sam.controladores.GestionUsuariosControlador::listarUsuarios);`.
+5. `GestionUsuariosControlador.java` verifies if the user has an open session. If so, it connects to MariaDB.
+6. Executes a `SELECT` in SQL using multiple `JOIN`s to obtain names, roles, and apiaries (comma separated `GROUP_CONCAT`).
+7. Java transforms the results into a JSON array tree with Jackson (`ArrayNode`) and responds `200 OK` sending the JSON.
+8. On the client side (JS), the `fetch` promise is resolved, we iterate over each user using `datos.forEach` and dynamically generate each row of the table (and an avatar with their initials). The table paints itself in front of the user's eyes.
+
+And that's how robust and fast the SAM system is!

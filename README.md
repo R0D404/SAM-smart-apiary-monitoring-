@@ -1,45 +1,45 @@
-# API RESTful - Smart Apiary Monitoring (SAM)
+# RESTful API - Smart Apiary Monitoring (SAM)
 
-Este documento describe la API RESTful del sistema **SAM (Smart Apiary Monitoring)** y proporciona instrucciones claras sobre cómo probar los distintos endpoints utilizando **Postman**.
+This document describes the RESTful API for the **SAM (Smart Apiary Monitoring)** system and provides clear instructions on how to test the various endpoints using **Postman**.
 
-La API está construida en **Java con Javalin** y devuelve y recibe los datos exclusivamente en formato **JSON**.
+The API is built in **Java with Javalin** and exclusively returns and receives data in **JSON** format.
 
 ---
 
-## 🚀 Requisitos Previos (Para probar en Postman)
+## Prerequisites (For testing in Postman)
 
-El sistema SAM cuenta con seguridad de sesiones mediante cookies. Para poder realizar peticiones a los endpoints protegidos (que son casi todos los de gestión), primero debes iniciar sesión (autenticarte) para que Postman guarde tu cookie de sesión.
+The SAM system features session security through cookies. To make requests to the protected endpoints (which are almost all of the management ones), you must first log in (authenticate) so that Postman saves your session cookie.
 
-### Paso 1: Iniciar Sesión en Postman
-1. Abre Postman y crea una nueva petición **POST**.
+### Step 1: Log in via Postman
+1. Open Postman and create a new **POST** request.
 2. URL: `http://localhost:7070/api/auth/login`
-3. Ve a la pestaña **Body**, selecciona **raw** y luego **JSON**.
-4. Pega el siguiente cuerpo:
+3. Go to the **Body** tab, select **raw**, and then **JSON**.
+4. Paste the following body:
    ```json
    {
        "username": "admin@sam.com",
        "password": "1234"
    }
    ```
-5. Haz clic en **Send**. Deberías recibir un código `200 OK`. Postman automáticamente guardará la cookie `JSESSIONID` para tus siguientes peticiones.
+5. Click **Send**. You should receive a `200 OK` status code. Postman will automatically save the `JSESSIONID` cookie for your subsequent requests.
 
 ---
 
-## 📚 Endpoints Disponibles (CRUD)
+## Available Endpoints (CRUD)
 
-A continuación se listan todos los módulos y las operaciones disponibles.
+Below are all the available modules and operations.
 
-> **Nota:** Reemplaza `{id}` en las URLs por el número identificador real (ej. `1`, `2`, `3`) que desees modificar o eliminar.
+> **Note:** Replace `{id}` in the URLs with the actual identifier number (e.g. `1`, `2`, `3`) you wish to modify or delete.
 
-### 1. Gestión de Usuarios (`/api/gestion/usuarios`)
-Administración de las cuentas de apicultores y administradores.
+### 1. User Management (`/api/gestion/usuarios`)
+Administration of beekeeper and administrator accounts.
 
 * **GET** `/api/gestion/usuarios`
-  * **Descripción:** Lista todos los usuarios del sistema.
-  * **Body:** Ninguno.
+  * **Description:** Lists all users in the system.
+  * **Body:** None.
 
 * **POST** `/api/gestion/usuarios`
-  * **Descripción:** Crea un nuevo usuario.
+  * **Description:** Creates a new user.
   * **Body (JSON):**
     ```json
     {
@@ -51,7 +51,7 @@ Administración de las cuentas de apicultores y administradores.
     ```
 
 * **PUT** `/api/gestion/usuarios/{id}`
-  * **Descripción:** Actualiza los datos de un usuario existente.
+  * **Description:** Updates data for an existing user.
   * **Body (JSON):**
     ```json
     {
@@ -63,19 +63,19 @@ Administración de las cuentas de apicultores y administradores.
     ```
 
 * **DELETE** `/api/gestion/usuarios/{id}`
-  * **Descripción:** Elimina (o da de baja) a un usuario.
-  * **Body:** Ninguno.
+  * **Description:** Deletes (or disables) a user.
+  * **Body:** None.
 
 ---
 
-### 2. Gestión de Colmenas (`/api/gestion/colmenas`)
-Administración del inventario de colmenas.
+### 2. Hive Management (`/api/gestion/colmenas`)
+Administration of the hive inventory.
 
 * **GET** `/api/gestion/colmenas`
-  * **Descripción:** Lista todas las colmenas.
+  * **Description:** Lists all hives.
 
 * **POST** `/api/gestion/colmenas`
-  * **Descripción:** Registra una nueva colmena.
+  * **Description:** Registers a new hive.
   * **Body (JSON):**
     ```json
     {
@@ -87,7 +87,7 @@ Administración del inventario de colmenas.
     ```
 
 * **PUT** `/api/gestion/colmenas/{id}`
-  * **Descripción:** Actualiza los datos de una colmena.
+  * **Description:** Updates data for a hive.
   * **Body (JSON):**
     ```json
     {
@@ -99,18 +99,18 @@ Administración del inventario de colmenas.
     ```
 
 * **DELETE** `/api/gestion/colmenas/{id}`
-  * **Descripción:** Elimina una colmena del sistema.
+  * **Description:** Deletes a hive from the system.
 
 ---
 
-### 3. Gestión de Apiarios (`/api/gestion/apiarios`)
-Control de los terrenos / apiarios.
+### 3. Apiary Management (`/api/gestion/apiarios`)
+Control of the apiary locations / sites.
 
 * **GET** `/api/gestion/apiarios`
-  * **Descripción:** Lista todos los apiarios.
+  * **Description:** Lists all apiaries.
 
 * **POST** `/api/gestion/apiarios`
-  * **Descripción:** Crea un nuevo apiario.
+  * **Description:** Creates a new apiary.
   * **Body (JSON):**
     ```json
     {
@@ -123,7 +123,7 @@ Control de los terrenos / apiarios.
     ```
 
 * **PUT** `/api/gestion/apiarios/{id}`
-  * **Descripción:** Modifica la información de un apiario.
+  * **Description:** Modifies apiary information.
   * **Body (JSON):**
     ```json
     {
@@ -136,18 +136,18 @@ Control de los terrenos / apiarios.
     ```
 
 * **DELETE** `/api/gestion/apiarios/{id}`
-  * **Descripción:** Elimina un apiario.
+  * **Description:** Deletes an apiary.
 
 ---
 
-### 4. Alertas del Sistema (`/api/alertas`)
-Historial de alertas generadas por los sensores (módulos ESP-32).
+### 4. System Alerts (`/api/alertas`)
+History of alerts generated by sensors (ESP-32 modules).
 
 * **GET** `/api/alertas`
-  * **Descripción:** Lista el historial de alertas.
+  * **Description:** Lists the alert history.
 
 * **POST** `/api/alertas`
-  * **Descripción:** Crea una nueva alerta (generalmente lo haría el hardware, pero puedes probarlo).
+  * **Description:** Creates a new alert (typically done by hardware, but you can test it).
   * **Body (JSON):**
     ```json
     {
@@ -160,7 +160,7 @@ Historial de alertas generadas por los sensores (módulos ESP-32).
     ```
 
 * **PUT** `/api/alertas/{id}`
-  * **Descripción:** Marca una alerta como atendida/resuelta.
+  * **Description:** Marks an alert as attended/resolved.
   * **Body (JSON):**
     ```json
     {
@@ -169,18 +169,18 @@ Historial de alertas generadas por los sensores (módulos ESP-32).
     ```
 
 * **DELETE** `/api/alertas/{id}`
-  * **Descripción:** Borra una alerta.
+  * **Description:** Deletes an alert.
 
 ---
 
-### 5. Historial de Visitas (`/api/visitas`)
-Bitácora de inspecciones y visitas a los apiarios.
+### 5. Visit History (`/api/visitas`)
+Log of inspections and visits to apiaries.
 
 * **GET** `/api/visitas`
-  * **Descripción:** Obtiene las últimas visitas/sesiones registradas.
+  * **Description:** Gets the latest logged visits/sessions.
 
 * **POST** `/api/visitas`
-  * **Descripción:** Registra una nueva inspección manual.
+  * **Description:** Logs a new manual inspection.
   * **Body (JSON):**
     ```json
     {
@@ -193,7 +193,7 @@ Bitácora de inspecciones y visitas a los apiarios.
     ```
 
 * **PUT** `/api/visitas/{id}`
-  * **Descripción:** Actualiza los detalles de la visita.
+  * **Description:** Updates visit details.
   * **Body (JSON):**
     ```json
     {
@@ -203,24 +203,24 @@ Bitácora de inspecciones y visitas a los apiarios.
     ```
 
 * **DELETE** `/api/visitas/{id}`
-  * **Descripción:** Elimina el registro de una visita.
+  * **Description:** Deletes a visit log.
 
 ---
 
-### 6. Historial de Cosechas (`/api/cosechas`)
-Módulo de recolección de miel y métricas calculadas.
+### 6. Harvest History (`/api/cosechas`)
+Honey collection module and calculated metrics.
 
 * **GET** `/api/cosechas`
-  * **Descripción:** Lista todo el historial de las cosechas cruzado con los nombres de los apicultores y sus fechas.
+  * **Description:** Lists the entire harvest history crossed with beekeeper names and dates.
 
 * **GET** `/api/cosechas/resumen`
-  * **Descripción:** Retorna métricas generales (Total de temporada, Promedio por colmena y % de validación con sensor).
+  * **Description:** Returns overall metrics (Total season, Average per hive, and Sensor validation %).
 
 * **GET** `/api/cosechas/grafica`
-  * **Descripción:** Agrupa la producción total (kg) por cada colmena para graficar.
+  * **Description:** Groups total production (kg) per hive for charting.
 
 ---
 
-## 💡 Consejos para Pruebas
-- Si alguna petición te devuelve **Error 401: No autorizado** o te redirige a un HTML de login, significa que la sesión caducó o que reiniciaste el servidor en Java. Simplemente **vuelve a ejecutar el Paso 1** de Iniciar Sesión.
-- Asegúrate de que en Postman el tipo de contenido al hacer envíos (POST/PUT) esté estrictamente en `JSON (application/json)`.
+## Testing Tips
+- If any request returns a **401 Unauthorized Error** or redirects you to a login HTML, it means your session has expired or you restarted the Java server. Simply **re-execute Step 1** to log in again.
+- Make sure that in Postman, the content type when sending (POST/PUT) is strictly set to `JSON (application/json)`.

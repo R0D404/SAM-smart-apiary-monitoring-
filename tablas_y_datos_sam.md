@@ -13,8 +13,8 @@ CREATE TABLE `ALERTA` (
   CONSTRAINT `1` FOREIGN KEY (`colmena_id`) REFERENCES `COLMENA` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 INSERT INTO `ALERTA` VALUES
-(1,1,'umbral','critico','Temperatura interna por encima de 38°C',0,0,'2026-07-12 23:53:24'),
-(2,2,'tasa_cambio','aviso','Caída brusca de peso (-2kg/h)',0,0,'2026-07-12 23:53:24');
+(1,1,'umbral','critico','Internal temperature above 38°C',0,0,'2026-07-12 23:53:24'),
+(2,2,'tasa_cambio','aviso','Sudden weight drop (-2kg/h)',0,0,'2026-07-12 23:53:24');
 
 CREATE TABLE `APIARIO` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
